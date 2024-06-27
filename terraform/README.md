@@ -1,7 +1,9 @@
 # Learn terraform
+
 - terraform and ansible
 
 ## Version
+
 ```shell
 ➜  ~ terraform --version
 Terraform v1.7.3
@@ -18,39 +20,49 @@ ansible [core 2.15.9]
   jinja version = 3.0.3
   libyaml = True
 ```
+
 ## Install
+
 ### Install Terraform
+
 ```shell
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 ```
 
 ### Install Ansible
+
 ```shell
 https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html
 ```
 
 ## Command
+
 ### Terraform init
+
 ```shell
 terraform init
 ```
 
 ### Terraform show changes
+
 ```shell
 terraform plan -var-file="vars/terraform.tfvars"
 ```
 
 ### Terraform apply env production
+
 ```shell
 terraform apply -var-file="vars/terraform.tfvars" -auto-approve
 ```
 
 ### Terraform destroy
+
 ```shell
 terraform destroy -var-file="vars/terraform.tfvars" -auto-approve
 ```
 
 ## Architecture
+
 - 1 nginx load balancer
 - 1 database
 - 2 web wordpress web server
