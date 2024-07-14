@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>background</title>
+    <style>
+        html, body {
+            margin: 0;
+        }
+
+        /* background-clip quyết định cách đổ background color, nếu là padding-box thì sẽ không đổ vào border */
+        /* nếu là content-box thì không đổ vao cả border và padding mà chỉ đổ vào content */
+        .header {
+            background-color: #333;
+            width: 100%;
+            height: 100px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 10px dashed blue;
+            background-clip: content-box;
+        }
+    </style>
+</head>
+<body>
+<div class="header"></div>
+</body>
+</html>
