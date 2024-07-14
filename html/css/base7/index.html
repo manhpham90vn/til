@@ -10,7 +10,7 @@
             height: 50vh;
             background-image: url("https://avatars.githubusercontent.com/u/40340023?v=4");
             background-size: 100px auto;
-            background-repeat: no-repeat;
+            background-repeat: repeat;
         }
 
         /* tạo background bằng ảnh gradient */
@@ -19,10 +19,40 @@
             height: 200px;
             background-image: linear-gradient(0, #333, #ccc);
         }
+
+        /* background-size: contain ảnh sẽ không bị che khuất */
+        /* background-size: cover ảnh sẽ bị che khuất, lấy theo chiều dài hơn */
+        /* background-origin cách hoạt động giống background-clip */
+        #bg_size {
+            width: 500px;
+            height: 500px;
+            background-image: url("https://avatars.githubusercontent.com/u/40340023?v=4");
+            background-size: cover;
+            background-repeat: no-repeat;
+            border: 20px dashed #ccc;
+            padding: 20px;
+            box-sizing: border-box;
+            background-origin: content-box;
+        }
+
+        /* background-position: xác định position của ảnh background */
+        #bg_position {
+            width: 500px;
+            height: 500px;
+            background-image: url("https://avatars.githubusercontent.com/u/40340023?v=4");
+            background-size: 200px;
+            background-repeat: no-repeat;
+            border: 20px dashed #ccc;
+            padding: 20px;
+            box-sizing: border-box;
+            background-position: top right;
+        }
     </style>
 </head>
 <body>
 <div id="main"></div>
 <div id="gradient"></div>
+<div id="bg_size"></div>
+<div id="bg_position"></div>
 </body>
 </html>
