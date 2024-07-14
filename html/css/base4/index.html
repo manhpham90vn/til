@@ -5,6 +5,7 @@
     <title>CSS Unit</title>
     <style>
         /* kích thước tuyệt đối đơn vị là px */
+        /* không bị ảnh hưởng bởi các phần tử khác */
         .box {
             width: 100px;
             height: 100px;
@@ -17,12 +18,44 @@
             height: 100px;
             background-color: blue;
         }
+
+        html {
+            font-size: 30px;
+        }
+
+        /* phụ thuộc vào kích thước định nghĩa ở thẻ html */
+        h1 {
+            font-size: 1rem;
+        }
+
+        /* phụ thuộc thẻ cha gần nhất chứa nó mà có chứa thuộc tính font-size, trường hợp này là div có class là box2 */
+        h2 {
+            font-size: 1em;
+        }
+
+        .box2 {
+            font-size: 50px;
+        }
+
+        /* vw là viewport theo chiều ngang cũng tính giống như % nhưng ở đây tính theo kích thước trình duyệt */
+        /* khác với % là tính theo kích thước phần tử cha */
+        /* tương tự với vh */
+        .box3 {
+            width: 100vw;
+            height: 100px;
+            background-color: blue;
+        }
     </style>
 </head>
 <body>
 <div>
     <div class="box"></div>
     <div class="box1"></div>
+    <h1>Test rem</h1>
+    <div class="box2">
+        <h2>Test em</h2>
+    </div>
+    <div class="box3"></div>
     <h1>CSS units</h1>
     <div>
         <h2>1 Absolute init</h2>
