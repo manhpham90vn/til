@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Độ ưu tiên trong css</title>
+    <link rel="stylesheet" href="main.css">
+
+    <style>
+        #first-heading {
+            color: blueviolet;
+        }
+
+        .heading {
+            color: blue;
+        }
+
+        h1 {
+            color: green;
+        }
+
+        /*  select 1 đối tượng có cả class và id  */
+        /*  điểm số là 110 điểm  */
+        .heading#first-heading {
+            color: black;
+        }
+
+        /* điểm số là 111 điểm */
+        h1.heading#first-heading {
+            color: darksalmon;
+        }
+
+        /* thẻ universal có điểm là 0 điểm */
+        * {
+            color: black;
+        }
+
+        /* thuộc tính important */
+        /* có độ ưu tiên cao nhất */
+        /* bỏ comment để xem các độ ưu tiên khác */
+        h1 {
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+<!-- Giữa internal và external thì độ ưu tiên như nhau, việc hiển thị sẽ quyết định dựa trên cách nào code được gọi sau hay mới hơn -->
+<h1>Độ ưu tiên internal và external</h1>
+
+<!-- Nếu có class thì cộng thêm 10 điểm, ưu tiên hơn khi chỉ có thẻ tag là 1 điểm -->
+<h1 class="heading">Độ ưu tiên khi có class</h1>
+
+<!-- khi có cả id thì độ u tiên cộng thêm 100 điểm -->
+<h1 class="heading" id="first-heading">Độ ưu tiên khi có id</h1>
+
+<!-- Style inline có độ ưu tiên là 1000 -->
+<h1 class="heading" id="first-heading" style="color: chocolate">Độ ưu tiên khi có style inline</h1>
+<ul>
+    <li>Internal - External</li>
+    <li>Inline - 1000</li>
+    <li>#id - 100</li>
+    <li>.class - 10</li>
+    <li>tag - 1</li>
+    <li>equal specificity</li>
+    <li>universal selector and inherited</li>
+</ul>
+</body>
+</html>
