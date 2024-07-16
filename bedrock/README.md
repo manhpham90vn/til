@@ -45,7 +45,7 @@
 
 ## AWS Service Offer
 
-### AWS EC2 Trn1  and EC2 Inf2
+### AWS EC2 Trn1 and EC2 Inf2
 
 - build, train and deploy your own models
 
