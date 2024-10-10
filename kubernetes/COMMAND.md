@@ -6,6 +6,21 @@
 kubectl get all
 ```
 
+### log
+
+```shell
+kubectl logs
+kubectl logs service/myapp-service
+kubectl logs pod/myapp-pod -f
+kubectl logs pod/myapp-pod -c nginx-container -f
+```
+
+### exec
+
+```shell
+kubectl exec -it pod/myapp-pod -c nginx-container -- sh
+```
+
 ## Name Spaces
 
 ```shell
