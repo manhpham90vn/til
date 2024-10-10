@@ -12,6 +12,24 @@ kubectl get all
 kubectl get namespaces
 ```
 
+### describe Name Spaces
+
+```shell
+kubectl describe namespaces default
+```
+
+## Node
+
+```shell
+kubectl get node
+```
+
+### describe node
+
+```shell
+kubectl describe node minikube
+```
+
 ## Pod
 
 ### Deploy pod
@@ -24,18 +42,21 @@ kubectl create -f pod.yml
 
 ```shell
 kubectl get pods -o wide
+kubectl get pods -A
+kubectl get pods -w # watching
 ```
 
 ### describe pod
 
 ```shell
-kubectl describe pod nginx
+kubectl describe pod myapp-pod
+kubectl describe pod etcd-minikube -n kube-system
 ```
 
 ### delete pod
 
 ```shell
-kubectl delete pod nginx
+kubectl delete pod myapp-pod
 ```
 
 ## Replication Controllers
@@ -54,19 +75,19 @@ kubectl get replicationcontroller
 
 ## Replica set
 
-### Deploy
+### Deploy Replica set
 
 ```shell
 kubectl create -f replicaset.yml
 ```
 
-### get
+### get Replica set
 
 ```shell
 kubectl get replicaset
 ```
 
-### delete
+### delete Replica set
 
 ```shell
 kubectl delete replicaset nginx-rs
@@ -74,19 +95,19 @@ kubectl delete replicaset nginx-rs
 
 ## Deployment
 
-### Deploy
+### Deploy Deployment
 
 ```shell
 kubectl create -f deployment.yml --record
 ```
 
-### get
+### get Deployment
 
 ```shell
 kubectl get deployments
 ```
 
-### delete
+### delete Deployment
 
 ```shell
 kubectl delete deployments nginx-deployment
@@ -124,7 +145,7 @@ kubectl patch deployment nginx-deployment --patch '{"metadata": {"annotations": 
 
 ## Service
 
-### Deploy
+### Deploy Service
 
 ```shell
 kubectl create -f nodeport.yml
@@ -136,13 +157,26 @@ kubectl create -f nodeport.yml
 minikube service myapp-service --url
 ```
 
+### get Service
+
+```shell
+kubectl get services
+```
+
+### describe Service
+
+```shell
+kubectl describe service myapp-service
+```
+
 ### Persistent Volume
 
 - get list Persistent Volume
 
 ```shell
-kubectl get pv 
+kubectl get pv
 ```
+
 ### Persistent Volume Claims
 
 - get list Persistent Volume Claims
@@ -184,6 +218,7 @@ kubectl get secret mydatabase-mysql -o yaml
 ### Repo
 
 - list repo
+
 ```shell
 helm repo list
 ```
@@ -300,7 +335,7 @@ helm create mychart
 - install my chart
 
 ```shell
-helm install mychart mychart 
+helm install mychart mychart
 ```
 
 - package chart
