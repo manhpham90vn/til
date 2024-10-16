@@ -3,6 +3,10 @@
 ## Common
 
 ```shell
+pod > replicaSet > deployment
+```
+
+```shell
 kubectl get all
 ```
 

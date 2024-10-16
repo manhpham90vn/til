@@ -4,19 +4,27 @@ metadata:
   name: nginx-rs
   labels:
     app: myapp
-    type: front-end
+    tier: front-end
 spec:
   template:
     metadata:
-      name: myapp-pod
-      labels:
-        app: myapp
-        type: front-end
-    spec:
-      containers:
-        - name: nginx-container
-          image: nginx
+    name: myapp-pod
+    labels:
+      app: myapp
+      tier: front-end
+  spec:
+    containers:
+      - name: nginx-container
+        image: nginx
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            protocol: TCP
   replicas: 3
   selector:
     matchLabels:
-      type: front-end
+      tier: front-end
