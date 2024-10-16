@@ -8,12 +8,17 @@ metadata:
 spec:
   containers:
     - name: nginx-container
-      image: nginx
+      image: manhpv151090/dockerize_expressjs
       resources:
         limits:
           cpu: "1"
           memory: "512Mi"
+      env:
+        - name: PORT
+          value: "8080"
+        - name: NODE_ENV
+          value: "production"
       imagePullPolicy: Always
       ports:
-        - containerPort: 80
+        - containerPort: 8080
           protocol: TCP
