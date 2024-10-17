@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: manhpv151090/dockerize_expressjs
+          image: manhpv151090/dockerize_expressjs:latest
           resources:
             limits:
               cpu: "1"
