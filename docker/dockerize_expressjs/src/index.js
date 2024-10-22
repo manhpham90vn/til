@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
     env: env,
     port: port,
     node_version: nodeVersion,
-    app_version: 2,
+    app_version: "v2",
     date: new Date(),
     pid: pid,
   });
