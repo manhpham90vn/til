@@ -174,6 +174,7 @@ kubectl create -f nodeport.yml
 
 ```shell
 minikube service myapp-service --url
+minikube service argocd-server -n argocd --url
 ```
 
 ### get Service

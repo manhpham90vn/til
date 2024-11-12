@@ -22,6 +22,11 @@
 
 - Là thành phần trung tâm của Kubernetes chịu trách nhiệm quản lý toàn bộ cluster
 
+## Namespace
+
+- Là cách để tổ chức và phân tách tài nguyên trong k8s
+- Có 4 namespace mặc định là: default, kube-node-lease, kube-public, kube-system
+
 ## Pod
 
 - Là đơn vị nhỏ nhất trong Kubernetes, chứa một hoặc nhiều container (thường là Docker container) cùng chia sẻ mạng và lưu trữ
