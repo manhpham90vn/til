@@ -1,13 +1,9 @@
-# Tổng Hợp So Sánh Syntax: 9 Ngôn Ngữ Lập Trình
-
-> Cheat sheet cho kỹ sư IT sử dụng nhiều ngôn ngữ lập trình
+# Tổng Hợp So Sánh Syntax
 
 ## Mục Lục
 
 1. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
 2. [Danh Sách Khái Niệm & Trường Hợp Sử Dụng](#2-danh-sách-khái-niệm--trường-hợp-sử-dụng)
-3. [Bảng So Sánh Syntax](#3-bảng-so-sánh-syntax)
-4. [Tóm Tắt Nhanh](#4-tóm-tắt-nhanh)
 
 ---
 
@@ -15,45 +11,45 @@
 
 ### Theo Loại Ngôn Ngữ
 
-| Ngôn ngữ | Loại | Biên dịch/Thông dịch | Typing |
-|----------|------|---------------------|--------|
-| **Rust** | Systems Programming | Compiled (AOT) | Static, Strong |
-| **Go** | Systems/Server | Compiled (AOT) | Static, Strong |
-| **Python** | General Purpose | Interpreted/Bytecode | Dynamic, Strong |
-| **TypeScript** | Web/JS Superset | Transpiled to JS | Static (optional) |
-| **JavaScript** | Web Scripting | Interpreted/JIT | Dynamic, Duck |
-| **Swift** | iOS/macOS | Compiled (AOT) | Static, Strong |
-| **Kotlin** | Android/JVM | Compiled (Bytecode) | Static, Strong |
-| **Dart** | Flutter/Web | Compiled (AOT/JIT) | Static, Strong |
-| **PHP** | Web Backend | Interpreted | Dynamic, Weak |
+| Ngôn ngữ       | Loại                | Biên dịch/Thông dịch | Typing            |
+| -------------- | ------------------- | -------------------- | ----------------- |
+| **Rust**       | Systems Programming | Compiled (AOT)       | Static, Strong    |
+| **Go**         | Systems/Server      | Compiled (AOT)       | Static, Strong    |
+| **Python**     | General Purpose     | Interpreted/Bytecode | Dynamic, Strong   |
+| **TypeScript** | Web/JS Superset     | Transpiled to JS     | Static (optional) |
+| **JavaScript** | Web Scripting       | Interpreted/JIT      | Dynamic, Duck     |
+| **Swift**      | iOS/macOS           | Compiled (AOT)       | Static, Strong    |
+| **Kotlin**     | Android/JVM         | Compiled (Bytecode)  | Static, Strong    |
+| **Dart**       | Flutter/Web         | Compiled (AOT/JIT)   | Static, Strong    |
+| **PHP**        | Web Backend         | Interpreted          | Dynamic, Weak     |
 
 ### Theo Paradigm
 
-| Ngôn ngữ | Paradigm |
-|----------|----------|
-| **Rust** | Multi-paradigm (Functional, OO, Imperative) |
-| **Go** | Concurrent, Imperative, Procedural |
-| **Python** | Multi-paradigm (Functional, OO, Procedural) |
-| **TypeScript** | Object-Oriented, Functional |
-| **JavaScript** | Multi-paradigm (Prototype-based, Functional) |
-| **Swift** | Multi-paradigm (Protocol-oriented, Functional, OO) |
-| **Kotlin** | Multi-paradigm (Functional, OO) |
-| **Dart** | Multi-paradigm (Class-based, Functional) |
-| **PHP** | Multi-paradigm (Procedural, OO) |
+| Ngôn ngữ       | Paradigm                                           |
+| -------------- | -------------------------------------------------- |
+| **Rust**       | Multi-paradigm (Functional, OO, Imperative)        |
+| **Go**         | Concurrent, Imperative, Procedural                 |
+| **Python**     | Multi-paradigm (Functional, OO, Procedural)        |
+| **TypeScript** | Object-Oriented, Functional                        |
+| **JavaScript** | Multi-paradigm (Prototype-based, Functional)       |
+| **Swift**      | Multi-paradigm (Protocol-oriented, Functional, OO) |
+| **Kotlin**     | Multi-paradigm (Functional, OO)                    |
+| **Dart**       | Multi-paradigm (Class-based, Functional)           |
+| **PHP**        | Multi-paradigm (Procedural, OO)                    |
 
 ### Ecosystem & Use Cases
 
-| Ngôn ngữ | Use Cases |
-|----------|-----------|
-| **Rust** | Systems programming, WebAssembly, CLI tools, Blockchain |
-| **Go** | Backend servers, Cloud services, DevOps tools, Microservices |
-| **Python** | Data science, ML/AI, Automation, Web (Django/Flask), Scripting |
-| **TypeScript** | Frontend (React, Vue, Angular), Node.js, Enterprise apps |
-| **JavaScript** | Frontend web, Node.js, Mobile (React Native) |
-| **Swift** | iOS/macOS apps, Apple ecosystem |
-| **Kotlin** | Android, Backend (Spring), Multiplatform |
-| **Dart** | Flutter (Cross-platform mobile), Web |
-| **PHP** | Web backend (Laravel, Symfony), CMS (WordPress) |
+| Ngôn ngữ       | Use Cases                                                      |
+| -------------- | -------------------------------------------------------------- |
+| **Rust**       | Systems programming, WebAssembly, CLI tools, Blockchain        |
+| **Go**         | Backend servers, Cloud services, DevOps tools, Microservices   |
+| **Python**     | Data science, ML/AI, Automation, Web (Django/Flask), Scripting |
+| **TypeScript** | Frontend (React, Vue, Angular), Node.js, Enterprise apps       |
+| **JavaScript** | Frontend web, Node.js, Mobile (React Native)                   |
+| **Swift**      | iOS/macOS apps, Apple ecosystem                                |
+| **Kotlin**     | Android, Backend (Spring), Multiplatform                       |
+| **Dart**       | Flutter (Cross-platform mobile), Web                           |
+| **PHP**        | Web backend (Laravel, Symfony), CMS (WordPress)                |
 
 ---
 
