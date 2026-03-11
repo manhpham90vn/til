@@ -2,13 +2,13 @@
 
 ## Mục Lục
 
-1. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
-2. [Tầng 1: Syntax & Semantics](#tầng-1-syntax--semantics)
+0. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
+1. [Tầng 1: Syntax & Semantics](#tầng-1-syntax--semantics)
    - [1.1 Khai Báo Biến](#11-khai-báo-biến)
    - [1.2 Khai Báo Hàm](#12-khai-báo-hàm)
    - [1.3 Vòng Lặp](#13-vòng-lặp)
    - [1.4 Điều Kiện](#14-điều-kiện)
-3. [Tầng 2: Type System](#tầng-2-type-system)
+2. [Tầng 2: Type System](#tầng-2-type-system)
    - [2.1 Kiểu Dữ Liệu Cơ Bản](#21-kiểu-dữ-liệu-cơ-bản)
    - [2.2 Enum](#22-enum)
    - [2.3 Nullable Types](#23-nullable-types)
@@ -16,72 +16,72 @@
    - [2.5 Generics](#25-generics)
    - [2.6 Collection Operations](#26-collection-operations)
    - [2.7 String Operations](#27-string-operations)
-4. [Tầng 3: OOP & Type Relationships](#tầng-3-oop--type-relationships)
+3. [Tầng 3: OOP & Type Relationships](#tầng-3-oop--type-relationships)
    - [3.1 Class/Object](#31-classobject)
    - [3.2 Kế Thừa & Đa Hình](#32-kế-thừa--đa-hình)
    - [3.3 Interface/Trait/Protocol](#33-interfacetraitprotocol)
    - [3.4 Visibility/Access Modifiers](#34-visibilityaccess-modifiers)
-5. [Tầng 4: Memory Model](#tầng-4-memory-model)
+4. [Tầng 4: Memory Model](#tầng-4-memory-model)
    - [4.1 Memory Management](#41-memory-management)
    - [4.2 Property & Getter/Setter](#42-property--gettersetter)
-6. [Tầng 5: Concurrency Model](#tầng-5-concurrency-model)
+5. [Tầng 5: Concurrency Model](#tầng-5-concurrency-model)
    - [5.1 Concurrency/Async](#51-concurrencyasync)
-7. [Tầng 6: Paradigm](#tầng-6-paradigm)
+6. [Tầng 6: Paradigm](#tầng-6-paradigm)
    - [6.1 Functional Programming](#61-functional-programming)
-8. [Tầng 7: Error Handling](#tầng-7-error-handling)
+7. [Tầng 7: Error Handling](#tầng-7-error-handling)
    - [7.1 Xử Lý Lỗi](#71-xử-lý-lỗi)
    - [7.2 Error Types](#72-error-types)
-9. [Tầng 8: Module & Organization](#tầng-8-module--organization)
+8. [Tầng 8: Module & Organization](#tầng-8-module--organization)
    - [8.1 Import/Module](#81-importmodule)
    - [8.2 Extension Methods](#82-extension-methods)
-10. [Tầng 9: I/O & Networking](#tầng-9-io--networking)
-    - [9.1 HTTP & Networking](#91-http--networking)
-    - [9.2 File I/O](#92-file-io)
-11. [Tầng 10: Data & Serialization](#tầng-10-data--serialization)
+9. [Tầng 9: I/O & Networking](#tầng-9-io--networking)
+   - [9.1 HTTP & Networking](#91-http--networking)
+   - [9.2 File I/O](#92-file-io)
+10. [Tầng 10: Data & Serialization](#tầng-10-data--serialization)
     - [10.1 JSON & Serialization](#101-json--serialization)
     - [10.2 Date & Time](#102-date--time)
     - [10.3 Regular Expression](#103-regular-expression)
-12. [Tầng 11: Development Practices](#tầng-11-development-practices)
+11. [Tầng 11: Development Practices](#tầng-11-development-practices)
     - [11.1 Testing](#111-testing)
     - [11.2 Logging](#112-logging)
     - [11.3 Dependency Injection](#113-dependency-injection)
     - [11.4 Configuration](#114-configuration)
     - [11.5 Build & Package Management](#115-build--package-management)
     - [11.6 Documentation](#116-documentation)
-13. [Tầng 12: Advanced Concepts](#tầng-12-advanced-concepts)
+12. [Tầng 12: Advanced Concepts](#tầng-12-advanced-concepts)
     - [12.1 Advanced Concepts](#121-advanced-concepts)
-14. [Tầng 13: Memory Layout](#tầng-13-memory-layout)
+13. [Tầng 13: Memory Layout](#tầng-13-memory-layout)
     - [13.1 Object Layout](#131-object-layout)
     - [13.2 Array/String Layout](#132-arraystring-layout)
-15. [Tầng 14: Compilation Model](#tầng-14-compilation-model)
+14. [Tầng 14: Compilation Model](#tầng-14-compilation-model)
     - [14.1 Interpreter](#141-interpreter)
     - [14.2 Bytecode](#142-bytecode)
     - [14.3 JIT](#143-jit)
-16. [Tầng 15: Linking Model](#tầng-15-linking-model)
+15. [Tầng 15: Linking Model](#tầng-15-linking-model)
     - [15.1 Module Loading](#151-module-loading)
-17. [Tầng 16: Runtime](#tầng-16-runtime)
+16. [Tầng 16: Runtime](#tầng-16-runtime)
     - [16.1 Stack Frame](#161-stack-frame)
     - [16.2 Garbage Collector](#162-garbage-collector)
-18. [Tầng 17: Language Design Patterns](#tầng-17-language-design-patterns)
+17. [Tầng 17: Language Design Patterns](#tầng-17-language-design-patterns)
     - [17.1 Duck Typing](#171-duck-typing)
     - [17.2 Context Managers](#172-context-managers)
-19. [Tầng 18: Standard Library](#tầng-18-standard-library)
+18. [Tầng 18: Standard Library](#tầng-18-standard-library)
     - [18.1 Collections](#181-collections)
     - [18.2 Utilities](#182-utilities)
     - [18.3 I/O & System](#183-io--system)
-20. [Tầng 19: Ecosystem](#tầng-19-ecosystem)
+19. [Tầng 19: Ecosystem](#tầng-19-ecosystem)
     - [19.1 Web Frameworks](#191-web-frameworks)
     - [19.2 Database & ORM](#192-database--orm)
     - [19.3 Testing](#193-testing)
     - [19.4 Data Science & ML](#194-data-science--ml)
-21. [Tầng 20: Toolchain](#tầng-20-toolchain)
+20. [Tầng 20: Toolchain](#tầng-20-toolchain)
     - [20.1 Build & Package Management](#201-build--package-management)
     - [20.2 Code Quality](#202-code-quality)
     - [20.3 IDE & Debugging](#203-ide--debugging)
 
 ---
 
-## 1. Phân Loại Ngôn Ngữ
+## 0. Phân Loại Ngôn Ngữ
 
 ### Chạy File Python
 
@@ -109,7 +109,7 @@ python -m module_name
 
 ---
 
-## 2. Tầng 1: Syntax & Semantics
+## 1. Tầng 1: Syntax & Semantics
 
 ### 1.1. Khai Báo Biến (Variable Declaration)
 
@@ -519,9 +519,9 @@ grade = "A" if score >= 90 else "B" if score >= 80 else "C"
 
 ---
 
-## 3. Tầng 2: Type System
+## 2. Tầng 2: Type System
 
-### 1.5. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
+### 2.1. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
 
 #### Integer
 
@@ -741,7 +741,7 @@ callable(callable_class())  # True nếu có __call__
 
 ---
 
-### 1.6. Enum (Python 3.4+)
+### 2.2. Enum (Python 3.4+)
 
 ```python
 from enum import Enum, auto
@@ -783,7 +783,7 @@ Color.RED == Color.GREEN  # False
 
 ---
 
-### 1.7. Nullable Types
+### 2.3. Nullable Types
 
 ```python
 # Python không có null type riêng
@@ -804,7 +804,7 @@ def process(value: Union[str, int]) -> str:
 
 ---
 
-### 1.8. Null Safety
+### 2.4. Null Safety
 
 ```python
 # Python không có built-in null safety
@@ -828,7 +828,7 @@ if (name := get_name()) is not None:
 
 ---
 
-### 1.9. Generics
+### 2.5. Generics
 
 ```python
 # Generics với typing module
@@ -866,7 +866,7 @@ T = Union[str, int]  # str | int (Python 3.10+)
 
 ---
 
-### 1.10. Collection Operations
+### 2.6. Collection Operations
 
 #### Map/Transform
 
@@ -1029,7 +1029,7 @@ for i, name in enumerate(names):
 
 ---
 
-### 1.11. String Operations
+### 2.7. String Operations
 
 #### Concatenation
 
@@ -1147,9 +1147,9 @@ text.endswith("World")    # True
 
 ---
 
-## 4. Tầng 3: OOP & Type Relationships
+## 3. Tầng 3: OOP & Type Relationships
 
-### 1.12. Class/Object
+### 3.1. Class/Object
 
 #### Class Definition
 
@@ -1293,7 +1293,7 @@ user = (UserBuilder()
 
 ---
 
-### 1.13. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
+### 3.2. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
 
 #### Inheritance
 
@@ -1394,7 +1394,7 @@ Duck.__mro__
 
 ---
 
-### 1.14. Interface/Trait/Protocol
+### 3.3. Interface/Trait/Protocol
 
 #### Protocol (Python 3.8+)
 
@@ -1461,7 +1461,7 @@ class MemoryStorage(Storage):
 
 ---
 
-### 1.15. Visibility/Access Modifiers
+### 3.4. Visibility/Access Modifiers
 
 ```python
 class Example:
@@ -1500,9 +1500,9 @@ class Person:
 
 ---
 
-## 5. Tầng 4: Memory Model
+## 4. Tầng 4: Memory Model
 
-### 1.16. Memory Management
+### 4.1. Memory Management
 
 #### Garbage Collection
 
@@ -1573,7 +1573,7 @@ asizeof.asizeof(x)  # More accurate size
 
 ---
 
-### 1.17. Property & Getter/Setter
+### 4.2. Property & Getter/Setter
 
 ```python
 class Temperature:
@@ -1607,9 +1607,9 @@ print(temp.fahrenheit)  # 77.0
 
 ---
 
-## 6. Tầng 5: Concurrency Model
+## 5. Tầng 5: Concurrency Model
 
-### 1.18. Concurrency/Async
+### 5.1. Concurrency/Async
 
 #### Threading
 
@@ -1726,9 +1726,9 @@ results = asyncio.run(fetch_urls(urls))
 
 ---
 
-## 7. Tầng 6: Paradigm
+## 6. Tầng 6: Paradigm
 
-### 1.19. Functional Programming
+### 6.1. Functional Programming
 
 #### Pure Function
 
@@ -1827,9 +1827,9 @@ cube(5)    # 125
 
 ---
 
-## 8. Tầng 7: Error Handling
+## 7. Tầng 7: Error Handling
 
-### 1.20. Xử Lý Lỗi (Error Handling)
+### 7.1. Xử Lý Lỗi (Error Handling)
 
 #### Try-Except
 
@@ -1921,7 +1921,7 @@ def level1():
 
 ---
 
-### 1.21. Error Types
+### 7.2. Error Types
 
 #### Built-in Exceptions
 
@@ -1964,9 +1964,9 @@ class ConnectionError(DatabaseError):
 
 ---
 
-## 9. Tầng 8: Module & Organization
+## 8. Tầng 8: Module & Organization
 
-### 1.22. Import/Module
+### 8.1. Import/Module
 
 #### Import
 
@@ -2043,7 +2043,7 @@ importlib.reload(numpy)  # Reload module
 
 ---
 
-### 1.23. Extension Methods
+### 8.2. Extension Methods
 
 #### Monkey Patching
 
@@ -2065,9 +2065,9 @@ person.greet()  # "Hello, John"
 
 ---
 
-## 10. Tầng 9: I/O & Networking
+## 9. Tầng 9: I/O & Networking
 
-### 1.24. HTTP & Networking
+### 9.1. HTTP & Networking
 
 #### Built-in urllib
 
@@ -2139,7 +2139,7 @@ result = asyncio.run(fetch())
 
 ---
 
-### 1.25. File I/O
+### 9.2. File I/O
 
 #### Read File
 
@@ -2226,9 +2226,9 @@ json.dumps(data, indent=2, sort_keys=True)
 
 ---
 
-## 11. Tầng 10: Data & Serialization
+## 10. Tầng 10: Data & Serialization
 
-### 1.26. JSON & Serialization
+### 10.1. JSON & Serialization
 
 #### JSON
 
@@ -2275,7 +2275,7 @@ with open("data.pkl", "rb") as f:
 
 ---
 
-### 1.27. Date & Time
+### 10.2. Date & Time
 
 #### datetime
 
@@ -2329,7 +2329,7 @@ dt_utc = dt_ny.astimezone(timezone.utc)
 
 ---
 
-### 1.28. Regular Expression
+### 10.3. Regular Expression
 
 ```python
 import re
@@ -2363,9 +2363,9 @@ email_pattern.findall(text)
 
 ---
 
-## 12. Tầng 11: Development Practices
+## 11. Tầng 11: Development Practices
 
-### 1.29. Testing
+### 11.1. Testing
 
 #### unittest
 
@@ -2459,7 +2459,7 @@ with patch('module.function', wraps=module.function) as spy:
 
 ---
 
-### 1.30. Logging
+### 11.2. Logging
 
 ```python
 import logging
@@ -2488,7 +2488,7 @@ logger.setLevel(logging.INFO)
 
 ---
 
-### 1.31. Dependency Injection
+### 11.3. Dependency Injection
 
 ```python
 # Constructor injection
@@ -2526,7 +2526,7 @@ class UserService:
 
 ---
 
-### 1.32. Configuration
+### 11.4. Configuration
 
 #### Environment Variables
 
@@ -2569,7 +2569,7 @@ with open("config.json") as f:
 
 ---
 
-### 1.33. Build & Package Management
+### 11.5. Build & Package Management
 
 #### pip
 
@@ -2617,7 +2617,7 @@ line-length = 88
 
 ---
 
-### 1.34. Documentation
+### 11.6. Documentation
 
 #### Docstring
 
@@ -2663,9 +2663,9 @@ class MyClass:
 
 ---
 
-## 13. Tầng 12: Advanced Concepts
+## 12. Tầng 12: Advanced Concepts
 
-### 1.35. Advanced Concepts
+### 12.1. Advanced Concepts
 
 #### Reflection
 
@@ -2846,9 +2846,9 @@ with managed_resource() as r:
 
 ---
 
-## 14. Tầng 13: Memory Layout
+## 13. Tầng 13: Memory Layout
 
-### 3.1. Object Layout
+### 13.1. Object Layout
 
 #### Python Objects
 
@@ -2918,9 +2918,9 @@ for stat in top_stats[:10]:
 
 ---
 
-## 15. Tầng 14: Compilation Model
+## 14. Tầng 14: Compilation Model
 
-### 3.2. Interpreter & Bytecode
+### 14.1. Interpreter & Bytecode
 
 #### CPython Execution
 
@@ -2979,9 +2979,9 @@ py_compile.compile('script.py', cfile='script.pyc')
 
 ---
 
-## 16. Tầng 15: Linking Model
+## 15. Tầng 15: Linking Model
 
-### 3.3. Module Loading
+### 15.1. Module Loading
 
 #### Import System
 
@@ -3004,9 +3004,9 @@ from ..package import module
 
 ---
 
-## 17. Tầng 16: Runtime
+## 16. Tầng 16: Runtime
 
-### 3.4. Stack Frame
+### 16.1. Stack Frame
 
 #### Call Stack
 
@@ -3033,7 +3033,7 @@ def current_frame():
     return frame.f_code.co_name, frame.f_lineno
 ```
 
-### 3.5. Garbage Collector
+### 16.2. Garbage Collector
 
 ```python
 import gc
@@ -3064,9 +3064,9 @@ gc.set_threshold(700, 10, 10)
 
 ---
 
-## 18. Tầng 17: Language Design Patterns
+## 17. Tầng 17: Language Design Patterns
 
-### 3.6. Duck Typing
+### 17.1. Duck Typing
 
 ```python
 # "If it walks like a duck and quacks like a duck, it's a duck"
@@ -3078,38 +3078,41 @@ class Duck:
 
 ---
 
-### 3.7. Context Managers
+### 17.2. Context Managers
 
+```
 class Dog:
-    def speak(self):
-        return "Woof!"
+def speak(self):
+return "Woof!"
 
 def make_speak(obj):
-    return obj.speak()
+return obj.speak()
 
 # Both work!
-make_speak(Duck())  # "Quack!"
-make_speak(Dog())   # "Woof!"
+
+make_speak(Duck()) # "Quack!"
+make_speak(Dog()) # "Woof!"
 
 # Protocol-based (Python 3.8+)
+
 from typing import Protocol
 
 class Speakable(Protocol):
-    def speak(self) -> str: ...
+def speak(self) -> str: ...
 
 class Cat:
-    def speak(self) -> str:
-        return "Meow!"
+def speak(self) -> str:
+return "Meow!"
 
 def process(obj: Speakable) -> str:
-    return obj.speak()
+return obj.speak()
 
-process(Cat())  # Works!
+process(Cat()) # Works!
 ```
 
 ## 18. Tầng 18: Standard Library
 
-### 3.8. Collections
+### 18.1. Collections
 
 ```python
 # List - dynamic array
@@ -3158,7 +3161,7 @@ from collections import namedtuple
 p = Point(1, 2)
 ```
 
-### 3.9. Utilities
+### 18.2. Utilities
 
 #### itertools
 
@@ -3222,7 +3225,7 @@ def process_str(arg):
     print(f"String: {arg}")
 ```
 
-### 3.10. I/O & System
+### 18.3. I/O & System
 
 ```python
 # File operations
@@ -3269,7 +3272,7 @@ psutil.Process().memory_info()
 
 ## 19. Tầng 19: Ecosystem
 
-### 3.1. Web Frameworks
+### 19.1. Web Frameworks
 
 #### Django
 
@@ -3364,7 +3367,7 @@ async def create_user(user: User):
 
 ---
 
-### 3.1. Database & ORM
+### 19.2. Database & ORM
 
 #### SQLAlchemy
 
@@ -3436,7 +3439,7 @@ user.post_set.all()
 
 ---
 
-### 3.2. Testing
+### 19.3. Testing
 
 #### pytest
 
@@ -3477,7 +3480,7 @@ def test_mock(MockClass):
 
 ## 20. Tầng 20: Toolchain
 
-### 3.1. Build & Package Management
+### 2.1. Build & Package Management
 
 #### NumPy
 
@@ -3563,7 +3566,7 @@ error = mean_squared_error(y_test, predictions)
 
 ## 20. Tầng 20: Toolchain
 
-### 3.1. Build & Package Management
+### 20.2. Build & Package Management
 
 #### pip & venv
 
@@ -3623,7 +3626,7 @@ profile = "black"
 
 ---
 
-### 3.2. Code Quality
+### 20.3. Code Quality
 
 #### Black (Formatter)
 
@@ -3673,18 +3676,18 @@ repos:
 
 ---
 
-### 2.17. IDE & Debugging
+### 20.4. IDE & Debugging
 
 #### VS Code
 
 ```json
 // .vscode/settings.json
 {
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.formatting.provider": "black",
-    "python.testing.pytestEnabled": true,
-    "python.analysis.typeCheckingMode": "basic"
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
+  "python.testing.pytestEnabled": true,
+  "python.analysis.typeCheckingMode": "basic"
 }
 ```
 
@@ -3717,6 +3720,7 @@ breakpoint()
 ## Tổng Kết
 
 Python là ngôn ngữ:
+
 - **Dynamic typing** với optional type annotations (Python 3.5+)
 - **Strong typing** với duck typing
 - **Multi-paradigm**: Functional, OOP, Procedural
@@ -3725,14 +3729,14 @@ Python là ngôn ngữ:
 
 ### Python Version History
 
-| Version | Release Date | Key Features |
-|---------|---------------|--------------|
-| Python 3.0 | 2009-12-03 | Print function, kwargs |
-| Python 3.5 | 2015-09-13 | Type hints, async/await |
-| Python 3.7 | 2018-06-27 | dataclasses, breakpoint() |
-| Python 3.8 | 2019-10-14 | Assignment expressions, positional-only params |
-| Python 3.9 | 2020-10-05 | Pattern matching (preview), built-in types as generics |
-| Python 3.10 | 2021-10-04 | Structural pattern matching, match expression |
-| Python 3.11 | 2022-10-03 | Better error messages, faster execution |
-| Python 3.12 | 2023-10-02 | Better performance, improved typing |
-| Python 3.13 | 2024-10-07 | Free-threaded CPython (experimental) |
+| Version     | Release Date | Key Features                                           |
+| ----------- | ------------ | ------------------------------------------------------ |
+| Python 3.0  | 2009-12-03   | Print function, kwargs                                 |
+| Python 3.5  | 2015-09-13   | Type hints, async/await                                |
+| Python 3.7  | 2018-06-27   | dataclasses, breakpoint()                              |
+| Python 3.8  | 2019-10-14   | Assignment expressions, positional-only params         |
+| Python 3.9  | 2020-10-05   | Pattern matching (preview), built-in types as generics |
+| Python 3.10 | 2021-10-04   | Structural pattern matching, match expression          |
+| Python 3.11 | 2022-10-03   | Better error messages, faster execution                |
+| Python 3.12 | 2023-10-02   | Better performance, improved typing                    |
+| Python 3.13 | 2024-10-07   | Free-threaded CPython (experimental)                   |
