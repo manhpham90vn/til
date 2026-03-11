@@ -3,53 +3,81 @@
 ## Mục Lục
 
 1. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
-2. [Tầng 1: Syntax \& Semantics](#2-tầng-1-syntax--semantics)
-   - [2.1 Khai Báo Biến](#21-khai-báo-biến)
-   - [2.2 Khai Báo Hàm](#22-khai-báo-hàm)
-   - [2.3 Vòng Lặp](#23-vòng-lặp)
-   - [2.4 Điều Kiện](#24-điều-kiện)
-3. [Tầng 2: Type System](#3-tầng-2-type-system)
-   - [2.5 Kiểu Dữ Liệu Cơ Bản](#25-kiểu-dữ-liệu-cơ-bản)
-   - [2.6 Enum](#26-enum)
-   - [2.7 Nullable Types](#27-nullable-types)
-   - [2.8 Null Safety](#28-null-safety)
-   - [2.9 Generics](#29-generics)
-   - [2.10 Collection Operations](#210-collection-operations)
-   - [2.11 String Operations](#211-string-operations)
-4. [Tầng 3: OOP \& Type Relationships](#4-tầng-3-oop--type-relationships)
-   - [2.12 Class/Object](#212-classobject)
-   - [2.13 Kế Thừa \& Đa Hình](#213-kế-thừa--đa-hình)
-   - [2.14 Interface/Trait/Protocol](#214-interfacetraitprotocol)
-   - [2.15 Visibility/Access Modifiers](#215-visibilityaccess-modifiers)
-5. [Tầng 4: Memory Model](#5-tầng-4-memory-model)
-   - [2.16 Memory Management](#216-memory-management)
-   - [2.17 Property \& Getter/Setter](#217-property--gettersetter)
-6. [Tầng 5: Concurrency Model](#6-tầng-5-concurrency-model)
-   - [2.18 Concurrency/Async](#218-concurrencyasync)
-7. [Tầng 6: Paradigm](#7-tầng-6-paradigm)
-   - [2.19 Functional Programming](#219-functional-programming)
-8. [Tầng 7: Error Handling](#8-tầng-7-error-handling)
-   - [2.20 Xử Lý Lỗi](#220-xử-lý-lỗi)
-   - [2.21 Error Types](#221-error-types)
-9. [Tầng 8: Module \& Organization](#9-tầng-8-module--organization)
-   - [2.22 Import/Module](#222-importmodule)
-   - [2.23 Annotation/Attribute](#223-annotationattribute)
-10. [Tầng 9: I/O \& Networking](#10-tầng-9-io--networking)
-    - [2.24 HTTP \& Networking](#224-http--networking)
-    - [2.25 File I/O](#225-file-io)
-11. [Tầng 10: Data \& Serialization](#11-tầng-10-data--serialization)
-    - [2.26 JSON \& Serialization](#226-json--serialization)
-    - [2.27 Date \& Time](#227-date--time)
-    - [2.28 Regular Expression](#228-regular-expression)
-12. [Tầng 11: Development Practices](#12-tầng-11-development-practices)
-    - [2.29 Testing](#229-testing)
-    - [2.30 Logging](#230-logging)
-    - [2.31 Dependency Injection](#231-dependency-injection)
-    - [2.32 Configuration](#232-configuration)
-    - [2.33 Build \& Package Management](#233-build--package-management)
-    - [2.34 Documentation](#234-documentation)
-13. [Tầng 12: Advanced Concepts](#13-tầng-12-advanced-concepts)
-    - [2.35 Advanced Concepts](#235-advanced-concepts)
+2. [Tầng 1: Syntax & Semantics](#tầng-1-syntax--semantics)
+   - [1.1 Khai Báo Biến](#11-khai-báo-biến)
+   - [1.2 Khai Báo Hàm](#12-khai-báo-hàm)
+   - [1.3 Vòng Lặp](#13-vòng-lặp)
+   - [1.4 Điều Kiện](#14-điều-kiện)
+3. [Tầng 2: Type System](#tầng-2-type-system)
+   - [2.1 Kiểu Dữ Liệu Cơ Bản](#21-kiểu-dữ-liệu-cơ-bản)
+   - [2.2 Enum](#22-enum)
+   - [2.3 Nullable Types](#23-nullable-types)
+   - [2.4 Null Safety](#24-null-safety)
+   - [2.5 Generics](#25-generics)
+   - [2.6 Collection Operations](#26-collection-operations)
+   - [2.7 String Operations](#27-string-operations)
+4. [Tầng 3: OOP & Type Relationships](#tầng-3-oop--type-relationships)
+   - [3.1 Class/Object](#31-classobject)
+   - [3.2 Kế Thừa & Đa Hình](#32-kế-thừa--đa-hình)
+   - [3.3 Interface/Trait/Protocol](#33-interfacetraitprotocol)
+   - [3.4 Visibility/Access Modifiers](#34-visibilityaccess-modifiers)
+5. [Tầng 4: Memory Model](#tầng-4-memory-model)
+   - [4.1 Memory Management](#41-memory-management)
+   - [4.2 Property & Getter/Setter](#42-property--gettersetter)
+6. [Tầng 5: Concurrency Model](#tầng-5-concurrency-model)
+   - [5.1 Concurrency/Async](#51-concurrencyasync)
+7. [Tầng 6: Paradigm](#tầng-6-paradigm)
+   - [6.1 Functional Programming](#61-functional-programming)
+8. [Tầng 7: Error Handling](#tầng-7-error-handling)
+   - [8.1 Xử Lý Lỗi](#81-xử-lý-lỗi)
+   - [8.2 Error Types](#82-error-types)
+9. [Tầng 8: Module & Organization](#tầng-8-module--organization)
+   - [8.1 Import/Module](#81-importmodule)
+   - [8.2 Annotation/Attribute](#82-annotationattribute)
+10. [Tầng 9: I/O & Networking](#tầng-9-io--networking)
+    - [9.1 HTTP & Networking](#91-http--networking)
+    - [9.2 File I/O](#92-file-io)
+11. [Tầng 10: Data & Serialization](#tầng-10-data--serialization)
+    - [10.1 JSON & Serialization](#101-json--serialization)
+    - [10.2 Date & Time](#102-date--time)
+    - [10.3 Regular Expression](#103-regular-expression)
+12. [Tầng 11: Development Practices](#tầng-11-development-practices)
+    - [11.1 Testing](#111-testing)
+    - [11.2 Logging](#112-logging)
+    - [11.3 Dependency Injection](#113-dependency-injection)
+    - [11.4 Configuration](#114-configuration)
+    - [11.5 Build & Package Management](#115-build--package-management)
+    - [11.6 Documentation](#116-documentation)
+13. [Tầng 12: Advanced Concepts](#tầng-12-advanced-concepts)
+    - [12.1 Advanced Concepts](#121-advanced-concepts)
+14. [Tầng 13: Memory Layout](#tầng-13-memory-layout)
+    - [13.1 Struct Layout](#131-struct-layout)
+15. [Tầng 14: Compilation Model](#tầng-14-compilation-model)
+    - [14.1 Interpreter & Bytecode](#141-interpreter--bytecode)
+16. [Tầng 15: Linking Model](#tầng-15-linking-model)
+    - [15.1 Dynamic Loading](#151-dynamic-loading)
+17. [Tầng 16: Runtime](#tầng-16-runtime)
+    - [16.1 Stack & Call Stack](#161-stack--call-stack)
+    - [16.2 Garbage Collector](#162-garbage-collector)
+18. [Tầng 17: Language Design Patterns](#tầng-17-language-design-patterns)
+    - [17.1 RAII Pattern](#171-raii-pattern)
+    - [17.2 Data Transfer Object](#172-data-transfer-object)
+19. [Tầng 18: Standard Library](#tầng-18-standard-library)
+    - [18.1 Collections](#181-collections)
+    - [18.2 Utilities](#182-utilities)
+    - [18.3 I/O & System](#183-io--system)
+    - [18.4 String & Regex](#184-string--regex)
+20. [Tầng 19: Ecosystem](#tầng-19-ecosystem)
+    - [19.1 Web Frameworks](#191-web-frameworks)
+    - [19.2 Database & ORM](#192-database--orm)
+    - [19.3 Testing](#193-testing)
+    - [19.4 DevOps & Infrastructure](#194-devops--infrastructure)
+    - [19.5 Security](#195-security)
+21. [Tầng 20: Toolchain](#tầng-20-toolchain)
+    - [20.1 Build & Package Management](#201-build--package-management)
+    - [20.2 Code Quality](#202-code-quality)
+    - [20.3 IDE & Debugging](#203-ide--debugging)
+    - [20.4 Profiling](#204-profiling)
 
 ---
 
@@ -78,9 +106,9 @@ php -a
 
 ---
 
-## 2. Tầng 1: Syntax & Semantics
+## Tầng 1: Syntax & Semantics
 
-### 2.1. Khai Báo Biến (Variable Declaration)
+### 1.1. Khai Báo Biến (Variable Declaration)
 
 #### Mutable - Biến thường
 
@@ -181,7 +209,7 @@ echo $dynamic;       // "Hello"
 
 ---
 
-### 2.2. Khai Báo Hàm (Function Declaration)
+### 1.2. Khai Báo Hàm (Function Declaration)
 
 #### Function cơ bản
 
@@ -311,7 +339,7 @@ class User {
 
 ---
 
-### 2.3. Vòng Lặp (Loops)
+### 1.3. Vòng Lặp (Loops)
 
 #### For Loop
 
@@ -420,7 +448,7 @@ for ($i = 0; $i < 2; $i++) {
 
 ---
 
-### 2.4. Điều Kiện (Conditionals)
+### 1.4. Điều Kiện (Conditionals)
 
 #### If-Else
 
@@ -511,9 +539,9 @@ $result = match(true) {
 
 ---
 
-## 3. Tầng 2: Type System
+## Tầng 2: Type System
 
-### 2.5. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
+### 2.1. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
 
 #### Integer
 
@@ -629,7 +657,7 @@ function logMessage(string $msg): void {
 
 ---
 
-### 2.6. Enum (PHP 8.1+)
+### 2.2. Enum (PHP 8.1+)
 
 #### Basic Enum
 
@@ -714,7 +742,7 @@ $name = OrderStatus::Paid->name;          // 'Paid'
 
 ---
 
-### 2.7. Nullable Types
+### 2.3. Nullable Types
 
 #### Nullable
 
@@ -763,7 +791,7 @@ $country = $user?->getAddress()?->getCountry();
 
 ---
 
-### 2.8. Null Safety
+### 2.4. Null Safety
 
 #### Elvis Operator
 
@@ -786,7 +814,7 @@ $user['name'] ??= "Guest";  // Chỉ gán nếu null
 
 ---
 
-### 2.9. Generics
+### 2.5. Generics
 
 #### PHP không có Generics như Java/C#
 
@@ -827,7 +855,7 @@ class Container {
 
 ---
 
-### 2.10. Collection Operations
+### 2.6. Collection Operations
 
 PHP sử dụng các hàm array_* hoặc class từ SPL.
 
@@ -961,7 +989,7 @@ $combined = array_combine($names, $values);
 
 ---
 
-### 2.11. String Operations
+### 2.7. String Operations
 
 #### Concatenation
 
@@ -1131,9 +1159,9 @@ mb_strlen($str);     // 5 ký tự (cho UTF-8)
 
 ---
 
-## 4. Tầng 3: OOP & Type Relationships
+## Tầng 3: OOP & Type Relationships
 
-### 2.12. Class/Object
+### 3.1. Class/Object
 
 #### Class Definition
 
@@ -1284,7 +1312,7 @@ $user = (new UserBuilder('John'))
 
 ---
 
-### 2.13. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
+### 3.2. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
 
 #### Inheritance
 
@@ -1398,7 +1426,7 @@ function printArea(Shape $shape): void {
 
 ---
 
-### 2.14. Interface/Trait/Protocol
+### 3.3. Interface/Trait/Protocol
 
 #### Interface
 
@@ -1495,7 +1523,7 @@ class MyClass {
 
 ---
 
-### 2.15. Visibility/Access Modifiers
+### 3.4. Visibility/Access Modifiers
 
 ```php
 class User {
@@ -1527,9 +1555,9 @@ function globalFunction() {}  // public
 
 ---
 
-## 5. Tầng 4: Memory Model
+## Tầng 4: Memory Model
 
-### 2.16. Memory Management
+### 4.1. Memory Management
 
 #### Garbage Collection
 
@@ -1572,7 +1600,7 @@ echo memory_get_peak_usage();
 
 ---
 
-### 2.17. Property & Getter/Setter
+### 4.2. Property & Getter/Setter
 
 #### Public Property
 
@@ -1648,9 +1676,9 @@ class HeavyObject {
 
 ---
 
-## 6. Tầng 5: Concurrency Model
+## Tầng 5: Concurrency Model
 
-### 2.18. Concurrency/Async
+### 5.1. Concurrency/Async
 
 #### Threads
 
@@ -1768,9 +1796,9 @@ if ($pid == -1) {
 
 ---
 
-## 7. Tầng 6: Paradigm
+## Tầng 6: Paradigm
 
-### 2.19. Functional Programming
+### 6.1. Functional Programming
 
 #### Pure Function
 
@@ -1846,9 +1874,9 @@ echo $mulBy2(5);  // 10
 
 ---
 
-## 8. Tầng 7: Error Handling
+## Tầng 7: Error Handling
 
-### 2.20. Xử Lý Lỗi (Error Handling)
+### 7.1. Xử Lý Lỗi (Error Handling)
 
 #### Try-Catch
 
@@ -1926,7 +1954,7 @@ function calculate(): int {
 
 ---
 
-### 2.21. Error Types
+### 7.2. Error Types
 
 ```php
 // Throwable interface
@@ -1959,9 +1987,9 @@ $a = 1 / 0;  // DivisionByZeroError
 
 ---
 
-## 9. Tầng 8: Module & Organization
+## Tầng 8: Module & Organization
 
-### 2.22. Import/Module
+### 8.1. Import/Module
 
 #### Require/Include
 
@@ -2038,7 +2066,7 @@ class_alias(User::class, 'User');
 
 ---
 
-### 2.23. Annotation/Attribute
+### 8.2. Annotation/Attribute
 
 #### Attributes (PHP 8.0+)
 
@@ -2090,9 +2118,9 @@ $config = new Config(port: 8080);
 
 ---
 
-## 10. Tầng 9: I/O & Networking
+## Tầng 9: I/O & Networking
 
-### 2.24. HTTP & Networking
+### 9.1. HTTP & Networking
 
 #### Built-in cURL
 
@@ -2155,7 +2183,7 @@ $response = $promise->wait();
 
 ---
 
-### 2.25. File I/O
+### 9.2. File I/O
 
 #### Read File
 
@@ -2235,9 +2263,9 @@ Co\run(function() {
 
 ---
 
-## 11. Tầng 10: Data & Serialization
+## Tầng 10: Data & Serialization
 
-### 2.26. JSON & Serialization
+### 10.1. JSON & Serialization
 
 #### JSON Encode/Decode
 
@@ -2303,7 +2331,7 @@ $json = json_encode(new Person('John', '123-45-6789'));
 
 ---
 
-### 2.27. Date & Time
+### 10.2. Date & Time
 
 #### DateTime Class
 
@@ -2385,7 +2413,7 @@ $date->endOfMonth();
 
 ---
 
-### 2.28. Regular Expression
+### 10.3. Regular Expression
 
 #### preg_* functions
 
@@ -2450,9 +2478,9 @@ preg_match('/(?<area>\d{3})-(?<number>\d{4})/', '123-4567', $matches);
 
 ---
 
-## 12. Tầng 11: Development Practices
+## Tầng 11: Development Practices
 
-### 2.29. Testing
+### 11.1. Testing
 
 #### PHPUnit
 
@@ -2551,7 +2579,7 @@ $this->assertCount(3, $array);
 
 ---
 
-### 2.30. Logging
+### 11.2. Logging
 
 #### Native Error Logging
 
@@ -2595,7 +2623,7 @@ $log->info('User logged in', [
 
 ---
 
-### 2.31. Dependency Injection
+### 11.3. Dependency Injection
 
 #### Constructor Injection
 
@@ -2663,7 +2691,7 @@ class Container implements ContainerInterface {
 
 ---
 
-### 2.32. Configuration
+### 11.4. Configuration
 
 #### Environment Variables
 
@@ -2720,7 +2748,7 @@ for ($i = 1; $i < $argc; $i++) {
 
 ---
 
-### 2.33. Build & Package Management
+### 11.5. Build & Package Management
 
 #### Composer (Dependency Manager)
 
@@ -2775,7 +2803,7 @@ vendor/bin/php-cs-fixer fix --rules=@PSR12 src/
 
 ---
 
-### 2.34. Documentation
+### 11.6. Documentation
 
 #### Comment
 
@@ -2807,9 +2835,9 @@ function add(int $a, int $b): int {
 
 ---
 
-## 13. Tầng 12: Advanced Concepts
+## Tầng 12: Advanced Concepts
 
-### 2.35. Advanced Concepts
+### 12.1. Advanced Concepts
 
 #### Reflection
 
@@ -2945,6 +2973,608 @@ class HeavyService {
         $this->data = computeExpensiveData();
     }
 }
+```
+
+---
+
+## Tầng 13: Memory Layout
+
+### 3.1. Struct Layout
+
+#### PHP không có Struct
+
+PHP là ngôn ngữ thuần hướng đối tượng, không có struct như C. Tuy nhiên có thể dùng:
+
+```php
+// Dùng class đơn giản thay struct
+class Point {
+    public function __construct(
+        public float $x = 0.0,
+        public float $y = 0.0,
+    ) {}
+}
+
+// Hoặc dùng stdClass
+$point = (object) ['x' => 1.0, 'y' => 2.0];
+```
+
+#### Memory Layout
+
+```php
+// PHP sử dụng zval structure cho mỗi value
+// Bao gồm: type, value, is_ref, refcount
+
+$a = "hello";  // Tạo zval mới
+$b = $a;       // Tăng refcount, không copy
+$b = "world";  // Tạo zval mới cho $b (copy-on-write)
+
+// Object luôn là reference
+$obj1 = new stdClass();
+$obj2 = $obj1;  // Cùng reference, không copy
+$obj2->name = "test";
+echo $obj1->name; // "test"
+```
+
+---
+
+## Tầng 14: Compilation Model
+
+### 3.2. Interpreter & Bytecode
+
+#### PHP là Interpreted Language
+
+```php
+// PHP chạy qua Zend Engine
+// 1. Lexical analysis -> tokens
+// 2. Parsing -> AST
+// 3. Compilation -> OPcodes (bytecode)
+// 4. Execution -> Zend VM
+
+// Xem opcode với VLD (Visual Dump)
+```
+
+#### OPcache (PHP 5.5+)
+
+```php
+// OPcache lưu bytecode vào memory
+// Cấu hình trong php.ini:
+
+// opcache.enable=1
+// opcache.memory_consumption=128
+// opcache.max_accelerated_files=10000
+
+// Kiểm tra status
+opcache_get_status();
+```
+
+#### JIT (PHP 8.0+)
+
+```php
+// JIT compilation trong PHP 8.0+
+// Cấu hình:
+
+// opcache.jit_buffer_size=100M
+// opcache.jit=Tracing
+
+// Kiểm tra JIT
+opcache_get_status()['jit'];
+```
+
+---
+
+## Tầng 15: Linking Model
+
+### 3.3. Dynamic Loading
+
+#### Extension Loading
+
+```php
+// Load extension động
+dl('gd.so');  // Deprecated trong PHP 8+
+// Nên dùng php.ini
+
+// Kiểm tra extension đã load
+extension_loaded('gd');           // true/false
+get_loaded_extensions();          // Array các extension
+
+// Lấy version
+phpversion('gd');
+```
+
+#### autoload (PSR-4)
+
+```php
+// composer.json autoload
+// "autoload": {
+//     "psr-4": {
+//         "App\\": "app/"
+//     }
+// }
+
+// Hoặc đăng ký manual
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $base_dir = __DIR__ . '/app/';
+
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) return;
+
+    $relativeClass = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relativeClass) . '.php';
+
+    if (file_exists($file)) require $file;
+});
+```
+
+---
+
+## Tầng 16: Runtime
+
+### 3.4. Stack & Call Stack
+
+#### Call Stack
+
+```php
+// PHP có call stack limit (mặc định 1000)
+// Tăng limit
+ini_set('xdebug.max_nesting_level', 500);
+
+// Xem stack trace
+debug_print_backtrace();
+
+// Exception stack trace
+try {
+    // code
+} catch (Exception $e) {
+    $e->getTrace();      // Array của stack frames
+    $e->getTraceAsString();
+}
+```
+
+#### Exception Unwinding
+
+```php
+function level3() {
+    throw new Exception("Error in level3");
+}
+
+function level2() {
+    level3();  // Exception sẽ propagate lên
+}
+
+function level1() {
+    try {
+        level2();
+    } catch (Exception $e) {
+        echo "Caught: " . $e->getMessage();
+        throw $e;  // Re-throw
+    } finally {
+        echo "Always executed\n";  // Cleanup
+    }
+}
+```
+
+### 3.5. Garbage Collector
+
+#### Reference Counting
+
+```php
+// PHP dùng refcount cho GC
+// Mỗi variable có refcount
+
+$a = "hello";  // refcount = 1
+$b = $a;       // refcount = 2
+unset($a);     // refcount = 1
+
+// Cycle garbage collector tự động chạy
+// Khi refcount > 0 nhưng không thể reach
+
+// Kiểm tra GC
+gc_enabled();           // true
+gc_collect_cycles();   // Số cycles thu gom được
+```
+
+---
+
+## Tầng 17: Language Design Patterns
+
+### 3.6. RAII Pattern
+
+#### PHP không có RAII thực sự
+
+```php
+// PHP dùng __destructor cho cleanup
+class FileHandle {
+    private $handle;
+
+    public function __construct(string $filename) {
+        $this->handle = fopen($filename, 'r');
+    }
+
+    public function __destruct() {
+        if ($this->handle) {
+            fclose($this->handle);
+        }
+    }
+}
+
+// PHP 8.0+ dùng try-with-resources
+try {
+    $handle = fopen('file.txt', 'r');
+    // Tự động gọi __destruct khi thoát scope
+} finally {
+    // Hoặc dùng finally
+}
+```
+
+### 3.7. Data Transfer Object (DTO)
+
+```php
+// Dùng array hoặc class
+class UserDTO {
+    public function __construct(
+        public readonly int $id,
+        public readonly string $name,
+        public readonly ?string $email,
+    ) {}
+
+    public static function fromArray(array $data): self {
+        return new self(
+            id: $data['id'],
+            name: $data['name'],
+            email: $data['email'] ?? null,
+        );
+    }
+
+    public function toArray(): array {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+        ];
+    }
+}
+
+// JSON serialization
+$json = json_encode(new UserDTO(1, 'John', 'john@example.com'));
+```
+
+---
+
+## Tầng 18: Standard Library
+
+### 3.8. Collections
+
+#### Arrays (vừa là List vừa là Map)
+
+```php
+// List/ArrayList
+$list = [1, 2, 3];
+$list[] = 4;
+count($list);  // 4
+
+// Map/HashMap
+$map = ['a' => 1, 'b' => 2];
+$map['c'] = 3;
+
+// Set (dùng array với null values)
+$set = [1 => true, 2 => true, 3 => true];
+
+// Stack
+$stack = [];
+array_push($stack, 1, 2, 3);
+$top = array_pop($stack);
+
+// Queue
+$queue = [];
+array_push($queue, 1, 2, 3);
+$item = array_shift($queue);
+```
+
+### 3.9. Utilities
+
+#### Option/Result (thủ công)
+
+```php
+// PHP không có built-in Option/Result
+// Dùng array hoặc null
+
+function findUser(int $id): ?User {
+    // Return User hoặc null
+}
+
+// Dùng union type (PHP 8.0+)
+function findUser(int $id): User|null {
+    return null;
+}
+
+// Result pattern với exceptions
+try {
+    $user = findUser(1);
+} catch (UserNotFoundException $e) {
+    // Handle error
+}
+```
+
+#### Iterator
+
+```php
+// Dùng Iterator interface
+class RangeIterator implements Iterator {
+    private int $current = 0;
+    private int $max;
+
+    public function __construct(int $max) {
+        $this->max = $max;
+    }
+
+    public function current(): int { return $this->current; }
+    public function key(): int { return $this->current; }
+    public function next(): void { $this->current++; }
+    public function rewind(): void { $this->current = 0; }
+    public function valid(): bool { return $this->current < $this->max; }
+}
+
+foreach (new RangeIterator(5) as $i) {
+    echo $i; // 0,1,2,3,4
+}
+```
+
+### 3.10. I/O & System
+
+```php
+// File
+$content = file_get_contents('file.txt');
+file_put_contents('file.txt', 'content');
+
+// Process
+$output = [];
+$returnVar = 0;
+exec('ls -la', $output, $returnVar);
+
+// Environment
+$env = getenv('PATH');
+putenv('MY_VAR=value');
+
+// Command line
+$argv = $GLOBALS['argv'];  // Arguments
+$argc = $GLOBALS['argc']; // Count
+
+// Time
+$now = time();
+$date = date('Y-m-d H:i:s');
+```
+
+### 3.11. String & Regex
+
+```php
+// String methods
+$str = "Hello World";
+strlen($str);           // 11
+strtoupper($str);       // HELLO WORLD
+strtolower($str);       // hello world
+trim($str);             // Remove whitespace
+explode(' ', $str);     // ['Hello', 'World']
+implode(' ', ['a','b']);// 'a b'
+substr($str, 0, 5);     // 'Hello'
+str_replace('World', 'PHP', $str); // 'Hello PHP'
+
+// Regex
+preg_match('/(\w+) (\w+)/', $str, $matches);
+preg_replace('/\d/', '#', $str);
+preg_split('/\s+/', $str);
+```
+
+---
+
+## Tầng 19: Ecosystem
+
+### 3.12. Web Frameworks
+
+#### Popular Frameworks
+
+```php
+// Laravel (most popular)
+$router->get('/user/{id}', [UserController::class, 'show']);
+
+// Symfony (enterprise)
+use Symfony\Component\Routing\Annotation\Route;
+class UserController {
+    #[Route('/user/{id}', methods: ['GET'])]
+    public function show(int $id): Response { }
+}
+
+// Slim (microframework)
+$app->get('/hello/{name}', function ($request, $response, $args) {
+    return $response->write("Hello " . $args['name']);
+});
+```
+
+### 3.13. Database & ORM
+
+```php
+// PDO (native)
+$pdo = new PDO('mysql:host=localhost;dbname=test', 'user', 'pass');
+$stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
+$stmt->execute([$id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Eloquent (Laravel ORM)
+$user = User::find($id);
+$users = User::where('active', true)->get();
+
+// Doctrine ORM
+$entityManager->find(User::class, $id);
+$query = $entityManager->createQuery('SELECT u FROM User u');
+```
+
+### 3.14. Testing
+
+```php
+// PHPUnit
+use PHPUnit\Framework\TestCase;
+
+class UserTest extends TestCase {
+    public function testCreateUser(): void {
+        $user = new User('John', 'john@example.com');
+        $this->assertEquals('John', $user->getName());
+        $this->assertNotNull($user->getEmail());
+    }
+
+    public function testException(): void {
+        $this->expectException(InvalidArgumentException::class);
+        throw new InvalidArgumentException('Invalid email');
+    }
+}
+
+// Mock với PHPUnit
+$mock = $this->createMock(UserRepository::class);
+$mock->method('find')->willReturn(new User('Mocked'));
+```
+
+### 3.15. DevOps & Infrastructure
+
+```php
+// Docker (Dockerfile)
+// FROM php:8.2-cli
+// RUN docker-php-ext-install pdo mysql
+// COPY . /app
+// CMD ["php", "server.php"]
+
+// Kubernetes (deployment.yaml)
+// apiVersion: apps/v1
+// kind: Deployment
+// spec:
+//   replicas: 3
+//   template:
+//     spec:
+//       containers:
+//         - name: php-app
+//           image: myapp:php8.2
+
+// Composer scripts cho CI/CD
+// "scripts": {
+//     "test": "phpunit",
+//     "lint": "phpcs src",
+//     "fix": "phpcbf src"
+// }
+```
+
+### 3.16. Security
+
+```php
+// Password hashing
+$hash = password_hash('password', PASSWORD_BCRYPT);
+password_verify('password', $hash);
+
+// JWT (dùng firebase/php-jwt)
+use Firebase\JWT\JWT;
+$payload = ['user_id' => 1, 'exp' => time() + 3600];
+$token = JWT::encode($payload, 'secret_key', 'HS256');
+
+// Input sanitization
+$name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+
+// SQL injection prevention (dùng prepared statements)
+$stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
+$stmt->execute([$id]);
+```
+
+---
+
+## Tầng 20: Toolchain
+
+### 3.17. Build & Package Management
+
+#### Composer
+
+```php
+// composer.json
+{
+    "name": "vendor/project",
+    "require": {
+        "php": "^8.1",
+        "laravel/framework": "^10.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
+
+// Commands
+// composer install
+// composer update
+// composer require vendor/package
+// composer dump-autoload
+```
+
+### 3.18. Code Quality
+
+```php
+// PHP_CodeSniffer (linting)
+phpcs src/ --standard=PSR12
+
+// PHP-CS-Fixer (formatter)
+php-cs-fixer fix src/ --rules=@PSR12
+
+// PHPStan (static analysis)
+phpstan analyse src/ --level=5
+
+// Psalm (type checking)
+psalm src/
+
+// Rector (automated refactoring)
+vendor/bin/rector process src/
+```
+
+### 3.19. IDE & Debugging
+
+```php
+// Xdebug configuration (php.ini)
+// xdebug.mode=debug
+// xdebug.start_with_request=yes
+// xdebug.client_host=localhost
+// xdebug.client_port=9003
+
+// Debug trong code
+var_dump($variable);
+print_r($variable);
+
+// Xdebug
+xdebug_print_function_stack();
+
+// PHPStorm features:
+// - PHP type inference
+// - PHPUnit integration
+// - Composer support
+// - Xdebug integration
+```
+
+### 3.20. Profiling
+
+```php
+// Xdebug profiling
+// xdebug.mode=profile
+// xdebug.output_dir=/tmp/profiler
+
+// Tideways/XHGui
+composer require tideways/php-profiler extension
+
+// Built-in performance monitoring
+$start = microtime(true);
+// code to measure
+$duration = microtime(true) - $start;
+
+// PHP 8.2+ performance hints
+// #[\SensitiveParameter]
+function process(?string $input) { }
 ```
 
 ---
