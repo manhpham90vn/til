@@ -36,6 +36,9 @@
 
 | Ngôn ngữ       | Loại                | Biên dịch/Thông dịch | Typing            |
 | -------------- | ------------------- | -------------------- | ----------------- |
+| **C**          | Systems Programming | Compiled (AOT)       | Static, Weak      |
+| **C++**        | Systems Programming | Compiled (AOT)       | Static, Strong    |
+| **Java**       | Enterprise/JVM      | Compiled (Bytecode)  | Static, Strong    |
 | **Rust**       | Systems Programming | Compiled (AOT)       | Static, Strong    |
 | **Go**         | Systems/Server      | Compiled (AOT)       | Static, Strong    |
 | **Python**     | General Purpose     | Interpreted/Bytecode | Dynamic, Strong   |
@@ -50,11 +53,14 @@
 
 | Ngôn ngữ       | Paradigm                                           |
 | -------------- | -------------------------------------------------- |
+| **C**          | Procedural, Imperative                             |
+| **C++**        | Multi-paradigm (Procedural, OO, Generic)           |
+| **Java**       | Object-Oriented, (Functional từ Java 8+)           |
 | **Rust**       | Multi-paradigm (Functional, OO, Imperative)        |
 | **Go**         | Concurrent, Imperative, Procedural                 |
 | **Python**     | Multi-paradigm (Functional, OO, Procedural)        |
 | **TypeScript** | Object-Oriented, Functional                        |
-| **JavaScript** | Multi-paradigm (Prototype-based, Functional)       |
+| **JavaScript** | Multi-paradigm (Prototype-based, Functional)       |t
 | **Swift**      | Multi-paradigm (Protocol-oriented, Functional, OO) |
 | **Kotlin**     | Multi-paradigm (Functional, OO)                    |
 | **Dart**       | Multi-paradigm (Class-based, Functional)           |
@@ -64,6 +70,9 @@
 
 | Ngôn ngữ       | Use Cases                                                      |
 | -------------- | -------------------------------------------------------------- |
+| **C**          | Systems programming, Embedded systems, OS kernels, Drivers    |
+| **C++**        | Systems programming, Game engines, High-performance apps      |
+| **Java**       | Enterprise apps, Android, Backend (Spring), Big Data          |
 | **Rust**       | Systems programming, WebAssembly, CLI tools, Blockchain        |
 | **Go**         | Backend servers, Cloud services, DevOps tools, Microservices   |
 | **Python**     | Data science, ML/AI, Automation, Web (Django/Flask), Scripting |
