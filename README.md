@@ -3,7 +3,30 @@
 ## Mục Lục
 
 1. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
-2. [Danh Sách Khái Niệm & Trường Hợp Sử Dụng](#2-danh-sách-khái-niệm--trường-hợp-sử-dụng)
+2. [Cấu Trúc Khái Niệm Theo Tầng](#2-cấu-trúc-khái-niệm-theo-tầng)
+
+### Các Tầng Khái Niệm
+
+- [Tầng 1: Syntax & Semantics](#tầng-1-syntax--semantics-cú-pháp--ngữ-nghĩa)
+- [Tầng 2: Type System](#tầng-2-type-system-hệ-thống-kiểu)
+- [Tầng 3: OOP & Type Relationships](#tầng-3-oop--type-relationships-oop--quan-hệ-kiểu)
+- [Tầng 4: Memory Model](#tầng-4-memory-model-mô-hình-bộ-nhớ)
+- [Tầng 5: Concurrency Model](#tầng-5-concurrency-model-mô-hình-đồng-thời)
+- [Tầng 6: Paradigm](#tầng-6-paradigm-mô-hình-lập-trình)
+- [Tầng 7: Error Handling](#tầng-7-error-handling-xử-lý-lỗi)
+- [Tầng 8: Module & Organization](#tầng-8-module--organization-tổ-chức--module)
+- [Tầng 9: I/O & Networking](#tầng-9-io--networking-nhậpxuất--mạng)
+- [Tầng 10: Data & Serialization](#tầng-10-data--serialization-dữ-liệu--serialization)
+- [Tầng 11: Development Practices](#tầng-11-development-practices-thực-hành-phát-triển)
+- [Tầng 12: Advanced Concepts](#tầng-12-advanced-concepts-khái-niệm-nâng-cao)
+- [Tầng 13: Memory Layout](#tầng-13-memory-layout-bố-trí-bộ-nhớ)
+- [Tầng 14: Compilation Model](#tầng-14-compilation-model-mô-hình-biên-dịch)
+- [Tầng 15: Linking Model](#tầng-15-linking-model-mô-hình-liên-kết)
+- [Tầng 16: Runtime](#tầng-16-runtime)
+- [Tầng 17: Language Design Patterns](#tầng-17-language-design-patterns-mẫu-thiết-kế-ngôn-ngữ)
+- [Tầng 18: Standard Library](#tầng-18-standard-library-thư-viện-chuẩn)
+- [Tầng 19: Ecosystem](#tầng-19-ecosystem-hệ-sinh-thái)
+- [Tầng 20: Toolchain](#tầng-20-toolchain-công-cụ-phát-triển)
 
 ---
 
@@ -47,15 +70,17 @@
 | **TypeScript** | Frontend (React, Vue, Angular), Node.js, Enterprise apps       |
 | **JavaScript** | Frontend web, Node.js, Mobile (React Native)                   |
 | **Swift**      | iOS/macOS apps, Apple ecosystem                                |
-| **Kotlin**     | Android, Backend (Spring), Multiplatform                       |
+| **Kotlin**    | Android, Backend (Spring), Multiplatform                       |
 | **Dart**       | Flutter (Cross-platform mobile), Web                           |
 | **PHP**        | Web backend (Laravel, Symfony), CMS (WordPress)                |
 
 ---
 
-## 2. Danh Sách Khái Niệm & Trường Hợp Sử Dụng
+## 2. Cấu Trúc Khái Niệm Theo Tầng
 
-### 2.1. Khai Báo Biến (Variable Declaration)
+### Tầng 1: Syntax & Semantics (Cú pháp & Ngữ nghĩa)
+
+#### 1.1. Khai Báo Biến (Variable Declaration)
 
 - **Mutable** - Biến có thể thay đổi giá trị
 - **Immutable** - Biến không thể thay đổi sau khi khởi tạo
@@ -66,7 +91,7 @@
 - **Global Variable** - Biến toàn cục
 - **Shadowing** - Biến cùng tên trong scope nhỏ
 
-### 2.2. Khai Báo Hàm (Function Declaration)
+#### 1.2. Khai Báo Hàm (Function Declaration)
 
 - **Function** - Hàm thông thường
 - **Return Type** - Kiểu dữ liệu trả về
@@ -81,7 +106,7 @@
 - **Closure** - Hàm closure (capture biến bên ngoài)
 - **Higher-Order Function** - Hàm nhận/trả về hàm khác
 
-### 2.3. Vòng Lặp (Loops)
+#### 1.3. Vòng Lặp (Loops)
 
 - **For Loop** - Vòng lặp với số lần xác định
 - **For-each/Range** - Duyệt qua collection
@@ -93,7 +118,7 @@
 - **List Comprehension** - Tạo list từ iterable (Python)
 - **Stream Loop** - Duyệt qua stream (Java/Go)
 
-### 2.4. Điều Kiện (Conditionals)
+#### 1.4. Điều Kiện (Conditionals)
 
 - **If-Else** - Rẽ nhánh cơ bản
 - **Switch/Match** - Rẽ nhánh nhiều trường hợp
@@ -104,150 +129,11 @@
 - **Elvis Operator** - Toán tử Elvis (??)
 - **Null Coalescing** - Giá trị mặc định khi null
 
-### 2.5. Struct/Class/Object
+---
 
-- **Struct** - Cấu trúc dữ liệu (value type)
-- **Class** - Lớp đối tượng (reference type)
-- **Constructor** - Hàm tạo đối tượng
-- **Data Class** - Class chỉ chứa dữ liệu
-- **Object** - Thực thể của class
-- **Singleton** - Class chỉ có 1 instance
-- **Factory Method** - Phương thức tạo đối tượng
-- **Builder Pattern** - Pattern xây dựng đối tượng
-- **Static Member** - Thành phần tĩnh (class-level)
-- **Instance Member** - Thành phần instance
+### Tầng 2: Type System (Hệ thống kiểu)
 
-### 2.6. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
-
-- **Inheritance** - Kế thừa từ class cha
-- **Superclass/Parent** - Class cha
-- **Subclass/Child** - Class con
-- **Override** - Ghi đè phương thức
-- **Super** - Tham chiếu đến class cha
-- **Abstract Class** - Class trừu tượng
-- **Sealed Class** - Class giới hạn kế thừa
-- **Final Class** - Class không thể kế thừa
-- **Polymorphism** - Đa hình
-- **Method Overloading** - Nạp chồng phương thức (cùng tên, tham số khác)
-- **Composition** - Thành phần hơn là kế thừa
-
-### 2.7. Interface/Trait/Protocol
-
-- **Interface** - Định nghĩa contract
-- **Trait** - Code reuse (Rust)
-- **Protocol** - Contract (Swift, Go)
-- **Abstract Method** - Phương thức trừu tượng
-- **Default Implementation** - Triển khai mặc định
-- **Static Method** - Phương thức tĩnh trong interface
-- **Multiple Interface** - Implement nhiều interface
-- **Interface Extension** - Mở rộng interface
-
-### 2.8. Enum
-
-- **Basic Enum** - Enum cơ bản
-- **Enum with Values** - Enum có giá trị
-- **Enum with Methods** - Enum có phương thức
-- **Associated Values** - Giá trị đi kèm (Swift)
-- **Pattern Matching Enum** - So khớp enum
-
-### 2.9. Nullable/Option Types
-
-- **Nullable** - Có thể null
-- **Optional** - Giá trị có hoặc không
-- **Null Check** - Kiểm tra null
-- **Unwrap** - Lấy giá trị từ optional
-- **Safe Unwrap** - Unwrap an toàn
-- **None/Null Representation** - Cách biểu diễn không có giá trị
-- **Optional Chaining** - Chuỗi gọi optional
-
-### 2.10. Xử Lý Lỗi (Error Handling)
-
-- **Try-Catch** - Bắt exception
-- **Result/Option** - Return error as value
-- **Error Return** - Trả về lỗi
-- **Throw Exception** - Ném ngoại lệ
-- **Custom Exception** - Exception tự định nghĩa
-- **Finally Block** - Luôn thực thi dù có lỗi
-- **Try-with-resources** - Tự động đóng tài nguyên
-- **Error Propagation** - Truyền lỗi lên trên
-- **Recover** - Khôi phục từ panic (Rust)
-
-### 2.11. Generics
-
-- **Generic Function** - Hàm generic
-- **Generic Class** - Class generic
-- **Type Constraint** - Ràng buộc kiểu
-- **Generic Trait** - Trait generic
-- **Where Clause** - Điều kiện ràng buộc
-- **Bounds** - Giới hạn kiểu
-- **Covariance/Contravariance** - Biến đổi kiểu
-- **Type Erasure** - Xóa kiểu (Java)
-
-### 2.12. Collection Operations
-
-- **Map/Transform** - Biến đổi từng phần tử
-- **Filter** - Lọc phần tử
-- **Reduce/Fold** - Gộp thành một giá trị
-- **FlatMap** - Biến đổi và làm phẳng
-- **Sort** - Sắp xếp
-- **GroupBy** - Nhóm theo key
-- **Find/First/Last** - Tìm phần tử
-- **Any/All/None** - Kiểm tra điều kiện
-- **Take/Skip** - Lấy/bỏ phần tử
-- **Chunk** - Chia thành chunks
-- **Zip** - Kết hợp 2 collections
-
-### 2.13. String Operations
-
-- **Concatenation** - Nối chuỗi
-- **Interpolation** - Chèn biến vào chuỗi
-- **Template String** - Chuỗi template
-- **Split** - Tách chuỗi
-- **Join** - Nối mảng thành chuỗi
-- **Replace** - Thay thế
-- **Trim** - Cắt khoảng trắng
-- **Upper/Lower Case** - Chữ hoa/thường
-- **Regex Match** - So khớp regex
-- **Substring** - Lấy chuỗi con
-- **Length** - Độ dài chuỗi
-
-### 2.14. Concurrency/Async
-
-- **Async/Await** - Hàm bất đồng bộ
-- **Thread** - Luồng
-- **Coroutine** - Coroutine
-- **Goroutine** - Goroutine (Go)
-- **Future/Promise** - Hứa hẹn kết quả tương lai
-- **Task** - Công việc bất đồng bộ
-- **Channel** - Kênh truyền tin (Go, Kotlin)
-- **Mutex/Lock** - Khóa đồng bộ
-- **Atomic** - Biến nguyên tử
-- **Await All/Any** - Chờ nhiều task
-- **Race Condition** - Điều kiện tranh chấp
-- **Deadlock Prevention** - Phòng tránh deadlock
-
-### 2.15. Visibility/Access Modifiers
-
-- **Private** - Chỉ trong cùng file/class
-- **Public** - Có thể truy cập từ bên ngoài
-- **Protected** - Kế thừa được
-- **Internal** - Trong cùng module/project
-- **Fileprivate** - Trong cùng file (Swift)
-- **Open** - Có thể override (Swift/Kotlin)
-- **Default Access** - Quyền truy cập mặc định
-
-### 2.16. Import/Export & Module
-
-- **Import** - Nhập module
-- **Export** - Xuất module
-- **Package** - Gói code
-- **Module Alias** - Đặt tên alias cho module
-- **Selective Import** - Chỉ nhập phần cần thiết
-- **Default Export** - Xuất mặc định
-- **Re-export** - Xuất lại từ module khác
-- **Namespace** - Không gian tên
-
-### 2.17. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
+#### 2.1. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
 
 - **Integer** - Số nguyên (int, i32, u64...)
 - **Float** - Số thực (float, f64, Double)
@@ -262,7 +148,25 @@
 - **Tuple** - Bộ giá trị
 - **Range** - Khoảng giá trị
 
-### 2.18. Null Safety
+#### 2.2. Enum
+
+- **Basic Enum** - Enum cơ bản
+- **Enum with Values** - Enum có giá trị
+- **Enum with Methods** - Enum có phương thức
+- **Associated Values** - Giá trị đi kèm (Swift)
+- **Pattern Matching Enum** - So khớp enum
+
+#### 2.3. Nullable/Option Types
+
+- **Nullable** - Có thể null
+- **Optional** - Giá trị có hoặc không
+- **Null Check** - Kiểm tra null
+- **Unwrap** - Lấy giá trị từ optional
+- **Safe Unwrap** - Unwrap an toàn
+- **None/Null Representation** - Cách biểu diễn không có giá trị
+- **Optional Chaining** - Chuỗi gọi optional
+
+#### 2.4. Null Safety
 
 - **Elvis Operator** - Toán tử Elvis (??)
 - **Safe Call** - Gọi an toàn (?.)
@@ -270,28 +174,102 @@
 - **Let/Apply/Also** - Scope functions với null
 - **Null Object Pattern** - Pattern thay thế null
 
-### 2.19. Property & Getter/Setter
+#### 2.5. Generics
 
-- **Property** - Thuộc tính
-- **Getter** - Lấy giá trị
-- **Setter** - Đặt giá trị
-- **Computed Property** - Thuộc tính tính toán
-- **Lazy Property** - Thuộc tính trì hoãn
-- **Late Init** - Khởi tạo muộn
-- **Backing Field** - Trường lưu trữ
+- **Generic Function** - Hàm generic
+- **Generic Class** - Class generic
+- **Type Constraint** - Ràng buộc kiểu
+- **Generic Trait** - Trait generic
+- **Where Clause** - Điều kiện ràng buộc
+- **Bounds** - Giới hạn kiểu
+- **Covariance/Contravariance** - Biến đổi kiểu
+- **Type Erasure** - Xóa kiểu (Java)
 
-### 2.20. Functional Programming
+#### 2.6. Collection Operations
 
-- **Pure Function** - Hàm thuần túy (không side effect)
-- **Immutability** - Bất biến
-- **First-Class Function** - Hàm như giá trị
-- **Currying** - Chuyển hàm nhiều tham số thành chuỗi
-- **Partial Application** - Áp dụng một phần
-- **Function Composition** - Kết hợp hàm
-- **Monad** - Monad pattern
-- **Functor** - Functor pattern
+- **Map/Transform** - Biến đổi từng phần tử
+- **Filter** - Lọc phần tử
+- **Reduce/Fold** - Gộp thành một giá trị
+- **FlatMap** - Biến đổi và làm phẳng
+- **Sort** - Sắp xếp
+- **GroupBy** - Nhóm theo key
+- **Find/First/Last** - Tìm phần tử
+- **Any/All/None** - Kiểm tra điều kiện
+- **Take/Skip** - Lấy/bỏ phần tử
+- **Chunk** - Chia thành chunks
+- **Zip** - Kết hợp 2 collections
 
-### 2.21. Memory Management
+#### 2.7. String Operations
+
+- **Concatenation** - Nối chuỗi
+- **Interpolation** - Chèn biến vào chuỗi
+- **Template String** - Chuỗi template
+- **Split** - Tách chuỗi
+- **Join** - Nối mảng thành chuỗi
+- **Replace** - Thay thế
+- **Trim** - Cắt khoảng trắng
+- **Upper/Lower Case** - Chữ hoa/thường
+- **Regex Match** - So khớp regex
+- **Substring** - Lấy chuỗi con
+- **Length** - Độ dài chuỗi
+
+---
+
+### Tầng 3: OOP & Type Relationships (OOP & Quan hệ kiểu)
+
+#### 3.1. Struct/Class/Object
+
+- **Struct** - Cấu trúc dữ liệu (value type)
+- **Class** - Lớp đối tượng (reference type)
+- **Constructor** - Hàm tạo đối tượng
+- **Data Class** - Class chỉ chứa dữ liệu
+- **Object** - Thực thể của class
+- **Singleton** - Class chỉ có 1 instance
+- **Factory Method** - Phương thức tạo đối tượng
+- **Builder Pattern** - Pattern xây dựng đối tượng
+- **Static Member** - Thành phần tĩnh (class-level)
+- **Instance Member** - Thành phần instance
+
+#### 3.2. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
+
+- **Inheritance** - Kế thừa từ class cha
+- **Superclass/Parent** - Class cha
+- **Subclass/Child** - Class con
+- **Override** - Ghi đè phương thức
+- **Super** - Tham chiếu đến class cha
+- **Abstract Class** - Class trừu tượng
+- **Sealed Class** - Class giới hạn kế thừa
+- **Final Class** - Class không thể kế thừa
+- **Polymorphism** - Đa hình
+- **Method Overloading** - Nạp chồng phương thức (cùng tên, tham số khác)
+- **Composition** - Thành phần hơn là kế thừa
+
+#### 3.3. Interface/Trait/Protocol
+
+- **Interface** - Định nghĩa contract
+- **Trait** - Code reuse (Rust)
+- **Protocol** - Contract (Swift, Go)
+- **Abstract Method** - Phương thức trừu tượng
+- **Default Implementation** - Triển khai mặc định
+- **Static Method** - Phương thức tĩnh trong interface
+- **Multiple Interface** - Implement nhiều interface
+- **Interface Extension** - Mở rộng interface
+
+#### 3.4. Visibility/Access Modifiers
+
+- **Private** - Chỉ trong cùng file/class
+- **Public** - Có thể truy cập từ bên ngoài
+- **Protected** - Kế thừa được
+- **Internal** - Trong cùng module/project
+- **Fileprivate** - Trong cùng file (Swift)
+- **Open** - Có thể override (Swift/Kotlin)
+- **Default Access** - Quyền truy cập mặc định
+
+---
+
+### Tầng 4: Memory Model (Mô hình bộ nhớ)
+
+#### 4.1. Memory Management
 
 - **Ownership** - Sở hữu (Rust)
 - **Borrowing** - Mượn (Rust)
@@ -302,23 +280,97 @@
 - **Smart Pointer** - Con trỏ thông minh
 - **RAII** - Resource Acquisition Is Initialization
 
-### 2.22. Annotation/Decorator
+#### 4.2. Property & Getter/Setter
 
-- **Annotation** - Chú thích metadata
-- **Decorator** - Bổ sung chức năng (Python)
-- **Attribute** - Thuộc tính (C#, Swift)
-- **Macro** - Macro (Rust)
-- **Compile-time** - Thời điểm biên dịch
-- **Runtime** - Thời điểm chạy
+- **Property** - Thuộc tính
+- **Getter** - Lấy giá trị
+- **Setter** - Đặt giá trị
+- **Computed Property** - Thuộc tính tính toán
+- **Lazy Property** - Thuộc tính trì hoãn
+- **Late Init** - Khởi tạo muộn
+- **Backing Field** - Trường lưu trữ
 
-### 2.23. Extension Methods
+---
+
+### Tầng 5: Concurrency Model (Mô hình đồng thời)
+
+#### 5.1. Concurrency/Async
+
+- **Async/Await** - Hàm bất đồng bộ
+- **Thread** - Luồng
+- **Coroutine** - Coroutine
+- **Goroutine** - Goroutine (Go)
+- **Future/Promise** - Hứa hẹn kết quả tương lai
+- **Task** - Công việc bất đồng bộ
+- **Channel** - Kênh truyền tin (Go, Kotlin)
+- **Mutex/Lock** - Khóa đồng bộ
+- **Atomic** - Biến nguyên tử
+- **Await All/Any** - Chờ nhiều task
+- **Race Condition** - Điều kiện tranh chấp
+- **Deadlock Prevention** - Phòng tránh deadlock
+
+---
+
+### Tầng 6: Paradigm (Mô hình lập trình)
+
+#### 6.1. Functional Programming
+
+- **Pure Function** - Hàm thuần túy (không side effect)
+- **Immutability** - Bất biến
+- **First-Class Function** - Hàm như giá trị
+- **Currying** - Chuyển hàm nhiều tham số thành chuỗi
+- **Partial Application** - Áp dụng một phần
+- **Function Composition** - Kết hợp hàm
+- **Monad** - Monad pattern
+- **Functor** - Functor pattern
+
+---
+
+### Tầng 7: Error Handling (Xử lý lỗi)
+
+#### 7.1. Xử Lý Lỗi (Error Handling)
+
+- **Try-Catch** - Bắt exception
+- **Result/Option** - Return error as value
+- **Error Return** - Trả về lỗi
+- **Throw Exception** - Ném ngoại lệ
+- **Custom Exception** - Exception tự định nghĩa
+- **Finally Block** - Luôn thực thi dù có lỗi
+- **Try-with-resources** - Tự động đóng tài nguyên
+- **Error Propagation** - Truyền lỗi lên trên
+- **Recover** - Khôi phục từ panic (Rust)
+
+#### 7.2. Error Types & Patterns
+
+- **Checked Exception** - Exception bắt buộc xử lý
+- **Unchecked Exception** - Exception không bắt buộc
+- **Custom Error Type** - Kiểu lỗi tự định nghĩa
+- **Error Union** - Hợp các kiểu lỗi
+- **Panic** - Lỗi nghiêm trọng (Rust)
+
+---
+
+### Tầng 8: Module & Organization (Tổ chức & Module)
+
+#### 8.1. Import/Export & Module
+
+- **Import** - Nhập module
+- **Export** - Xuất module
+- **Package** - Gói code
+- **Module Alias** - Đặt tên alias cho module
+- **Selective Import** - Chỉ nhập phần cần thiết
+- **Default Export** - Xuất mặc định
+- **Re-export** - Xuất lại từ module khác
+- **Namespace** - Không gian tên
+
+#### 8.2. Extension Methods
 
 - **Extension Function** - Mở rộng class không sửa
 - **Extension Property** - Mở rộng property
 - **Implicit Receiver** - Receiver ngầm định
 - **Type Extension** - Mở rộng kiểu dữ liệu
 
-### 2.24. Operator Overloading
+#### 8.3. Operator Overloading
 
 - **Arithmetic Operators** - Toán tử số học
 - **Comparison Operators** - Toán tử so sánh
@@ -326,7 +378,11 @@
 - **Custom Operators** - Toán tử tự định nghĩa
 - **Infix Functions** - Hàm infix (Kotlin)
 
-### 2.25. HTTP & Networking
+---
+
+### Tầng 9: I/O & Networking (Nhập/Xuất & Mạng)
+
+#### 9.1. HTTP & Networking
 
 - **HTTP Request** - Gửi request
 - **HTTP Response** - Nhận response
@@ -337,7 +393,7 @@
 - **Authentication** - Xác thực
 - **HTTP Client** - Thư viện gọi HTTP
 
-### 2.26. File I/O
+#### 9.2. File I/O
 
 - **Read File** - Đọc file
 - **Write File** - Ghi file
@@ -346,7 +402,11 @@
 - **Buffer** - Bộ đệm
 - **Async File I/O** - Đọc/ghi bất đồng bộ
 
-### 2.27. JSON & Serialization
+---
+
+### Tầng 10: Data & Serialization (Dữ liệu & Serialization)
+
+#### 10.1. JSON & Serialization
 
 - **Serialize** - Chuyển object thành JSON
 - **Deserialize** - Chuyển JSON thành object
@@ -354,7 +414,7 @@
 - **Field Mapping** - Ánh xạ trường
 - **Naming Strategy** - Quy tắc đặt tên
 
-### 2.28. Date & Time
+#### 10.2. Date & Time
 
 - **Current Date/Time** - Thời gian hiện tại
 - **Parse/Format** - Chuyển đổi định dạng
@@ -362,7 +422,7 @@
 - **Duration** - Khoảng thời gian
 - **Date Arithmetic** - Tính toán ngày tháng
 
-### 2.29. Regular Expression
+#### 10.3. Regular Expression
 
 - **Pattern** - Mẫu regex
 - **Match** - So khớp
@@ -370,7 +430,20 @@
 - **Capture Group** - Nhóm bắt
 - **Split** - Tách bằng regex
 
-### 2.30. Testing
+---
+
+### Tầng 11: Development Practices (Thực hành phát triển)
+
+#### 11.1. Annotation/Decorator
+
+- **Annotation** - Chú thích metadata
+- **Decorator** - Bổ sung chức năng (Python)
+- **Attribute** - Thuộc tính (C#, Swift)
+- **Macro** - Macro (Rust)
+- **Compile-time** - Thời điểm biên dịch
+- **Runtime** - Thời điểm chạy
+
+#### 11.2. Testing
 
 - **Unit Test** - Test đơn vị
 - **Integration Test** - Test tích hợp
@@ -381,14 +454,14 @@
 - **Test Suite** - Bộ test
 - **Before/After Hook** - Thiết lập/cleanup
 
-### 2.31. Logging
+#### 11.3. Logging
 
 - **Log Levels** - Cấp độ log (debug, info, warn, error)
 - **Logger** - Công cụ ghi log
 - **Formatted Log** - Log có định dạng
 - **Structured Logging** - Log có cấu trúc
 
-### 2.32. Dependency Injection
+#### 11.4. Dependency Injection
 
 - **Constructor Injection** - Tiêm vào constructor
 - **Setter Injection** - Tiêm qua setter
@@ -396,36 +469,32 @@
 - **Service Container** - Container quản lý dependency
 - **Factory** - Factory tạo dependency
 
-### 2.33. Configuration
+#### 11.5. Configuration
 
 - **Environment Variables** - Biến môi trường
 - **Config File** - File cấu hình
 - **Command Line Args** - Tham số dòng lệnh
 - **Secret Management** - Quản lý secrets
 
-### 2.34. Build & Package Management
+#### 11.6. Build & Package Management
 
 - **Dependency Manager** - Quản lý thư viện
 - **Build Tool** - Công cụ build
 - **Linter** - Kiểm tra code style
 - **Formatter** - Định dạng code
 
-### 2.35. Documentation
+#### 11.7. Documentation
 
 - **Comment** - Bình luận
 - **Doc Comment** - Bình luận tài liệu
 - **Type Documentation** - Tài liệu kiểu
 - **README** - Tài liệu project
 
-### 2.36. Error Types & Patterns
+---
 
-- **Checked Exception** - Exception bắt buộc xử lý
-- **Unchecked Exception** - Exception không bắt buộc
-- **Custom Error Type** - Kiểu lỗi tự định nghĩa
-- **Error Union** - Hợp các kiểu lỗi
-- **Panic** - Lỗi nghiêm trọng (Rust)
+### Tầng 12: Advanced Concepts (Khái niệm nâng cao)
 
-### 2.37. Advanced Concepts
+#### 12.1. Advanced Concepts
 
 - **Reflection** - Siêu lập trình (Java, Python, PHP)
 - **Metadata/Introspection** - Lấy thông tin kiểu lúc runtime
@@ -447,3 +516,351 @@
 - **Domain-Specific Language (DSL)** - Ngôn ngữ miền cụ thể
 
 ---
+
+### Tầng 13: Memory Layout (Bố trí bộ nhớ)
+
+#### 13.1. Struct Layout
+
+- **Struct Packing** - Sắp xếp fields không padding
+- **Field Order** - Thứ tự fields ảnh hưởng kích thước
+- **Alignment** - Căn chỉnh bộ nhớ
+- **Size Of** - Kích thước struct
+- **Memory Layout** - Cách struct được lưu trong memory
+
+#### 13.2. Object Layout
+
+- **Header** - Object header (metadata, GC info)
+- **Object Header** - Class pointer, sync block
+- **Array Layout** - Cách array được lưu
+- **String Layout** - Cách string được lưu (UTF-8, UTF-16)
+
+#### 13.3. VTable (Virtual Table)
+
+- **Virtual Method Table** - Bảng phương thức ảo
+- **Method Dispatch** - Cách gọi phương thức ảo
+- **Interface VTable** - VTable cho interface
+- **Multiple Inheritance** - VTable với đa kế thừa
+
+#### 13.4. Cache Locality
+
+- **Spatial Locality** - Dữ liệu gần nhau trong memory
+- **Temporal Locality** - Dữ liệu được dùng gần nhau về thời gian
+- **Cache Line** - Đơn vị cache (thường 64 bytes)
+- **Prefetching** - Tải trước dữ liệu vào cache
+- **False Sharing** - Chia sẻ false giữa các CPU cores
+
+#### 13.5. Padding
+
+- **Struct Padding** - Thêm bytes để căn chỉnh
+- **Alignment Padding** - Padding cho alignment requirements
+- **Packed Struct** - Struct không padding
+- **Memory Alignment** - Căn chỉnh theo yêu cầu
+
+---
+
+### Tầng 14: Compilation Model (Mô hình biên dịch)
+
+#### 14.1. Interpreter
+
+- **AST Interpreter** - Diễn giải AST trực tiếp
+- **Bytecode Interpreter** - Diễn giải bytecode
+- **Threaded Code** - Interpreted code dạng threaded
+- **Indirect Threaded** - Threading gián tiếp
+
+#### 14.2. Bytecode
+
+- **Bytecode VM** - Virtual machine chạy bytecode
+- **Instruction Set** - Tập lệnh bytecode
+- **Bytecode Optimization** - Tối ưu bytecode
+- **Constant Pool** - Pool các hằng số
+- **Frame Layout** - Bố cục frame trong bytecode
+
+#### 14.3. JIT (Just-in-Time)
+
+- **Baseline JIT** - JIT cơ bản
+- **Optimizing JIT** - JIT với tối ưu
+- **Inline Caching** - Cache kết quả inline
+- **Type Specialization** - Chuyên biệt theo kiểu
+- **Deoptimization** - Bỏ tối ưu khi cần
+- **On-Stack Replacement** - Thay đổi code đang chạy
+
+#### 14.4. AOT (Ahead-of-Time)
+
+- **Native Compilation** - Biên dịch ra native code
+- **Link-Time Optimization** - Tối ưu lúc link
+- **Whole Program Analysis** - Phân tích toàn chương trình
+- **Code Generation** - Sinh code máy
+- **Architecture Specific** - Tối ưu theo kiến trúc CPU
+
+---
+
+### Tầng 15: Linking Model (Mô hình liên kết)
+
+#### 15.1. Static Linking
+
+- **Static Library** - Thư viện tĩnh (.a, .lib)
+- **Linker** - Trình liên kết
+- **Symbol Resolution** - Phân giải symbol
+- **Relocation** - Điều chỉnh địa chỉ
+- **Symbol Table** - Bảng symbol
+
+#### 15.2. Dynamic Linking
+
+- **Dynamic Library** - Thư viện động (.so, .dll, .dylib)
+- **Shared Library** - Thư viện chia sẻ
+- **Dynamic Loader** - Trình tải động
+- **Symbol Resolution** - Phân giải symbol lúc load
+- **Lazy Binding** - Liên kết lazy
+- **PLT/GOT** - Procedure Linkage Table / Global Offset Table
+
+#### 15.3. Symbol Resolution
+
+- **Symbol Visibility** - Visibility của symbol
+-** - X **Symbol Collisionung đột symbol
+- **Name Mangling** - Đổi tên hàm (C++)
+- **Symbol Versioning** - Phiên bản symbol
+- **Export/Import** - Xuất/Nhập symbol
+
+---
+
+### Tầng 16: Runtime
+
+#### 16.1. Stack Frame
+
+- **Frame Layout** - Bố cục stack frame
+- **Return Address** - Địa chỉ quay về
+- **Saved Registers** - Các register được lưu
+- **Local Variables** - Biến cục bộ
+- **Stack Pointer** - Con trỏ stack
+- **Frame Pointer** - Con trỏ frame
+
+#### 16.2. Call Stack
+
+- **Call Graph** - Đồ thị gọi hàm
+- **Stack Unwinding** - Unwind stack
+- **Tail Call** - Gọi đuôi
+- **Recursion** - Đệ quy
+- **Stack Overflow** - Tràn stack
+
+#### 16.3. Exception Unwinding
+
+- **Stack Unwinding** - Unwind khi exception
+- **Unwind Tables** - Bảng unwind (SEH, DWARF)
+- **Cleanup Code** - Code cleanup trong unwind
+- **Catch Blocks** - Khối bắt exception
+- **Exception Propagation** - Truyền exception
+
+#### 16.4. Garbage Collector Internals
+
+- **Mark & Sweep** - Đánh dấu và quét
+- **Generational GC** - GC thế hệ
+- **Reference Counting** - Đếm tham chiếu
+- **Tracing** - Truy vết object
+- **Memory Compaction** - Nén bộ nhớ
+- **Write Barrier** - Rào chắn ghi
+- **Root Set** - Tập root (stack, heap, registers)
+- **Object Headers** - Header của object trong GC
+
+---
+
+### Tầng 17: Language Design Patterns (Mẫu thiết kế ngôn ngữ)
+
+#### 17.1. Zero-Cost Abstractions
+
+- **Abstraction Overhead** - Chi phí của trừu tượng
+- **Inlining** - Inline code
+- **Monomorphization** - Sinh code cụ thể (generics)
+- **LLVM Optimization** - Tối ưu từ LLVM
+- **Zero-Cost** - Không overhead runtime
+
+#### 17.2. RAII (Resource Acquisition Is Initialization)
+
+- **Resource Management** - Quản lý tài nguyên
+- **Constructor/Destructor** - Constructor hủy
+- **Scope-Based** - Quản lý theo scope
+- **Smart Pointers** - Con trỏ thông minh
+- **File Handles** - Handle file
+- **Database Connections** - Kết nối database
+
+#### 17.3. Ownership
+
+- **Move Semantics** - Ngữ nghĩa di chuyển
+- **Borrowing** - Mượn (mutable/immutable)
+- **Lifetimes** - Thời gian sống
+- **Ownership Transfer** - Chuyển giao sở hữu
+- **Aliasing** - Tên gọi nhiều
+- **Borrow Checker** - Trình kiểm tra borrow
+
+#### 17.4. Algebraic Data Type (ADT)
+
+- **Sum Type** - Tổng (enum với data)
+- **Product Type** - Tích (struct/tuple)
+- **Pattern Matching** - So khớp pattern
+- **Exhaustive Matching** - So khớp đầy đủ
+- **Tagged Union** - Union có tag
+- **Option/Maybe** - Kiểu có thể null
+- **Result/Either** - Kiểu error
+
+---
+
+### Tầng 18: Standard Library (Thư viện chuẩn)
+
+#### 18.1. Collections & Data Structures
+
+- **Vector/ArrayList** - Danh sách động
+- **HashMap/HashSet** - Map và Set
+- **LinkedList** - Danh sách liên kết
+- **Queue/Deque** - Hàng đợi
+- **Stack** - Ngăn xếp
+- **Tree/TreeMap** - Cấu trúc cây
+- **Heap/Priority Queue** - Heap và hàng đợi ưu tiên
+
+#### 18.2. Utilities
+
+- **Option/Result** - Xử lý null và error
+- **Iterator** - Duyệt qua collection
+- **Range** - Khoảng giá trị
+- **Lazy** - Đánh giá lười biếng
+- **OnceCell** - Khởi tạo một lần
+
+#### 18.3. Concurrency Primitives
+
+- **Thread** - Luồng
+- **Mutex/RwLock** - Khóa
+- **Channel** - Kênh truyền tin
+- **Atomic** - Biến nguyên tử
+- **Future/Task** - Task bất đồng bộ
+- **Scoped Thread** - Thread với scope
+
+#### 18.4. I/O & System
+
+- **File/Path** - Thao tác file
+- **Process** - Quản lý process
+- **Environment** - Biến môi trường
+- **Command Line** - Xử lý argument
+- **Time/Duration** - Thời gian
+
+#### 18.5. String & Text
+
+- **String/Str** - Chuỗi
+- **Regex** - Biểu thức chính quy
+- **Formatter** - Định dạng
+
+---
+
+### Tầng 19: Ecosystem (Hệ sinh thái)
+
+#### 19.1. Web Frameworks
+
+- **Backend Framework** - Framework web backend
+- **Frontend Framework** - Framework web frontend
+- **API Framework** - Framework xây dựng API
+- **Microservices** - Hỗ trợ microservices
+- **GraphQL** - Thư viện GraphQL
+
+#### 19.2. Database & ORM
+
+- **ORM** - Object-Relational Mapping
+- **Query Builder** - Xây dựng truy vấn
+- **Database Driver** - Driver kết nối database
+- **Migration** - Quản lý migration
+- **Schema** - Định nghĩa schema
+
+#### 19.3. Testing
+
+- **Unit Test Framework** - Framework test đơn vị
+- **Mock Library** - Thư viện mock
+- **Property Testing** - Test thuộc tính
+- **Benchmark** - Đo hiệu năng
+- **Fuzzing** - Fuzz testing
+
+#### 19.4. DevOps & Infrastructure
+
+- **Container** - Container hóa (Docker)
+- **Kubernetes** - Orchestration
+- **CI/CD** - Continuous Integration/Deployment
+- **Infrastructure as Code** - IaC
+- **Monitoring** - Giám sát
+- **Logging** - Ghi log
+
+#### 19.5. Networking & Communication
+
+- **HTTP Client/Server** - Client/server HTTP
+- **WebSocket** - Giao thức WebSocket
+- **gRPC** - gRPC framework
+- **Message Queue** - Hàng đợi tin nhắn
+- **Web Framework** - Framework web
+
+#### 19.6. Security & Cryptography
+
+- **Authentication** - Xác thực
+- **Authorization** - Phân quyền
+- **Encryption** - Mã hóa
+- **Hashing** - Băm mật khẩu
+- **JWT** - JSON Web Token
+- **TLS/SSL** - Bảo mật transport
+
+#### 19.7. Data Science & ML
+
+- **NumPy-like** - Tính toán mảng
+- **Pandas-like** - Xử lý dữ liệu
+- **ML Framework** - Framework ML
+- **Data Visualization** - Trực quan hóa
+
+---
+
+### Tầng 20: Toolchain (Công cụ phát triển)
+
+#### 20.1. Compiler & Build
+
+- **Compiler** - Trình biên dịch
+- **Linker** - Trình liên kết
+- **Build System** - Hệ thống build
+- **Package Manager** - Quản lý package
+- **Dependency Resolution** - Phân giải phụ thuộc
+
+#### 20.2. Code Quality
+
+- **Linter** - Kiểm tra code style
+- **Formatter** - Định dạng code
+- **Type Checker** - Kiểm tra kiểu
+- **Static Analyzer** - Phân tích tĩnh
+
+#### 20.3. IDE & Editor
+
+- **Language Server** - LSP server
+- **Debug Adapter** - Debug protocol
+- **Code Completion** - Tự động hoàn thành
+- **Refactoring Tools** - Công cụ refactor
+
+#### 20.4. Version Control
+
+- **Version Control** - Quản lý phiên bản
+- **Git Hooks** - Git hooks
+- **Merge Tool** - Công cụ merge
+- **Diff Tool** - Công cụ so sánh
+
+#### 20.5. Documentation & Publishing
+
+- **Doc Generator** - Sinh tài liệu
+- **Package Registry** - Registry package
+- **Release Tool** - Công cụ release
+
+#### 20.6. Runtime & Environment
+
+- **VM** - Virtual Machine
+- **Interpreter** - Trình thông dịch
+- **JIT** - Just-in-Time compiler
+- **Runtime** - Thời gian chạy
+- **REPL** - Read-Eval-Print Loop
+
+#### 20.7. Profiling & Debugging
+
+- **Profiler** - Công cụ profile
+- **Debugger** - Công cụ debug
+- **Memory Profiler** - Profile bộ nhớ
+- **Trace Tool** - Công cụ trace
+
+---
+
+

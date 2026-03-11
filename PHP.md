@@ -3,43 +3,53 @@
 ## Mục Lục
 
 1. [Phân Loại Ngôn Ngữ](#1-phân-loại-ngôn-ngữ)
-2. [Khai Báo Biến](#21-khai-báo-biến)
-3. [Khai Báo Hàm](#22-khai-báo-hàm)
-4. [Vòng Lặp](#23-vòng-lặp)
-5. [Điều Kiện](#24-điều-kiện)
-6. [Class/Object](#25-classobject)
-7. [Kế Thừa & Đa Hình](#26-kế-thừa--đa-hình)
-8. [Interface](#27-interface)
-9. [Enum](#28-enum)
-10. [Nullable Types](#29-nullable-types)
-11. [Xử Lý Lỗi](#210-xử-lý-lỗi)
-12. [Generics](#211-generics)
-13. [Collection Operations](#212-collection-operations)
-14. [String Operations](#213-string-operations)
-15. [Concurrency/Async](#214-concurrencyasync)
-16. [Visibility](#215-visibility)
-17. [Import/Module](#216-importmodule)
-18. [Kiểu Dữ Liệu Cơ Bản](#217-kiểu-dữ-liệu-cơ-bản)
-19. [Null Safety](#218-null-safety)
-19. [Property & Getter/Setter](#219-property--gettersetter)
-20. [Functional Programming](#220-functional-programming)
-21. [Memory Management](#221-memory-management)
-22. [Annotation/Attribute](#222-annotationattribute)
-23. [Trait](#223-trait)
-24. [Operator Overloading](#224-operator-overloading)
-25. [HTTP & Networking](#225-http--networking)
-26. [File I/O](#226-file-io)
-27. [JSON & Serialization](#227-json--serialization)
-28. [Date & Time](#228-date--time)
-29. [Regular Expression](#229-regular-expression)
-30. [Testing](#230-testing)
-31. [Logging](#231-logging)
-32. [Dependency Injection](#232-dependency-injection)
-33. [Configuration](#233-configuration)
-34. [Build & Package Management](#234-build--package-management)
-35. [Documentation](#235-documentation)
-36. [Error Types](#236-error-types)
-37. [Advanced Concepts](#237-advanced-concepts)
+2. [Tầng 1: Syntax \& Semantics](#2-tầng-1-syntax--semantics)
+   - [2.1 Khai Báo Biến](#21-khai-báo-biến)
+   - [2.2 Khai Báo Hàm](#22-khai-báo-hàm)
+   - [2.3 Vòng Lặp](#23-vòng-lặp)
+   - [2.4 Điều Kiện](#24-điều-kiện)
+3. [Tầng 2: Type System](#3-tầng-2-type-system)
+   - [2.5 Kiểu Dữ Liệu Cơ Bản](#25-kiểu-dữ-liệu-cơ-bản)
+   - [2.6 Enum](#26-enum)
+   - [2.7 Nullable Types](#27-nullable-types)
+   - [2.8 Null Safety](#28-null-safety)
+   - [2.9 Generics](#29-generics)
+   - [2.10 Collection Operations](#210-collection-operations)
+   - [2.11 String Operations](#211-string-operations)
+4. [Tầng 3: OOP \& Type Relationships](#4-tầng-3-oop--type-relationships)
+   - [2.12 Class/Object](#212-classobject)
+   - [2.13 Kế Thừa \& Đa Hình](#213-kế-thừa--đa-hình)
+   - [2.14 Interface/Trait/Protocol](#214-interfacetraitprotocol)
+   - [2.15 Visibility/Access Modifiers](#215-visibilityaccess-modifiers)
+5. [Tầng 4: Memory Model](#5-tầng-4-memory-model)
+   - [2.16 Memory Management](#216-memory-management)
+   - [2.17 Property \& Getter/Setter](#217-property--gettersetter)
+6. [Tầng 5: Concurrency Model](#6-tầng-5-concurrency-model)
+   - [2.18 Concurrency/Async](#218-concurrencyasync)
+7. [Tầng 6: Paradigm](#7-tầng-6-paradigm)
+   - [2.19 Functional Programming](#219-functional-programming)
+8. [Tầng 7: Error Handling](#8-tầng-7-error-handling)
+   - [2.20 Xử Lý Lỗi](#220-xử-lý-lỗi)
+   - [2.21 Error Types](#221-error-types)
+9. [Tầng 8: Module \& Organization](#9-tầng-8-module--organization)
+   - [2.22 Import/Module](#222-importmodule)
+   - [2.23 Annotation/Attribute](#223-annotationattribute)
+10. [Tầng 9: I/O \& Networking](#10-tầng-9-io--networking)
+    - [2.24 HTTP \& Networking](#224-http--networking)
+    - [2.25 File I/O](#225-file-io)
+11. [Tầng 10: Data \& Serialization](#11-tầng-10-data--serialization)
+    - [2.26 JSON \& Serialization](#226-json--serialization)
+    - [2.27 Date \& Time](#227-date--time)
+    - [2.28 Regular Expression](#228-regular-expression)
+12. [Tầng 11: Development Practices](#12-tầng-11-development-practices)
+    - [2.29 Testing](#229-testing)
+    - [2.30 Logging](#230-logging)
+    - [2.31 Dependency Injection](#231-dependency-injection)
+    - [2.32 Configuration](#232-configuration)
+    - [2.33 Build \& Package Management](#233-build--package-management)
+    - [2.34 Documentation](#234-documentation)
+13. [Tầng 12: Advanced Concepts](#13-tầng-12-advanced-concepts)
+    - [2.35 Advanced Concepts](#235-advanced-concepts)
 
 ---
 
@@ -68,9 +78,11 @@ php -a
 
 ---
 
-## 2.1. Khai Báo Biến (Variable Declaration)
+## 2. Tầng 1: Syntax & Semantics
 
-### Mutable - Biến thường
+### 2.1. Khai Báo Biến (Variable Declaration)
+
+#### Mutable - Biến thường
 
 ```php
 $name = "John";
@@ -79,7 +91,7 @@ $price = 19.99;
 $isActive = true;
 ```
 
-### Immutable - Hằng số
+#### Immutable - Hằng số
 
 ```php
 // Dùng const (PHP 5.3+)
@@ -98,7 +110,7 @@ class Config {
 }
 ```
 
-### Type Declaration (PHP 7.0+)
+#### Type Declaration (PHP 7.0+)
 
 ```php
 function greet(string $name): string {
@@ -120,7 +132,7 @@ function processData(mixed $data): mixed {
 }
 ```
 
-### Type Inference
+#### Type Inference
 
 ```php
 // PHP là dynamic typing, tự suy luận kiểu
@@ -129,7 +141,7 @@ $value = 42;           // int
 $value = [1, 2, 3];   // array
 ```
 
-### Static Variable
+#### Static Variable
 
 ```php
 function counter(): int {
@@ -143,7 +155,7 @@ counter(); // 2
 counter(); // 3
 ```
 
-### Global Variable
+#### Global Variable
 
 ```php
 $globalVar = "I'm global";
@@ -159,7 +171,7 @@ function accessGlobal2(): string {
 }
 ```
 
-### Variable Variables
+#### Variable Variables
 
 ```php
 $varName = "dynamic";
@@ -169,9 +181,9 @@ echo $dynamic;       // "Hello"
 
 ---
 
-## 2.2. Khai Báo Hàm (Function Declaration)
+### 2.2. Khai Báo Hàm (Function Declaration)
 
-### Function cơ bản
+#### Function cơ bản
 
 ```php
 function greet(string $name): string {
@@ -189,7 +201,7 @@ function logMessage(string $msg): void {
 }
 ```
 
-### Parameters
+#### Parameters
 
 ```php
 // Required parameters
@@ -213,7 +225,7 @@ createUser(
 );
 ```
 
-### Variadic Parameters
+#### Variadic Parameters
 
 ```php
 function sum(...$numbers): int {
@@ -227,7 +239,7 @@ function merge(string $prefix, ...$items): array {
 }
 ```
 
-### Arrow Function (PHP 7.4+)
+#### Arrow Function (PHP 7.4+)
 
 ```php
 $add = fn($a, $b) => $a + $b;
@@ -236,7 +248,7 @@ $add = fn($a, $b) => $a + $b;
 $add = fn(int $a, int $b): int => $a + $b;
 ```
 
-### Closure
+#### Closure
 
 ```php
 $multiply = function($a) use ($multiplier) {
@@ -247,7 +259,7 @@ $multiplier = 2;
 echo $multiply(5); // 10
 ```
 
-### Higher-Order Function
+#### Higher-Order Function
 
 ```php
 function apply(int $value, callable $func): int {
@@ -257,7 +269,7 @@ function apply(int $value, callable $func): int {
 $result = apply(5, fn($x) => $x * 2); // 10
 ```
 
-### Method trong Class
+#### Method trong Class
 
 ```php
 class Calculator {
@@ -277,7 +289,7 @@ echo $calc->add(2, 3);      // 5
 echo Calculator::multiply(2, 3); // 6
 ```
 
-### Constructor & Destructor
+#### Constructor & Destructor
 
 ```php
 class User {
@@ -299,9 +311,9 @@ class User {
 
 ---
 
-## 2.3. Vòng Lặp (Loops)
+### 2.3. Vòng Lặp (Loops)
 
-### For Loop
+#### For Loop
 
 ```php
 for ($i = 0; $i < 5; $i++) {
@@ -310,7 +322,7 @@ for ($i = 0; $i < 5; $i++) {
 // Output: 0 1 2 3 4
 ```
 
-### While Loop
+#### While Loop
 
 ```php
 $i = 0;
@@ -320,7 +332,7 @@ while ($i < 5) {
 // Output: 0 1 2 3 4
 ```
 
-### Do-While
+#### Do-While
 
 ```php
 $i = 0;
@@ -330,7 +342,7 @@ do {
 // Output: 0 1 2 3 4
 ```
 
-### For-each
+#### For-each
 
 ```php
 $items = ['a', 'b', 'c'];
@@ -352,7 +364,7 @@ foreach ($items as &$item) {
 unset($item);  // Quan trọng: unset sau khi dùng reference
 ```
 
-### Iterator
+#### Iterator
 
 ```php
 class MyIterator implements Iterator {
@@ -381,7 +393,7 @@ class MyIterator implements Iterator {
 }
 ```
 
-### Loop Control
+#### Loop Control
 
 ```php
 // Break
@@ -402,16 +414,15 @@ outer:
 for ($i = 0; $i < 2; $i++) {
     for ($j = 0; $j < 2; $j++) {
         if ($matrix[$i][$j] === 2) break 2; // Thoát cả 2 loop
-        // Hoặc dùng: break outer; (với label)
     }
 }
 ```
 
 ---
 
-## 2.4. Điều Kiện (Conditionals)
+### 2.4. Điều Kiện (Conditionals)
 
-### If-Else
+#### If-Else
 
 ```php
 $age = 20;
@@ -425,7 +436,7 @@ if ($age >= 18) {
 }
 ```
 
-### Switch
+#### Switch
 
 ```php
 $day = date('N');
@@ -454,7 +465,7 @@ $result = match ($day) {
 };
 ```
 
-### Ternary Operator
+#### Ternary Operator
 
 ```php
 $status = $age >= 18 ? "Adult" : "Minor";
@@ -466,21 +477,21 @@ $name = $user['name'] ?? "Guest";
 $value = $x ?: "default";  // Dùng $x nếu truthy, không thì "default"
 ```
 
-### Elvis Operator (PHP 8.0+)
+#### Elvis Operator (PHP 8.0+)
 
 ```php
 // Thực ra là null coalescing assignment
 $value ??= "default";  // Chỉ gán nếu null
 ```
 
-### Null Coalescing
+#### Null Coalescing
 
 ```php
 $name = $user['name'] ?? "Guest";
 $email = $user['email'] ?? $user['contact']['email'] ?? "no email";
 ```
 
-### Match Expression (PHP 8.0+)
+#### Match Expression (PHP 8.0+)
 
 ```php
 $status = match($code) {
@@ -500,9 +511,631 @@ $result = match(true) {
 
 ---
 
-## 2.5. Class/Object
+## 3. Tầng 2: Type System
 
-### Class Definition
+### 2.5. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
+
+#### Integer
+
+```php
+$int = 42;
+$hex = 0x1A;       // 26
+$binary = 0b1010;  // 10
+$octal = 052;      // 42
+
+// PHP 8.0+ numeric string
+var_dump(is_numeric("42"));  // true
+var_dump(intval("42"));       // 42
+```
+
+#### Float
+
+```php
+$float = 3.14;
+$scientific = 1.2e3;  // 1200
+
+// Float precision
+var_dump(0.1 + 0.2);   // 0.3 (gần đúng!)
+```
+
+#### Boolean
+
+```php
+$bool = true;
+$bool = false;
+
+// Truthy/Falsy values
+// Falsy: 0, 0.0, "", "0", null, [], false
+// Truthy: "0" (string), -1, etc.
+```
+
+#### String
+
+```php
+$str = "Hello";
+$str = 'Hello';
+
+// Single vs Double quotes
+$name = "John";
+"$name";   // "John" (interpolate)
+'$name';   // "$name" (literal)
+```
+
+#### Array
+
+```php
+// Indexed array
+$arr = [1, 2, 3];
+$arr = array(1, 2, 3);
+
+// Associative array
+$user = [
+    'name' => 'John',
+    'age' => 25,
+];
+
+// Multidimensional
+$matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+];
+```
+
+#### Object
+
+```php
+$obj = new stdClass();
+$obj->name = 'John';
+
+// Từ array
+$obj = (object)['name' => 'John'];
+```
+
+#### Callable/Closure
+
+```php
+$func = function($x) { return $x * 2; };
+
+// Callable type
+function callIt(callable $fn) {
+    return $fn(5);
+}
+```
+
+#### Resource
+
+```php
+$file = fopen("test.txt", "r");  // Resource
+fclose($file);
+```
+
+#### Never (PHP 8.1+)
+
+```php
+function redirect(string $url): never {
+    header("Location: $url");
+    exit();
+}
+```
+
+#### Void (PHP 7.1+)
+
+```php
+function logMessage(string $msg): void {
+    echo $msg;
+    // Không return gì
+}
+```
+
+---
+
+### 2.6. Enum (PHP 8.1+)
+
+#### Basic Enum
+
+```php
+enum Status {
+    case Pending;
+    case Active;
+    case Completed;
+    case Failed;
+}
+
+$status = Status::Active;
+
+switch ($status) {
+    case Status::Pending:
+        echo "Waiting...";
+        break;
+    case Status::Active:
+        echo "Running";
+        break;
+}
+```
+
+#### Enum with Values
+
+```php
+enum Status: string {
+    case Pending = 'pending';
+    case Active = 'active';
+    case Completed = 'completed';
+
+    public function label(): string {
+        return match($this) {
+            self::Pending => 'Chờ xử lý',
+            self::Active => 'Hoạt động',
+            self::Completed => 'Hoàn thành',
+        };
+    }
+}
+
+echo Status::Active->value;     // 'active'
+echo Status::Active->label();    // 'Hoạt động'
+```
+
+#### Enum with Methods
+
+```php
+enum HttpCode: int {
+    case OK = 200;
+    case NotFound = 404;
+    case ServerError = 500;
+
+    public function isSuccess(): bool {
+        return $this->value >= 200 && $this->value < 300;
+    }
+
+    public static function fromValue(int $value): ?self {
+        return self::tryFrom($value);
+    }
+}
+```
+
+#### Backed Enum
+
+```php
+enum OrderStatus: string {
+    case Pending = 'pending';
+    case Paid = 'paid';
+    case Shipped = 'shipped';
+    case Delivered = 'delivered';
+
+    public function canCancel(): bool {
+        return $this === self::Pending;
+    }
+}
+
+// Convert
+$status = OrderStatus::from('paid');      // Paid
+$value = OrderStatus::Paid->value;         // 'paid'
+$name = OrderStatus::Paid->name;          // 'Paid'
+```
+
+---
+
+### 2.7. Nullable Types
+
+#### Nullable
+
+```php
+// PHP 7.1+
+function getUser(?int $id): ?string {
+    if ($id === null) {
+        return null;
+    }
+    return "User $id";
+}
+
+// Null default
+function greet(?string $name = null): string {
+    return "Hello, " . ($name ?? "Guest");
+}
+```
+
+#### Null Check
+
+```php
+$value = null;
+
+if ($value === null) {
+    echo "No value";
+}
+
+// Hoặc dùng null coalescing
+echo $value ?? "default";
+```
+
+#### Null-safe Operator (PHP 8.0+)
+
+```php
+// Trước PHP 8.0
+$country = null;
+if ($user !== null) {
+    if ($user->getAddress() !== null) {
+        $country = $user->getAddress()->getCountry();
+    }
+}
+
+// PHP 8.0+
+$country = $user?->getAddress()?->getCountry();
+```
+
+---
+
+### 2.8. Null Safety
+
+#### Elvis Operator
+
+```php
+$name = $user ?? "Guest";
+$value = $data['name'] ?? $default ?? "default";
+```
+
+#### Null-safe Operator (PHP 8.0+)
+
+```php
+$result = $user?->getProfile()?->getAvatar()?->getUrl();
+```
+
+#### Null Coalescing Assignment (PHP 7.4+)
+
+```php
+$user['name'] ??= "Guest";  // Chỉ gán nếu null
+```
+
+---
+
+### 2.9. Generics
+
+#### PHP không có Generics như Java/C#
+
+Nhưng có thể dùng:
+
+```php
+// 1. DocBlock annotations (thường dùng với IDE)
+/**
+ * @template T
+ * @param T $value
+ * @return T
+ */
+function identity($value) {
+    return $value;
+}
+
+// 2. PHPStan/Psalm kiểu static analysis
+// 3. Union types (PHP 8.0+)
+function process(int|string $value): int|string {
+    return $value;
+}
+
+// 4. Custom generic-like class
+class Container {
+    /** @var mixed */
+    private $value;
+
+    public function set(mixed $value): self {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function get(): mixed {
+        return $this->value;
+    }
+}
+```
+
+---
+
+### 2.10. Collection Operations
+
+PHP sử dụng các hàm array_* hoặc class từ SPL.
+
+#### Map/Transform
+
+```php
+$numbers = [1, 2, 3, 4, 5];
+
+// Dùng array_map
+$squared = array_map(fn($n) => $n * $n, $numbers);
+// [1, 4, 9, 16, 25]
+
+// Với key
+$keys = ['a', 'b', 'c'];
+$values = array_map(fn($k, $v) => strtoupper($v), $keys, $numbers);
+```
+
+#### Filter
+
+```php
+$numbers = [1, 2, 3, 4, 5];
+
+$evens = array_filter($numbers, fn($n) => $n % 2 === 0);
+// [2, 4]
+
+// Filter với key
+$assoc = ['a' => 1, 'b' => 2, 'c' => 3];
+$result = array_filter($assoc, fn($v, $k) => $k !== 'b', ARRAY_FILTER_USE_BOTH);
+```
+
+#### Reduce/Fold
+
+```php
+$numbers = [1, 2, 3, 4, 5];
+
+$sum = array_reduce($numbers, fn($carry, $item) => $carry + $item, 0);
+// 15
+
+$product = array_reduce($numbers, fn($carry, $item) => $carry * $item, 1);
+// 120
+```
+
+#### FlatMap
+
+```php
+$words = ['hello', 'world'];
+
+// Tách mỗi word thành các ký tự
+$chars = array_merge(...array_map('str_split', $words));
+// ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
+```
+
+#### Sort
+
+```php
+$numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+
+sort($numbers);           // Sắp xếp tăng, thay đổi array
+rsort($numbers);          // Sắp xếp giảm
+
+asort($numbers);          // Sắp xếp theo value, giữ key
+ksort($numbers);          // Sắp xếp theo key
+
+// Với callback
+usort($numbers, fn($a, $b) => $a <=> $b);  // Spaceship operator
+usort($numbers, fn($a, $b) => $b - $a);    // Giảm dần
+```
+
+#### Find/First/Last
+
+```php
+$numbers = [1, 2, 3, 4, 5];
+
+$first = reset($numbers);        // 1
+$last = end($numbers);          // 5
+
+$found = array_find($numbers, fn($n) => $n > 3);     // 4
+$key = array_find_key($numbers, fn($n) => $n > 3);   // 3
+```
+
+#### Any/All/None
+
+```php
+$numbers = [1, 2, 3, 4, 5];
+
+$hasEven = array_any($numbers, fn($n) => $n % 2 === 0);  // true (PHP 8.4+)
+$allPositive = array_all($numbers, fn($n) => $n > 0);  // true (PHP 8.4+)
+
+// Trước PHP 8.4
+$hasEven = in_array(true, array_map(fn($n) => $n % 2 === 0, $numbers));
+$allPositive = !in_array(false, array_map(fn($n) => $n > 0, $numbers));
+```
+
+#### GroupBy
+
+```php
+$users = [
+    ['name' => 'John', 'role' => 'admin'],
+    ['name' => 'Jane', 'role' => 'user'],
+    ['name' => 'Bob', 'role' => 'admin'],
+];
+
+$grouped = [];
+foreach ($users as $user) {
+    $grouped[$user['role']][] = $user;
+}
+```
+
+#### Chunk
+
+```php
+$numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+
+$chunks = array_chunk($numbers, 3);
+// [[1,2,3], [4,5,6], [7,8]]
+```
+
+#### Zip
+
+```php
+$names = ['a', 'b', 'c'];
+$values = [1, 2, 3];
+
+$zipped = array_map(null, $names, $values);
+// [['a', 1], ['b', 2], ['c', 3]]
+
+// Hoặc dùng array_combine
+$combined = array_combine($names, $values);
+// ['a' => 1, 'b' => 2, 'c' => 3]
+```
+
+---
+
+### 2.11. String Operations
+
+#### Concatenation
+
+```php
+$firstName = "John";
+$lastName = "Doe";
+
+$fullName = $firstName . " " . $lastName;
+// "John Doe"
+
+// Với .=
+$greeting = "Hello";
+$greeting .= " World";  // "Hello World"
+```
+
+#### Interpolation
+
+```php
+$name = "John";
+
+// Double quotes - biến được interpolate
+echo "Hello, $name";           // Hello, John
+echo "Hello, {$name}";          // Hello, John
+
+// Single quotes - không interpolate
+echo 'Hello, $name';            // Hello, $name
+
+// Complex syntax
+$user = ['name' => 'John', 'age' => 25];
+echo "Hello, {$user['name']}"; // Hello, John
+```
+
+#### Template String (heredoc/nowdoc)
+
+```php
+// Heredoc - interpolate
+$html = <<<HTML
+<div class="container">
+    <h1>Welcome, $name!</h1>
+    <p>Your age: {$user['age']}</p>
+</div>
+HTML;
+
+// Nowdoc - không interpolate
+$plain = <<<'PLAIN'
+This is plain text.
+$name will not be replaced.
+PLAIN;
+```
+
+#### Split
+
+```php
+$str = "apple,banana,cherry";
+$fruits = explode(",", $str);
+// ['apple', 'banana', 'cherry']
+
+// Với limit
+$parts = explode(",", $str, 2);
+// ['apple', 'banana,cherry']
+
+// str_split cho từng ký tự
+$chars = str_split($str);
+// ['a', 'p', 'p', 'l', 'e', ...]
+```
+
+#### Join
+
+```php
+$fruits = ['apple', 'banana', 'cherry'];
+$str = implode(", ", $fruits);
+// "apple, banana, cherry"
+
+// join() là alias của implode
+$str = join("-", $fruits);
+// "apple-banana-cherry"
+```
+
+#### Replace
+
+```php
+$str = "Hello World";
+
+// String replace
+str_replace("World", "PHP", $str);     // "Hello PHP"
+
+// Case insensitive
+str_ireplace("hello", "Hi", $str);    // "Hi World"
+
+// Multiple replacements
+str_replace(["hello", "world"], ["Hi", "PHP"], $str);
+
+// Regex replace
+preg_replace('/\d+/', '#', "test123");  // "test#"
+
+// Callback replace
+preg_replace_callback('/\d+/', fn($m) => (int)$m[0] * 2, "test5"); // "test10"
+```
+
+#### Trim
+
+```php
+$str = "   Hello World   ";
+
+trim($str);      // "Hello World"
+ltrim($str);     // "Hello World   "
+rtrim($str);     // "   Hello World"
+
+// Trim specific characters
+trim($str, " H"); // "ello World"
+```
+
+#### Upper/Lower Case
+
+```php
+$str = "Hello World";
+
+strtoupper($str);    // "HELLO WORLD"
+strtolower($str);    // "hello world"
+ucfirst($str);       // "Hello world" - viết hoa chữ cái đầu
+ucwords($str);       // "Hello World" - viết hoa mỗi từ
+```
+
+#### Regex Match
+
+```php
+$str = "Email: test@example.com";
+
+// preg_match - tìm 1 match
+if (preg_match('/(\w+)@(\w+\.\w+)/', $str, $matches)) {
+    echo $matches[0];    // Full match: test@example.com
+    echo $matches[1];    // Group 1: test
+    echo $matches[2];    // Group 2: example.com
+}
+
+// preg_match_all - tìm tất cả
+preg_match_all('/\d+/', "123 abc 456", $matches);
+// $matches[0] = ['123', '456']
+
+// preg_split
+$parts = preg_split('/\s+/', "hello world test");
+// ['hello', 'world', 'test']
+```
+
+#### Substring
+
+```php
+$str = "Hello World";
+
+substr($str, 0, 5);      // "Hello" - từ vị trí 0, length 5
+substr($str, 6);         // "World" - từ vị trí 6 đến cuối
+substr($str, -5);        // "World" - 5 ký tự cuối
+
+// mb_substr cho multibyte
+$str = "Xin chào";
+mb_substr($str, 0, 4);  // "Xin "
+```
+
+#### Length
+
+```php
+$str = "Hello";
+
+strlen($str);        // 5 bytes
+mb_strlen($str);     // 5 ký tự (cho UTF-8)
+```
+
+---
+
+## 4. Tầng 3: OOP & Type Relationships
+
+### 2.12. Class/Object
+
+#### Class Definition
 
 ```php
 class User {
@@ -545,7 +1178,7 @@ $user = new User("John", 25);
 echo $user->getName();
 ```
 
-### Data Class (PHP 8.0+ - Named Arguments)
+#### Data Class (PHP 8.0+ - Named Arguments)
 
 ```php
 // PHP không có data class như Kotlin, nhưng có thể dùng:
@@ -564,7 +1197,7 @@ $user = new UserDTO(
 );
 ```
 
-### Singleton
+#### Singleton
 
 ```php
 class Singleton {
@@ -589,7 +1222,7 @@ class Singleton {
 }
 ```
 
-### Factory Method
+#### Factory Method
 
 ```php
 class UserFactory {
@@ -605,7 +1238,7 @@ class UserFactory {
 }
 ```
 
-### Builder Pattern
+#### Builder Pattern
 
 ```php
 class UserBuilder {
@@ -651,9 +1284,9 @@ $user = (new UserBuilder('John'))
 
 ---
 
-## 2.6. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
+### 2.13. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
 
-### Inheritance
+#### Inheritance
 
 ```php
 class Animal {
@@ -678,7 +1311,7 @@ $dog = new Dog("Buddy");
 echo $dog->speak(); // "Woof!"
 ```
 
-### Override
+#### Override
 
 ```php
 class ParentClass {
@@ -699,7 +1332,7 @@ class ChildClass extends ParentClass {
 }
 ```
 
-### Abstract Class
+#### Abstract Class
 
 ```php
 abstract class Shape {
@@ -723,7 +1356,7 @@ class Circle extends Shape {
 }
 ```
 
-### Final Class/Method
+#### Final Class/Method
 
 ```php
 final class Config {
@@ -737,13 +1370,37 @@ class MyClass {
 }
 ```
 
-### Interface (xem thêm 2.7)
+#### Polymorphism
+
+```php
+interface Shape {
+    public function area(): float;
+}
+
+class Circle implements Shape {
+    public function __construct(private float $radius) {}
+    public function area(): float {
+        return pi() * $this->radius ** 2;
+    }
+}
+
+class Square implements Shape {
+    public function __construct(private float $side) {}
+    public function area(): float {
+        return $this->side ** 2;
+    }
+}
+
+function printArea(Shape $shape): void {
+    echo $shape->area();
+}
+```
 
 ---
 
-## 2.7. Interface/Trait/Protocol
+### 2.14. Interface/Trait/Protocol
 
-### Interface
+#### Interface
 
 ```php
 interface JsonSerializable {
@@ -765,7 +1422,7 @@ class FileCache implements Cacheable, JsonSerializable {
 }
 ```
 
-### Interface với Default Implementation (PHP 8.0+)
+#### Interface với Default Implementation (PHP 8.0+)
 
 ```php
 interface Logger {
@@ -782,7 +1439,7 @@ interface Logger {
 }
 ```
 
-### Trait
+#### Trait
 
 ```php
 trait LoggerTrait {
@@ -813,7 +1470,7 @@ class UserService {
 }
 ```
 
-### Trait Conflicts
+#### Trait Conflicts
 
 ```php
 trait A {
@@ -838,676 +1495,7 @@ class MyClass {
 
 ---
 
-## 2.8. Enum (PHP 8.1+)
-
-### Basic Enum
-
-```php
-enum Status {
-    case Pending;
-    case Active;
-    case Completed;
-    case Failed;
-}
-
-$status = Status::Active;
-
-switch ($status) {
-    case Status::Pending:
-        echo "Waiting...";
-        break;
-    case Status::Active:
-        echo "Running";
-        break;
-}
-```
-
-### Enum with Values
-
-```php
-enum Status: string {
-    case Pending = 'pending';
-    case Active = 'active';
-    case Completed = 'completed';
-
-    public function label(): string {
-        return match($this) {
-            self::Pending => 'Chờ xử lý',
-            self::Active => 'Hoạt động',
-            self::Completed => 'Hoàn thành',
-        };
-    }
-}
-
-echo Status::Active->value;     // 'active'
-echo Status::Active->label();    // 'Hoạt động'
-```
-
-### Enum with Methods
-
-```php
-enum HttpCode: int {
-    case OK = 200;
-    case NotFound = 404;
-    case ServerError = 500;
-
-    public function isSuccess(): bool {
-        return $this->value >= 200 && $this->value < 300;
-    }
-
-    public static function fromValue(int $value): ?self {
-        return self::tryFrom($value);
-    }
-}
-```
-
-### Backed Enum
-
-```php
-enum OrderStatus: string {
-    case Pending = 'pending';
-    case Paid = 'paid';
-    case Shipped = 'shipped';
-    case Delivered = 'delivered';
-
-    public function canCancel(): bool {
-        return $this === self::Pending;
-    }
-}
-
-// Convert
-$status = OrderStatus::from('paid');      // Paid
-$value = OrderStatus::Paid->value;         // 'paid'
-$name = OrderStatus::Paid->name;          // 'Paid'
-```
-
----
-
-## 2.9. Nullable Types
-
-### Nullable
-
-```php
-// PHP 7.1+
-function getUser(?int $id): ?string {
-    if ($id === null) {
-        return null;
-    }
-    return "User $id";
-}
-
-// Null default
-function greet(?string $name = null): string {
-    return "Hello, " . ($name ?? "Guest");
-}
-```
-
-### Null Check
-
-```php
-$value = null;
-
-if ($value === null) {
-    echo "No value";
-}
-
-// Hoặc dùng null coalescing
-echo $value ?? "default";
-```
-
-### Null-safe Operator (PHP 8.0+)
-
-```php
-// Trước PHP 8.0
-$country = null;
-if ($user !== null) {
-    if ($user->getAddress() !== null) {
-        $country = $user->getAddress()->getCountry();
-    }
-}
-
-// PHP 8.0+
-$country = $user?->getAddress()?->getCountry();
-```
-
----
-
-## 2.10. Xử Lý Lỗi (Error Handling)
-
-### Try-Catch
-
-```php
-try {
-    $result = divide(10, 0);
-} catch (DivisionByZeroError $e) {
-    echo "Cannot divide by zero: " . $e->getMessage();
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-} finally {
-    echo "Cleanup here";
-}
-```
-
-### Throw Exception
-
-```php
-function validate(int $age): void {
-    if ($age < 0) {
-        throw new \InvalidArgumentException("Age cannot be negative");
-    }
-}
-```
-
-### Custom Exception
-
-```php
-class ValidationException extends \Exception {}
-
-function process(array $data): void {
-    if (!isset($data['name'])) {
-        throw new ValidationException("Name is required");
-    }
-}
-
-try {
-    process([]);
-} catch (ValidationException $e) {
-    echo $e->getMessage();
-}
-```
-
-### Error Types
-
-```php
-// Throwable interface
-try {
-    // code
-} catch (\Error $e) {
-    // Bắt Error (Fatal, TypeError, etc.)
-} catch (\Exception $e) {
-    // Bắt Exception
-}
-```
-
-### Try-Catch với Reflection
-
-```php
-function safeCall(callable $fn, ...$args): mixed {
-    try {
-        return $fn(...$args);
-    } catch (\Throwable $e) {
-        return null;
-    }
-}
-```
-
----
-
-## 2.11. Generics
-
-### PHP không có Generics như Java/C#
-
-Nhưng có thể dùng:
-
-```php
-// 1. DocBlock annotations (thường dùng với IDE)
-/**
- * @template T
- * @param T $value
- * @return T
- */
-function identity($value) {
-    return $value;
-}
-
-// 2. PHPStan/Psalm kiểu static analysis
-// 3. Union types (PHP 8.0+)
-function process(int|string $value): int|string {
-    return $value;
-}
-
-// 4. Custom generic-like class
-class Container {
-    /** @var mixed */
-    private $value;
-
-    public function set(mixed $value): self {
-        $this->value = $value;
-        return $this;
-    }
-
-    public function get(): mixed {
-        return $this->value;
-    }
-}
-```
-
----
-
-## 2.12. Collection Operations
-
-PHP sử dụng các hàm array_* hoặc class từ SPL.
-
-### Map/Transform
-
-```php
-$numbers = [1, 2, 3, 4, 5];
-
-// Dùng array_map
-$squared = array_map(fn($n) => $n * $n, $numbers);
-// [1, 4, 9, 16, 25]
-
-// Với key
-$keys = ['a', 'b', 'c'];
-$values = array_map(fn($k, $v) => strtoupper($v), $keys, $numbers);
-// ['A' => 1, 'B' => 2, 'C' => 3] (chỉ là ví dụ)
-```
-
-### Filter
-
-```php
-$numbers = [1, 2, 3, 4, 5];
-
-$evens = array_filter($numbers, fn($n) => $n % 2 === 0);
-// [2, 4]
-
-// Filter với key
-$assoc = ['a' => 1, 'b' => 2, 'c' => 3];
-$result = array_filter($assoc, fn($v, $k) => $k !== 'b', ARRAY_FILTER_USE_BOTH);
-```
-
-### Reduce/Fold
-
-```php
-$numbers = [1, 2, 3, 4, 5];
-
-$sum = array_reduce($numbers, fn($carry, $item) => $carry + $item, 0);
-// 15
-
-$product = array_reduce($numbers, fn($carry, $item) => $carry * $item, 1);
-// 120
-```
-
-### FlatMap
-
-```php
-$words = ['hello', 'world'];
-
-// Tách mỗi word thành các ký tự
-$chars = array_merge(...array_map('str_split', $words));
-// ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
-```
-
-### Sort
-
-```php
-$numbers = [3, 1, 4, 1, 5, 9, 2, 6];
-
-sort($numbers);           // Sắp xếp tăng, thay đổi array
-rsort($numbers);          // Sắp xếp giảm
-
-asort($numbers);          // Sắp xếp theo value, giữ key
-ksort($numbers);          // Sắp xếp theo key
-
-// Với callback
-usort($numbers, fn($a, $b) => $a <=> $b);  // Spaceship operator
-usort($numbers, fn($a, $b) => $b - $a);    // Giảm dần
-```
-
-### Find/First/Last
-
-```php
-$numbers = [1, 2, 3, 4, 5];
-
-$first = reset($numbers);        // 1
-$last = end($numbers);          // 5
-
-$found = array_find($numbers, fn($n) => $n > 3);     // 4
-$key = array_find_key($numbers, fn($n) => $n > 3);   // 3
-```
-
-### Any/All/None
-
-```php
-$numbers = [1, 2, 3, 4, 5];
-
-$hasEven = array_any($numbers, fn($n) => $n % 2 === 0);  // true (PHP 8.4+)
-$allPositive = array_all($numbers, fn($n) => $n > 0);  // true (PHP 8.4+)
-
-// Trước PHP 8.4
-$hasEven = in_array(true, array_map(fn($n) => $n % 2 === 0, $numbers));
-$allPositive = !in_array(false, array_map(fn($n) => $n > 0, $numbers));
-```
-
-### GroupBy
-
-```php
-$users = [
-    ['name' => 'John', 'role' => 'admin'],
-    ['name' => 'Jane', 'role' => 'user'],
-    ['name' => 'Bob', 'role' => 'admin'],
-];
-
-$grouped = [];
-foreach ($users as $user) {
-    $grouped[$user['role']][] = $user;
-}
-```
-
-### Chunk
-
-```php
-$numbers = [1, 2, 3, 4, 5, 6, 7, 8];
-
-$chunks = array_chunk($numbers, 3);
-// [[1,2,3], [4,5,6], [7,8]]
-```
-
-### Zip
-
-```php
-$names = ['a', 'b', 'c'];
-$values = [1, 2, 3];
-
-$zipped = array_map(null, $names, $values);
-// [['a', 1], ['b', 2], ['c', 3]]
-
-// Hoặc dùng array_combine
-$combined = array_combine($names, $values);
-// ['a' => 1, 'b' => 2, 'c' => 3]
-```
-
----
-
-## 2.13. String Operations
-
-### Concatenation
-
-```php
-$firstName = "John";
-$lastName = "Doe";
-
-$fullName = $firstName . " " . $lastName;
-// "John Doe"
-
-// Với .=
-$greeting = "Hello";
-$greeting .= " World";  // "Hello World"
-```
-
-### Interpolation
-
-```php
-$name = "John";
-
-// Double quotes - biến được interpolate
-echo "Hello, $name";           // Hello, John
-echo "Hello, {$name}";          // Hello, John
-
-// Single quotes - không interpolate
-echo 'Hello, $name';            // Hello, $name
-
-// Complex syntax
-$user = ['name' => 'John', 'age' => 25];
-echo "Hello, {$user['name']}"; // Hello, John
-```
-
-### Template String (heredoc/nowdoc)
-
-```php
-// Heredoc - interpolate
-$html = <<<HTML
-<div class="container">
-    <h1>Welcome, $name!</h1>
-    <p>Your age: {$user['age']}</p>
-</div>
-HTML;
-
-// Nowdoc - không interpolate
-$plain = <<<'PLAIN'
-This is plain text.
-$name will not be replaced.
-PLAIN;
-```
-
-### Split
-
-```php
-$str = "apple,banana,cherry";
-$fruits = explode(",", $str);
-// ['apple', 'banana', 'cherry']
-
-// Với limit
-$parts = explode(",", $str, 2);
-// ['apple', 'banana,cherry']
-
-// str_split cho từng ký tự
-$chars = str_split($str);
-// ['a', 'p', 'p', 'l', 'e', ...]
-```
-
-### Join
-
-```php
-$fruits = ['apple', 'banana', 'cherry'];
-$str = implode(", ", $fruits);
-// "apple, banana, cherry"
-
-// join() là alias của implode
-$str = join("-", $fruits);
-// "apple-banana-cherry"
-```
-
-### Replace
-
-```php
-$str = "Hello World";
-
-// String replace
-str_replace("World", "PHP", $str);     // "Hello PHP"
-
-// Case insensitive
-strireplace("hello", "Hi", $str);      // "Hi World"
-
-// Multiple replacements
-str_replace(["hello", "world"], ["Hi", "PHP"], $str);
-
-// Regex replace
-preg_replace('/\d+/', '#', "test123");  // "test#"
-
-// Callback replace
-preg_replace_callback('/\d+/', fn($m) => (int)$m[0] * 2, "test5"); // "test10"
-```
-
-### Trim
-
-```php
-$str = "   Hello World   ";
-
-trim($str);      // "Hello World"
-ltrim($str);     // "Hello World   "
-rtrim($str);     // "   Hello World"
-
-// Trim specific characters
-trim($str, " H"); // "ello World"
-```
-
-### Upper/Lower Case
-
-```php
-$str = "Hello World";
-
-strtoupper($str);    // "HELLO WORLD"
-strtolower($str);    // "hello world"
-ucfirst($str);       // "Hello world" - viết hoa chữ cái đầu
-ucwords($str);       // "Hello World" - viết hoa mỗi từ
-```
-
-### Regex Match
-
-```php
-$str = "Email: test@example.com";
-
-// preg_match - tìm 1 match
-if (preg_match('/(\w+)@(\w+\.\w+)/', $str, $matches)) {
-    echo $matches[0];    // Full match: test@example.com
-    echo $matches[1];    // Group 1: test
-    echo $matches[2];    // Group 2: example.com
-}
-
-// preg_match_all - tìm tất cả
-preg_match_all('/\d+/', "123 abc 456", $matches);
-// $matches[0] = ['123', '456']
-
-// preg_split
-$parts = preg_split('/\s+/', "hello world test");
-// ['hello', 'world', 'test']
-```
-
-### Substring
-
-```php
-$str = "Hello World";
-
-substr($str, 0, 5);      // "Hello" - từ vị trí 0, length 5
-substr($str, 6);         // "World" - từ vị trí 6 đến cuối
-substr($str, -5);        // "World" - 5 ký tự cuối
-
-// mb_substr cho multibyte
-$str = "Xin chào";
-mb_substr($str, 0, 4);  // "Xin "
-```
-
-### Length
-
-```php
-$str = "Hello";
-
-strlen($str);        // 5 bytes
-mb_strlen($str);     // 5 ký tự (cho UTF-8)
-```
-
----
-
-## 2.14. Concurrency/Async
-
-### Threads
-
-PHP không có built-in thread tốt, nhưng có thể dùng:
-
-```php
-// Parallel extension (PECL - cần cài đặt)
-use Parallel\Runtime;
-use Parallel\Future;
-
-$runtime = new Runtime();
-$future = $runtime->run(function() {
-    return heavyComputation();
-});
-
-$result = $future->cancel(); // Chờ kết quả
-```
-
-### Async với ReactPHP / Swoole
-
-```php
-// Swoole - Async HTTP Server
-$http = new Swoole\Http\Server("0.0.0.0", 9501);
-
-$http->on("request", function ($request, $response) {
-    $response->header("Content-Type", "text/plain");
-    $response->end("Hello World");
-});
-
-$http->start();
-
-// Async MySQL (Swoole)
-Co::create(function() {
-    $mysql = new Co\MySQL;
-    $mysql->connect([
-        'host' => '127.0.0.1',
-        'port' => 3306,
-        'user' => 'root',
-        'password' => '',
-        'database' => 'test',
-    ]);
-    $res = $mysql->query('SELECT * FROM users');
-});
-```
-
-### Promise/Future
-
-```php
-// Dùng ReactPHP Promise
-use React\Promise\Deferred;
-
-function asyncOperation(): Promise {
-    $deferred = new Deferred();
-
-    // Simulate async work
-    $client->request('GET', 'http://example.com')->then(
-        function ($response) use ($deferred) {
-            $deferred->resolve($response);
-        },
-        function ($error) use ($deferred) {
-            $deferred->reject($error);
-        }
-    );
-
-    return $deferred->promise();
-}
-
-// Sử dụng
-asyncOperation()
-    ->then(function($result) { echo $result; })
-    ->otherwise(function($error) { echo $error; });
-```
-
-### Fibers (PHP 8.1+)
-
-```php
-$fiber = new Fiber(function(): void {
-    $value = Fiber::suspend("suspended value");
-    echo "Resumed with: $value\n";
-});
-
-$value = $fiber->start(); // "suspended value"
-$fiber->resume("resuming"); // "Resumed with: resuming"
-```
-
-### Async/Await (simulated với Fiber)
-
-```php
-function fetchUser(int $id): Fiber {
-    return new Fiber(function() use ($id) {
-        // Simulate async request
-        $result = yield asyncHttpGet("/users/$id");
-        return $result;
-    });
-}
-```
-
-### Parallel Processing
-
-```php
-// Dùng pcntl (Process Control)
-$pid = pcntl_fork();
-
-if ($pid == -1) {
-    die("Cannot fork");
-} else if ($pid) {
-    // Parent process
-    pcntl_wait($status);
-} else {
-    // Child process
-    doChildWork();
-    exit();
-}
-```
-
----
-
-## 2.15. Visibility (Access Modifiers)
+### 2.15. Visibility/Access Modifiers
 
 ```php
 class User {
@@ -1525,7 +1513,7 @@ class User {
 }
 ```
 
-### Default Visibility
+#### Default Visibility
 
 ```php
 // Trong class - mặc định là public
@@ -1539,205 +1527,54 @@ function globalFunction() {}  // public
 
 ---
 
-## 2.16. Import/Module
+## 5. Tầng 4: Memory Model
 
-### Require/Include
+### 2.16. Memory Management
 
-```php
-// Include file
-include 'header.php';      // Warning nếu lỗi
-require 'header.php';       // Fatal error nếu lỗi
+#### Garbage Collection
 
-// Include once
-include_once 'config.php';
-require_once 'config.php';
-```
-
-### Namespace
+PHP sử dụng automatic garbage collection:
 
 ```php
-// file: App/Controllers/UserController.php
-namespace App\Controllers;
+// Reference counting
+$a = "hello";
+$b = $a;  // $a and $b cùng reference
+unset($a); // Giảm reference count
 
-class UserController {
-    // ...
-}
+// Circular references được GC xử lý tự động
 ```
 
-### Import
-
-```php
-use App\Models\User;
-use App\Models\User as UserModel;
-use App\Controllers\{UserController, PostController};
-
-// Import hàm
-use function App\Helpers\formatDate;
-
-// Import constant
-use const App\Config\MAX_SIZE;
-```
-
-### Autoloading (PSR-4)
-
-```php
-// composer.json
-{
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    }
-}
-
-// Trong code, không cần require
-new App\Models\User();  // Tự động load
-```
-
----
-
-## 2.17. Kiểu Dữ Liệu Cơ Bản (Primitive Types)
-
-### Integer
-
-```php
-$int = 42;
-$hex = 0x1A;       // 26
-$binary = 0b1010;  // 10
-$octal = 052;      // 42
-
-// PHP 8.0+ numeric string
-var_dump(is_numeric("42"));  // true
-var_dump(intval("42"));       // 42
-```
-
-### Float
-
-```php
-$float = 3.14;
-$scientific = 1.2e3;  // 1200
-
-// Float precision
-var_dump(0.1 + 0.2);   // 0.3 (gần đúng!)
-```
-
-### Boolean
-
-```php
-$bool = true;
-$bool = false;
-
-// Truthy/Falsy values
-// Falsy: 0, 0.0, "", "0", null, [], false
-// Truthy: "0" (string), -1, etc.
-```
-
-### String
-
-```php
-$str = "Hello";
-$str = 'Hello';
-
-// Single vs Double quotes
-$name = "John";
-"$name";   // "John" (interpolate)
-'$name';   // "$name" (literal)
-```
-
-### Array
-
-```php
-// Indexed array
-$arr = [1, 2, 3];
-$arr = array(1, 2, 3);
-
-// Associative array
-$user = [
-    'name' => 'John',
-    'age' => 25,
-];
-
-// Multidimensional
-$matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-];
-```
-
-### Object
+#### Weak Reference (PHP 7.4+)
 
 ```php
 $obj = new stdClass();
-$obj->name = 'John';
+$weakRef = WeakReference::create($obj);
 
-// Từ array
-$obj = (object)['name' => 'John'];
-```
-
-### Callable/Closure
-
-```php
-$func = function($x) { return $x * 2; };
-
-// Callable type
-function callIt(callable $fn) {
-    return $fn(5);
+if ($weakRef->get()) {
+    echo "Object still exists";
 }
+
+unset($obj);  // Object được giải phóng
+var_dump($weakRef->get());  // null
 ```
 
-### Resource
+#### Memory Limit
 
 ```php
-$file = fopen("test.txt", "r");  // Resource
-fclose($file);
-```
+// Trong php.ini
+memory_limit = 256M
 
-### Never (PHP 8.1+)
-
-```php
-function redirect(string $url): never {
-    header("Location: $url");
-    exit();
-}
-```
-
-### Void (PHP 7.1+)
-
-```php
-function logMessage(string $msg): void {
-    echo $msg;
-    // Không return gì
-}
+// Trong code
+ini_set('memory_limit', '512M');
+echo memory_get_usage();
+echo memory_get_peak_usage();
 ```
 
 ---
 
-## 2.18. Null Safety
+### 2.17. Property & Getter/Setter
 
-### Elvis Operator
-
-```php
-$name = $user "Guest";
-$value = $data['name'] ??['key'] ?? $default ?? "default";
-```
-
-### Null-safe Operator (PHP 8.0+)
-
-```php
-$result = $user?->getProfile()?->getAvatar()?->getUrl();
-```
-
-### Null Coalescing Assignment (PHP 7.4+)
-
-```php
-$user['name'] ??= "Guest";  // Chỉ gán nếu null
-```
-
----
-
-## 2.19. Property & Getter/Setter
-
-### Public Property
+#### Public Property
 
 ```php
 class User {
@@ -1750,7 +1587,7 @@ $user->name = "John";  // Direct access
 echo $user->name;
 ```
 
-### Getter/Setter
+#### Getter/Setter
 
 ```php
 class User {
@@ -1781,7 +1618,7 @@ class User {
 }
 ```
 
-### Readonly Properties (PHP 8.1+)
+#### Readonly Properties (PHP 8.1+)
 
 ```php
 class User {
@@ -1795,7 +1632,7 @@ $user = new User("1", "John");
 // $user->id = "2";  // Error!
 ```
 
-### Lazy Properties (PHP 8.4+)
+#### Lazy Properties (PHP 8.4+)
 
 ```php
 class HeavyObject {
@@ -1811,9 +1648,131 @@ class HeavyObject {
 
 ---
 
-## 2.20. Functional Programming
+## 6. Tầng 5: Concurrency Model
 
-### Pure Function
+### 2.18. Concurrency/Async
+
+#### Threads
+
+PHP không có built-in thread tốt, nhưng có thể dùng:
+
+```php
+// Parallel extension (PECL - cần cài đặt)
+use Parallel\Runtime;
+use Parallel\Future;
+
+$runtime = new Runtime();
+$future = $runtime->run(function() {
+    return heavyComputation();
+});
+
+$result = $future->cancel(); // Chờ kết quả
+```
+
+#### Async với ReactPHP / Swoole
+
+```php
+// Swoole - Async HTTP Server
+$http = new Swoole\Http\Server("0.0.0.0", 9501);
+
+$http->on("request", function ($request, $response) {
+    $response->header("Content-Type", "text/plain");
+    $response->end("Hello World");
+});
+
+$http->start();
+
+// Async MySQL (Swoole)
+Co::create(function() {
+    $mysql = new Co\MySQL;
+    $mysql->connect([
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'user' => 'root',
+        'password' => '',
+        'database' => 'test',
+    ]);
+    $res = $mysql->query('SELECT * FROM users');
+});
+```
+
+#### Promise/Future
+
+```php
+// Dùng ReactPHP Promise
+use React\Promise\Deferred;
+
+function asyncOperation(): Promise {
+    $deferred = new Deferred();
+
+    // Simulate async work
+    $client->request('GET', 'http://example.com')->then(
+        function ($response) use ($deferred) {
+            $deferred->resolve($response);
+        },
+        function ($error) use ($deferred) {
+            $deferred->reject($error);
+        }
+    );
+
+    return $deferred->promise();
+}
+
+// Sử dụng
+asyncOperation()
+    ->then(function($result) { echo $result; })
+    ->otherwise(function($error) { echo $error; });
+```
+
+#### Fibers (PHP 8.1+)
+
+```php
+$fiber = new Fiber(function(): void {
+    $value = Fiber::suspend("suspended value");
+    echo "Resumed with: $value\n";
+});
+
+$value = $fiber->start(); // "suspended value"
+$fiber->resume("resuming"); // "Resumed with: resuming"
+```
+
+#### Async/Await (simulated với Fiber)
+
+```php
+function fetchUser(int $id): Fiber {
+    return new Fiber(function() use ($id) {
+        // Simulate async request
+        $result = yield asyncHttpGet("/users/$id");
+        return $result;
+    });
+}
+```
+
+#### Parallel Processing
+
+```php
+// Dùng pcntl (Process Control)
+$pid = pcntl_fork();
+
+if ($pid == -1) {
+    die("Cannot fork");
+} else if ($pid) {
+    // Parent process
+    pcntl_wait($status);
+} else {
+    // Child process
+    doChildWork();
+    exit();
+}
+```
+
+---
+
+## 7. Tầng 6: Paradigm
+
+### 2.19. Functional Programming
+
+#### Pure Function
 
 ```php
 function add(int $a, int $b): int {
@@ -1821,7 +1780,7 @@ function add(int $a, int $b): int {
 }
 ```
 
-### First-Class Function
+#### First-Class Function
 
 ```php
 $fn = function($x) { return $x * 2; };
@@ -1831,7 +1790,7 @@ function apply(callable $fn, $value) {
 }
 ```
 
-### Immutability
+#### Immutability
 
 ```php
 // Thay vì mutate
@@ -1842,7 +1801,7 @@ $newArr = [...$arr, 4];  // [1, 2, 3, 4]
 $newArr = array_map(fn($x) => $x * 2, $arr);
 ```
 
-### Function Composition
+#### Function Composition
 
 ```php
 function compose(callable ...$fns): callable {
@@ -1862,7 +1821,7 @@ $process = compose(
 echo $process(5); // ((5 + 1) * 2) - 3 = 9
 ```
 
-### Currying
+#### Currying
 
 ```php
 function curriedAdd(int $a): callable {
@@ -1873,7 +1832,7 @@ $add5 = curriedAdd(5);
 echo $add5(3);  // 8
 ```
 
-### Partial Application
+#### Partial Application
 
 ```php
 function partial(callable $fn, ...$args): callable {
@@ -1887,52 +1846,201 @@ echo $mulBy2(5);  // 10
 
 ---
 
-## 2.21. Memory Management
+## 8. Tầng 7: Error Handling
 
-### Garbage Collection
+### 2.20. Xử Lý Lỗi (Error Handling)
 
-PHP sử dụng automatic garbage collection:
+#### Try-Catch
 
 ```php
-// Reference counting
-$a = "hello";
-$b = $a;  // $a and $b cùng reference
-unset($a); // Giảm reference count
-
-// Circular references được GC xử lý tự động
+try {
+    $result = divide(10, 0);
+} catch (DivisionByZeroError $e) {
+    echo "Cannot divide by zero: " . $e->getMessage();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+} finally {
+    echo "Cleanup here";
+}
 ```
 
-### Weak Reference (PHP 7.4+)
+#### Throw Exception
 
 ```php
-$obj = new stdClass();
-$weakRef = WeakReference::create($obj);
+function validate(int $age): void {
+    if ($age < 0) {
+        throw new \InvalidArgumentException("Age cannot be negative");
+    }
+}
+```
 
-if ($weakRef->get()) {
-    echo "Object still exists";
+#### Custom Exception
+
+```php
+class ValidationException extends \Exception {}
+
+function process(array $data): void {
+    if (!isset($data['name'])) {
+        throw new ValidationException("Name is required");
+    }
 }
 
-unset($obj);  // Object được giải phóng
-var_dump($weakRef->get());  // null
+try {
+    process([]);
+} catch (ValidationException $e) {
+    echo $e->getMessage();
+}
 ```
 
-### Memory Limit
+#### Try-with-resources (PHP 8.0+)
 
 ```php
-// Trong php.ini
-memory_limit = 256M
+// Sử dụng try-with-resources cho file handling
+try {
+    $resource = fopen('file.txt', 'r');
+    if ($resource === false) {
+        throw new Exception("Cannot open file");
+    }
+    // Use resource
+} finally {
+    if (isset($resource)) {
+        fclose($resource);
+    }
+}
+```
 
-// Trong code
-ini_set('memory_limit', '512M');
-echo memory_get_usage();
-echo memory_get_peak_usage();
+#### Error Propagation
+
+```php
+function divide(int $a, int $b): int {
+    if ($b === 0) {
+        throw new \DivisionByZeroError("Cannot divide by zero");
+    }
+    return $a / $b;
+}
+
+function calculate(): int {
+    return divide(10, 0); // Error propagate lên
+}
 ```
 
 ---
 
-## 2.22. Annotation/Attribute
+### 2.21. Error Types
 
-### Attributes (PHP 8.0+)
+```php
+// Throwable interface
+try {
+    // code
+} catch (\Error $e) {
+    // Bắt Error (Fatal, TypeError, etc.)
+} catch (\Exception $e) {
+    // Bắt Exception
+}
+```
+
+#### Error Types trong PHP
+
+```php
+// TypeError
+function add(int $a, int $b): int { return $a + $b; }
+add("1", 2);  // TypeError
+
+// ValueError
+$arr = [];
+$arr[-1];  // ValueError (PHP 8.0+)
+
+// ArithmeticError
+intdiv(1, 0);  // ArithmeticError
+
+// DivisionByZeroError
+$a = 1 / 0;  // DivisionByZeroError
+```
+
+---
+
+## 9. Tầng 8: Module & Organization
+
+### 2.22. Import/Module
+
+#### Require/Include
+
+```php
+// Include file
+include 'header.php';      // Warning nếu lỗi
+require 'header.php';       // Fatal error nếu lỗi
+
+// Include once
+include_once 'config.php';
+require_once 'config.php';
+```
+
+#### Namespace
+
+```php
+// file: App/Controllers/UserController.php
+namespace App\Controllers;
+
+class UserController {
+    // ...
+}
+```
+
+#### Import
+
+```php
+use App\Models\User;
+use App\Models\User as UserModel;
+use App\Controllers\{UserController, PostController};
+
+// Import hàm
+use function App\Helpers\formatDate;
+
+// Import constant
+use const App\Config\MAX_SIZE;
+```
+
+#### Autoloading (PSR-4)
+
+```php
+// composer.json
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
+
+// Trong code, không cần require
+new App\Models\User();  // Tự động load
+```
+
+#### Selective Import
+
+```php
+// Chỉ import những gì cần
+use App\Models\User;
+use App\Models\Post;
+use App\Services\AuthService;
+```
+
+#### Re-export
+
+```php
+// Trong file index.php của module
+use App\Models\User;
+use App\Models\Post;
+
+// Re-export để dùng ở nơi khác
+class_alias(User::class, 'User');
+```
+
+---
+
+### 2.23. Annotation/Attribute
+
+#### Attributes (PHP 8.0+)
 
 ```php
 #[Attribute]
@@ -1956,7 +2064,7 @@ $ref = new ReflectionClass(MyClass::class);
 $attrs = $ref->getAttributes();
 ```
 
-### Built-in Attributes
+#### Built-in Attributes
 
 ```php
 // #[Deprecated]
@@ -1982,47 +2090,11 @@ $config = new Config(port: 8080);
 
 ---
 
-## 2.23. Trait (xem 2.7)
+## 10. Tầng 9: I/O & Networking
 
----
+### 2.24. HTTP & Networking
 
-## 2.24. Operator Overloading
-
-### PHP không hỗ trợ operator overloading
-
-Nhưng có thể dùng magic methods:
-
-```php
-class Money {
-    public function __construct(
-        public int $amount
-    ) {}
-
-    // Khi dùng +
-    public function __add(Money $other): Money {
-        return new Money($this->amount + $other->amount);
-    }
-
-    // Khi convert sang string
-    public function __toString(): string {
-        return "$" . $this->amount;
-    }
-
-    // Clone
-    public function __clone() {
-        // Custom clone logic
-    }
-}
-
-$total = new Money(100) + new Money(50);
-echo $total; // "$150"
-```
-
----
-
-## 2.25. HTTP & Networking
-
-### Built-in cURL
+#### Built-in cURL
 
 ```php
 // GET request
@@ -2040,7 +2112,7 @@ $response = curl_exec($ch);
 curl_close($ch);
 ```
 
-### File Get Contents
+#### File Get Contents
 
 ```php
 // GET
@@ -2057,7 +2129,7 @@ $context = stream_context_create([
 $response = file_get_contents('https://api.example.com', false, $context);
 ```
 
-### Guzzle HTTP (thư viện phổ biến)
+#### Guzzle HTTP (thư viện phổ biến)
 
 ```php
 use GuzzleHttp\Client;
@@ -2083,9 +2155,9 @@ $response = $promise->wait();
 
 ---
 
-## 2.26. File I/O
+### 2.25. File I/O
 
-### Read File
+#### Read File
 
 ```php
 // Toàn bộ file
@@ -2102,7 +2174,7 @@ while (($line = fgets($handle)) !== false) {
 fclose($handle);
 ```
 
-### Write File
+#### Write File
 
 ```php
 // Ghi đè
@@ -2117,21 +2189,21 @@ fwrite($handle, 'Hello');
 fclose($handle);
 ```
 
-### File Path
+#### File Path
 
 ```php
 $path = '/var/www/html/images/photo.jpg';
 
 basename($path);        // "photo.jpg"
-dirname($path);         // "/var/www/html/images"
-pathinfo($path);        // ['dirname', 'basename', 'extension', 'filename']
+dirname($path);          // "/var/www/html/images"
+pathinfo($path);         // ['dirname', 'basename', 'extension', 'filename']
 pathinfo($path, PATHINFO_EXTENSION);  // "jpg"
 
 // Real path
 realpath('relative/path');  // Absolute path
 ```
 
-### Stream
+#### Stream
 
 ```php
 // Read from stream
@@ -2149,7 +2221,7 @@ fclose($handle);
 $temp = fopen('php://temp', 'w+');
 ```
 
-### Async File I/O
+#### Async File I/O
 
 ```php
 // Swoole async file
@@ -2163,9 +2235,11 @@ Co\run(function() {
 
 ---
 
-## 2.27. JSON & Serialization
+## 11. Tầng 10: Data & Serialization
 
-### JSON Encode/Decode
+### 2.26. JSON & Serialization
+
+#### JSON Encode/Decode
 
 ```php
 $data = ['name' => 'John', 'age' => 25, 'active' => true];
@@ -2185,7 +2259,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 ```
 
-### Serialization
+#### Serialization
 
 ```php
 $obj = new stdClass();
@@ -2229,9 +2303,9 @@ $json = json_encode(new Person('John', '123-45-6789'));
 
 ---
 
-## 2.28. Date & Time
+### 2.27. Date & Time
 
-### DateTime Class
+#### DateTime Class
 
 ```php
 $now = new DateTime();
@@ -2248,14 +2322,14 @@ $interval = $start->diff($end);
 echo $interval->days;  // 14
 ```
 
-### DateTimeImmutable (PHP 5.5+)
+#### DateTimeImmutable (PHP 5.5+)
 
 ```php
 $date = new DateTimeImmutable('2024-01-01');
 $newDate = $date->modify('+1 day');  // Tạo instance mới, không thay đổi $date
 ```
 
-### Timestamp
+#### Timestamp
 
 ```php
 // Current timestamp
@@ -2269,7 +2343,7 @@ $date = new DateTime('@' . time());
 $date = DateTime::createFromFormat('U', '1705312800');
 ```
 
-### DateInterval
+#### DateInterval
 
 ```php
 $date = new DateTime();
@@ -2280,7 +2354,7 @@ $date->sub(new DateInterval('P1W'));      // -1 week
 $interval = new DateInterval('P2DT3H4M'); // 2 days, 3 hours, 4 minutes
 ```
 
-### DateTimeZone
+#### DateTimeZone
 
 ```php
 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
@@ -2291,7 +2365,7 @@ $date = new DateTime('2024-01-15 10:00:00', new DateTimeZone('UTC'));
 $date->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh'));
 ```
 
-### Carbon Library (thường dùng)
+#### Carbon Library (thường dùng)
 
 ```php
 use Carbon\Carbon;
@@ -2311,9 +2385,9 @@ $date->endOfMonth();
 
 ---
 
-## 2.29. Regular Expression
+### 2.28. Regular Expression
 
-### preg_* functions
+#### preg_* functions
 
 ```php
 $pattern = '/\d{3}-\d{4}/';
@@ -2346,7 +2420,7 @@ $filtered = preg_grep('/test/', $items);
 // ['test1', 'test2']
 ```
 
-### Pattern Modifiers
+#### Pattern Modifiers
 
 ```php
 // i - case insensitive
@@ -2366,7 +2440,7 @@ $pattern = '/(
 )/x';
 ```
 
-### Named Capture Groups
+#### Named Capture Groups
 
 ```php
 preg_match('/(?<area>\d{3})-(?<number>\d{4})/', '123-4567', $matches);
@@ -2376,9 +2450,11 @@ preg_match('/(?<area>\d{3})-(?<number>\d{4})/', '123-4567', $matches);
 
 ---
 
-## 2.30. Testing
+## 12. Tầng 11: Development Practices
 
-### PHPUnit
+### 2.29. Testing
+
+#### PHPUnit
 
 ```php
 // tests/UserTest.php
@@ -2427,7 +2503,7 @@ class UserTest extends TestCase {
 }
 ```
 
-### Mocking
+#### Mocking
 
 ```php
 use PHPUnit\Framework\TestCase;
@@ -2456,7 +2532,7 @@ class ServiceTest extends TestCase {
 }
 ```
 
-### Assertions
+#### Assertions
 
 ```php
 $this->assertEquals($expected, $actual);
@@ -2475,9 +2551,9 @@ $this->assertCount(3, $array);
 
 ---
 
-## 2.31. Logging
+### 2.30. Logging
 
-### Native Error Logging
+#### Native Error Logging
 
 ```php
 // Error log
@@ -2492,66 +2568,47 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
 });
 ```
 
-### Monolog (thư viện phổ biến)
+#### Monolog (thư viện phổ biến)
 
 ```php
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SlackHandler;
+use Monolog\Handler\FirePHPHandler;
 
+// Create logger
 $log = new Logger('app');
-
-// Log to file
 $log->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+$log->pushHandler(new FirePHPHandler());
 
-// Log to Slack
-$log->pushHandler(new SlackHandler('token', 'channel'));
+// Log messages
+$log->debug('Debug message');
+$log->info('Info message');
+$log->warning('Warning message');
+$log->error('Error message', ['exception' => $e]);
 
-$log->debug('Debug message', ['data' => [1, 2, 3]]);
-$log->info('User logged in', ['user_id' => 123]);
-$log->warning('Low memory');
-$log->error('Database connection failed', ['exception' => $e]);
-$log->critical('System down!');
-```
-
-### Structured Logging
-
-```php
-$log->info('User registered', [
+// Structured logging
+$log->info('User logged in', [
     'user_id' => 123,
-    'email' => 'user@example.com',
-    'ip' => $_SERVER['REMOTE_ADDR'],
-    'context' => ['source' => 'web']
+    'ip' => $_SERVER['REMOTE_ADDR']
 ]);
 ```
 
 ---
 
-## 2.32. Dependency Injection
+### 2.31. Dependency Injection
 
-### Constructor Injection
+#### Constructor Injection
 
 ```php
 class UserService {
     public function __construct(
-        private UserRepository $userRepo,
+        private UserRepository $repository,
         private Mailer $mailer
     ) {}
-
-    public function createUser(string $email): void {
-        $user = new User($email);
-        $this->userRepo->save($user);
-        $this->mailer->sendWelcome($email);
-    }
 }
-
-// Manual DI
-$repo = new UserRepository();
-$mailer = new Mailer();
-$service = new UserService($repo, $mailer);
 ```
 
-### Setter Injection
+#### Setter Injection
 
 ```php
 class CacheService {
@@ -2560,38 +2617,26 @@ class CacheService {
     public function setCache(Cache $cache): void {
         $this->cache = $cache;
     }
-
-    public function get(string $key): mixed {
-        return $this->cache?->get($key);
-    }
 }
 ```
 
-### Interface Injection
+#### Interface Injection
 
 ```php
-interface LoggerAwareInterface {
-    public function setLogger(Logger $logger): void;
+interface LoggerInterface {
+    public function log(string $message): void;
 }
 
-class LoggerAwareTrait {
-    private Logger $logger;
+class Application {
+    private LoggerInterface $logger;
 
-    public function setLogger(Logger $logger): void {
+    public function setLogger(LoggerInterface $logger): void {
         $this->logger = $logger;
     }
 }
-
-class MyService {
-    use LoggerAwareTrait;
-
-    public function doWork(): void {
-        $this->logger->info('Work started');
-    }
-}
 ```
 
-### Service Container (PSR-11)
+#### Service Container (PSR-11)
 
 ```php
 use Psr\Container\ContainerInterface;
@@ -2600,111 +2645,110 @@ class Container implements ContainerInterface {
     private array $services = [];
 
     public function get(string $id): mixed {
-        if (!isset($this->services[$id])) {
-            $this->services[$id] = $this->create($id);
+        if (!$this->has($id)) {
+            throw new NotFoundException("Service not found: $id");
         }
-        return $this->services[$id];
+        return $this->services[$id]($this);
     }
 
     public function has(string $id): bool {
-        return isset($this->services[$id]) || method_exists($this, 'create' . $id);
+        return isset($this->services[$id]);
     }
 
-    private function create(string $id): mixed {
-        return match($id) {
-            UserRepository::class => new UserRepository(),
-            Mailer::class => new Mailer(),
-            default => throw new \Exception("Unknown service: $id")
-        };
+    public function register(string $id, callable $factory): void {
+        $this->services[$id] = $factory;
     }
 }
 ```
 
 ---
 
-## 2.33. Configuration
+### 2.32. Configuration
 
-### Environment Variables
+#### Environment Variables
 
 ```php
-// $_ENV or getenv()
-$dbHost = $_ENV['DB_HOST'] ?? 'localhost';
-$dbHost = getenv('DB_HOST') ?: 'localhost';
+// .env file
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+API_KEY=secret
 
-// Dùng dotenv (vlucas/phpdotenv)
-require 'vendor/autoload.php';
+// Trong code
+$host = $_ENV['DATABASE_HOST'] ?? 'localhost';
+$apiKey = getenv('API_KEY');
+
+// Dùng Dotenv
+require_once 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$dbHost = $_ENV['DB_HOST'];
+$host = $_ENV['DATABASE_HOST'];
 ```
 
-### Config File
+#### Config File
 
 ```php
-// config/app.php
+// config/database.php
 return [
-    'debug' => true,
-    'db' => [
-        'host' => 'localhost',
-        'name' => 'myapp',
-        'user' => 'root',
-    ],
-    'mail' => [
-        'driver' => 'smtp',
-        'host' => 'smtp.mailtrap.io',
-    ]
+    'driver' => 'mysql',
+    'host' => $_ENV['DB_HOST'] ?? 'localhost',
+    'database' => $_ENV['DB_NAME'],
+    'username' => $_ENV['DB_USER'],
+    'password' => $_ENV['DB_PASS'],
 ];
 
 // Load config
-$config = require 'config/app.php';
-echo $config['debug'];
+$config = require 'config/database.php';
 ```
 
-### Command Line Args
+#### Command Line Args
 
 ```php
-// $argv, $argc
-// php script.php arg1 arg2 --option=value
+// $argv[0] = script name
+// $argv[1], $argv[2], ... = arguments
 
-// Dùng Composer console component
-use Symfony\Component\Console\Application;
+// php script.php --env=production --debug
 
-$app = new Application();
-$app->register('greet')
-    ->addArgument('name')
-    ->addOption('yell')
-    ->setCode(function($input, $output) {
-        $name = $input->getArgument('name');
-        $message = "Hello, $name";
-        if ($input->getOption('yell')) {
-            $message = strtoupper($message);
-        }
-        $output->writeln($message);
-    });
-$app->run();
+for ($i = 1; $i < $argc; $i++) {
+    $arg = $argv[$i];
+    if (str_starts_with($arg, '--')) {
+        [$key, $value] = explode('=', substr($arg, 2), 2);
+        $options[$key] = $value;
+    }
+}
 ```
 
 ---
 
-## 2.34. Build & Package Management
+### 2.33. Build & Package Management
 
-### Composer
+#### Composer (Dependency Manager)
+
+```bash
+# Initialize project
+composer init
+
+# Add dependency
+composer require laravel/framework
+composer require --dev phpunit/phpunit
+
+# Install
+composer install
+composer update
+```
+
+#### composer.json
 
 ```json
-// composer.json
 {
     "name": "vendor/project",
-    "description": "My project",
-    "type": "project",
+    "description": "My PHP Project",
     "require": {
-        "php": "^8.1",
-        "laravel/framework": "^10.0",
-        "guzzlehttp/guzzle": "^7.0"
+        "php": "^8.0",
+        "laravel/framework": "^10.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
-        "phpstan/phpstan": "^1.0"
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
@@ -2713,298 +2757,195 @@ $app->run();
     },
     "scripts": {
         "test": "phpunit",
-        "lint": "phpstan analyse"
-    },
-    "config": {
-        "optimize-autoloader": true
+        "lint": "phpcs src"
     }
 }
 ```
 
-### Composer Commands
+#### PHP-CS-Fixer (Formatter)
 
 ```bash
 # Install
-composer install
-
-# Update
-composer update
-
-# Add package
-composer require guzzlehttp/guzzle
-composer require --dev phpunit/phpunit
-
-# Autoload
-composer dump-autoload
-
-# Scripts
-composer test
-composer run-script lint
-```
-
-### Linter & Formatter
-
-```php
-// PHPStan (static analysis)
-composer require --dev phpstan/phpstan
-// phpstan.neon
-includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-parameters:
-    level: 8
-    paths:
-        - src
-
-// PHP-CS-Fixer (code style)
 composer require --dev friendsofphp/php-cs-fixer
-// .php-cs-fixer.dist.php
-$config = new PhpCsFixer\Config();
-return $config->setRules([
-    '@PSR12' => true,
-    'array_syntax' => ['syntax' => 'short'],
-]);
 
-// Run
-phpstan analyse src
-php-cs-fixer fix src
+# Run
+vendor/bin/php-cs-fixer fix src/
+vendor/bin/php-cs-fixer fix --rules=@PSR12 src/
 ```
 
 ---
 
-## 2.35. Documentation
+### 2.34. Documentation
 
-### Comments
+#### Comment
 
 ```php
 // Single line comment
+
+# Shell style comment
 
 /*
  * Multi-line
  * comment
  */
-
-/**
- * DocBlock comment for documentation
- *
- * @param string $name User's name
- * @param int $age User's age
- * @return bool Success status
- */
-function process(string $name, int $age): bool {
-    return true;
-}
 ```
 
-### DocBlock Tags
+#### Doc Comment
 
 ```php
 /**
- * Short description.
+ * Calculates the sum of two numbers.
  *
- * Long description with multiple lines.
- *
- * @param string $param1 Description of param1
- * @param int|null $param2 Optional param
- * @return bool Return description
- * @throws \InvalidArgumentException When validation fails
- * @see OtherClass::method()
- * @since 1.0.0
- * @deprecated 2.0.0 Use newMethod() instead
+ * @param int $a First number
+ * @param int $b Second number
+ * @return int The sum
  */
+function add(int $a, int $b): int {
+    return $a + $b;
+}
 ```
 
 ---
 
-## 2.36. Error Types
+## 13. Tầng 12: Advanced Concepts
 
-### Exception Hierarchy
+### 2.35. Advanced Concepts
 
-```php
-// Throwable (PHP 7+)
-try {
-    // code
-} catch (\Throwable $e) {
-    // Catch all
-}
-
-// Error (PHP 7+) - programming errors
-catch (\Error $e) {
-    // TypeError, ArgumentCountError, etc.
-}
-
-// Exception - application errors
-catch (\Exception $e) {
-    // Custom application errors
-}
-```
-
-### Custom Error Types
-
-```php
-class ValidationException extends \Exception {}
-class NotFoundException extends \Exception {}
-class UnauthorizedException extends \Exception {}
-
-// Với error codes
-class ApiException extends \Exception {
-    public function __construct(
-        string $message,
-        private int $statusCode = 500
-    ) {
-        parent::__construct($message);
-    }
-
-    public function getStatusCode(): int {
-        return $this->statusCode;
-    }
-}
-```
-
-### Error Handling
-
-```php
-// Set custom handler
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
-});
-
-// Exception handler
-set_exception_handler(function($e) {
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
-    exit();
-});
-
-// Shutdown handler
-register_shutdown_function(function() {
-    $error = error_get_last();
-    if ($error) {
-        // Log fatal errors
-    }
-});
-```
-
----
-
-## 2.37. Advanced Concepts
-
-### Reflection
+#### Reflection
 
 ```php
 class User {
-    public string $name = 'Guest';
-    public function greet(): string {
-        return "Hello, $this->name";
-    }
+    public string $name;
+    private int $age;
 }
 
-$class = new ReflectionClass(User::class);
+// Get class info
+$ref = new ReflectionClass(User::class);
+$ref->getName();              // "User"
+$ref->getProperties();         // [ReflectionProperty]
+$ref->getMethods();           // [ReflectionMethod]
 
-// Get properties
-$props = $class->getProperties();
-// Get methods
-$methods = $class->getMethods();
-// Get doc comment
-$doc = $class->getDocComment();
+// Get property info
+$prop = $ref->getProperty('age');
+$prop->isPrivate();           // true
+$prop->setAccessible(true);
+$prop->setValue($user, 25);
 
-// Invoke method
-$method = $class->getMethod('greet');
-$user = $class->newInstance();
-$result = $method->invoke($user);
-
-// Check property type
-$prop = $class->getProperty('name');
-$type = $prop->getType();
+// Get method info
+$method = $ref->getMethod('getName');
+$method->isPublic();          // true
 ```
 
-### Attributes (xem 2.22)
-
-### Dynamic Properties
+#### Metadata/Introspection
 
 ```php
-class StdClass {
-    // PHP 8.2+ - không cần class
+// Lấy thông tin kiểu lúc runtime
+class Product {
+    public string $name;
+    public float $price;
 }
 
-$obj = new stdClass();
-$obj->name = 'John';  // Dynamic property
-$obj->{'dynamic-' . $key} = $value;
+$ref = new ReflectionClass(Product::class);
 
-// PHP 8.2+ - #[AllowDynamicProperties]
-#[AllowDynamicProperties]
-class Dynamic {}
+// Kiểm tra property
+foreach ($ref->getProperties() as $property) {
+    echo $property->getName() . ": " .
+         $property->getType()->getName() . "\n";
+}
+
+// Kiểm tra method
+$ref->hasMethod('__construct');
 ```
 
-### Magic Methods
+#### Magic Methods
 
 ```php
-class Magic {
+class MagicClass {
     private array $data = [];
 
-    // __get($name) - truy cập property không tồn tại
-    public function __get(string $name): mixed {
-        return $this->data[$name] ?? null;
+    // Khi gọi không tồn tại
+    public function __call(string $name, array $args): mixed {
+        if (str_starts_with($name, 'get')) {
+            $key = strtolower(substr($name, 3));
+            return $this->data[$key] ?? null;
+        }
     }
 
-    // __set($name, $value) - gán property không tồn tại
+    // Khi gọi static không tồn tại
+    public static function __callStatic(string $name, array $args): mixed {
+        // ...
+    }
+
+    // Khi set property không tồn tại
     public function __set(string $name, mixed $value): void {
         $this->data[$name] = $value;
     }
 
-    // __isset($name) - kiểm tra property
+    // Khi kiểm tra property
     public function __isset(string $name): bool {
         return isset($this->data[$name]);
     }
 
-    // __unset($name) - unset property
+    // Khi unset property
     public function __unset(string $name): void {
         unset($this->data[$name]);
     }
 
-    // __call($name, $args) - gọi method không tồn tại
-    public function __call(string $name, array $args): mixed {
-        return "Called $name with: " . implode(', ', $args);
+    // Khi convert sang string
+    public function __toString(): string {
+        return json_encode($this->data);
     }
 
-    // __callStatic() - static call
-    // __toString() - convert to string
-    // __invoke() - gọi object như function
-    // __clone() - khi clone
-    // __debugInfo() - var_dump
+    // Khi clone
+    public function __clone(): void {
+        $this->data = [];
+    }
+
+    // Khi serialize
+    public function __sleep(): array {
+        return ['data'];
+    }
+
+    // Khi unserialize
+    public function __wakeup(): void {
+        // Reconnect or reinitialize
+    }
+}
+```
+
+#### FFI (Foreign Function Interface) (PHP 7.4+)
+
+```php
+// Cần enable trong php.ini: ffi.enable=true
+
+if (FFI::isLoaded()) {
+    // Gọi C functions
+    $libc = FFI::load("libc.so.6");
+    $printf = $libc->printf;
+    $printf("Hello %s\n", "World");
 }
 ```
 
-### FFI (Foreign Function Interface) (PHP 7.4+)
+#### Fibers (PHP 8.1+)
 
 ```php
-// Cần extension ffi.enable=1 trong php.ini
-
-$ffi = FFI::cdef("
-    int printf(const char *format, ...);
-", "libc.so.6");
-
-$ffi->printf("Hello %s\n", "World");
+// Xem thêm ở Concurrency
 ```
 
-### Meta-programming
+#### Lazy Objects (PHP 8.4+)
 
 ```php
-// Dynamic class creation
-$className = 'DynamicClass';
-eval("class $className { public \$value; }");
+// Tạo object lazy
+class HeavyService {
+    public function __construct(
+        public lazy string $data = null
+    ) {}
 
-// Method missing (via __call)
-class API {
-    public function __call(string $method, array $args) {
-        return "Calling $method with: " . json_encode($args);
+    public function initialize(): void {
+        $this->data = computeExpensiveData();
     }
 }
-
-$api = new API();
-echo $api->getUser(123);  // Calling getUser with: [123]
 ```
-
-### Traits (xem 2.7)
 
 ---
 
@@ -3012,22 +2953,19 @@ echo $api->getUser(123);  // Calling getUser with: [123]
 
 PHP là ngôn ngữ:
 - **Dynamic typing** với optional type declarations (PHP 7.0+)
-- **Weakly typed** nhưng có type hints
-- **Server-side** chủ yếu cho web development
-- Có nhiều magic methods cho meta-programming
-- Không có built-in generics như Java
-- Không có true operator overloading
-- Hỗ trợ OOP đầy đủ từ PHP 5, với nhiều cải tiến trong PHP 7, 8
+- **Weak typing** có implicit conversion
+- **Multi-paradigm**: Procedural + OOP + Functional
+- **Rich ecosystem**: Laravel, Symfony, WordPress
+- **Modern features**: Attributes (8.0), Named Arguments (8.0), Match (8.0), Enums (8.1), Fibers (8.1), Readonly (8.1)
 
 ### PHP Version History
 
-| Version | Year | Key Features |
-|---------|------|--------------|
-| PHP 5 | 2004 | OOP improvements, PDO |
-| PHP 7 | 2015 | Scalar type hints, return types, null coalescing |
-| PHP 7.4 | 2019 | Arrow functions, typed properties |
-| PHP 8 | 2020 | Attributes, named arguments, union types, match |
-| PHP 8.1 | 2021 | Enums, readonly properties, fibers |
-| PHP 8.2 | 2022 | Readonly classes, Disjunctive Normal Form types |
-| PHP 8.3 | 2023 | Typed class constants, JSON validation |
-| PHP 8.4 | 2024 | Lazy objects, array_find/any/all, property hooks |
+| Version | Release Date | Key Features |
+|---------|---------------|--------------|
+| PHP 7.0 | 2015-12-03 | Type declarations, null coalescing |
+| PHP 7.4 | 2019-11-28 | Arrow functions, typed properties |
+| PHP 8.0 | 2020-11-26 | Attributes, named arguments, match |
+| PHP 8.1 | 2021-12-06 | Enums, Fibers, readonly properties |
+| PHP 8.2 | 2022-12-08 | Readonly classes, DNF types |
+| PHP 8.3 | 2023-11-23 | Typed class constants, json_validate |
+| PHP 8.4 | 2024-11-21 | Lazy objects, array_find |
