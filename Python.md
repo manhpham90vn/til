@@ -8,6 +8,7 @@
    - [1.2 Khai Báo Hàm](#12-khai-báo-hàm)
    - [1.3 Vòng Lặp](#13-vòng-lặp)
    - [1.4 Điều Kiện](#14-điều-kiện)
+   - [1.5 Destructuring & Spread](#15-destructuring--spread)
 2. [Tầng 2: Type System](#tầng-2-type-system)
    - [2.1 Kiểu Dữ Liệu Cơ Bản](#21-kiểu-dữ-liệu-cơ-bản)
    - [2.2 Enum](#22-enum)
@@ -183,6 +184,39 @@ class Counter:
 print(Counter.count)  # 0
 c1 = Counter()
 print(Counter.count)  # 1
+```
+
+#### Scope & Shadowing
+
+```python
+# Python có LEGB rule: Local, Enclosing, Global, Built-in
+x = "global"
+
+def outer():
+    x = "enclosing"  # Shadowing global x
+
+    def inner():
+        x = "local"  # Shadowing enclosing x
+        print(x)     # "local"
+
+    inner()
+    print(x)  # "enclosing"
+
+outer()
+print(x)  # "global"
+
+# nonlocal - thay đổi biến enclosing
+def counter():
+    count = 0
+    def increment():
+        nonlocal count
+        count += 1
+        return count
+    return increment
+
+c = counter()
+c()  # 1
+c()  # 2
 ```
 
 ---
@@ -426,6 +460,48 @@ for i in RangeIterator(5):
     print(i)  # 0, 1, 2, 3, 4
 ```
 
+#### Generator/Yield
+
+```python
+# Generator function - lazy evaluation
+def count_up(n):
+    i = 0
+    while i < n:
+        yield i
+        i += 1
+
+for num in count_up(5):
+    print(num)  # 0, 1, 2, 3, 4
+
+# Generator với send()
+def accumulator():
+    total = 0
+    while True:
+        value = yield total
+        if value is None:
+            break
+        total += value
+
+gen = accumulator()
+next(gen)        # 0 (khởi tạo)
+gen.send(10)     # 10
+gen.send(20)     # 30
+
+# yield from - delegate to sub-generator
+def flatten(nested):
+    for item in nested:
+        if isinstance(item, list):
+            yield from flatten(item)
+        else:
+            yield item
+
+list(flatten([1, [2, 3], [4, [5, 6]]]))  # [1, 2, 3, 4, 5, 6]
+
+# Generator expression
+squares = (x**2 for x in range(10))  # Lazy
+list(squares)  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
 #### Loop Control
 
 ```python
@@ -515,6 +591,70 @@ status = "adult" if age >= 18 else "minor"
 # Nested ternary
 score = 85
 grade = "A" if score >= 90 else "B" if score >= 80 else "C"
+```
+
+---
+
+### 1.5. Destructuring & Spread (Phân rã & Toán tử mở rộng)
+
+#### Tuple/List Unpacking
+
+```python
+# Basic unpacking
+a, b, c = [1, 2, 3]
+x, y = (10, 20)
+
+# Swap
+a, b = b, a
+
+# Starred assignment (rest operator)
+first, *rest = [1, 2, 3, 4, 5]
+# first = 1, rest = [2, 3, 4, 5]
+
+first, *middle, last = [1, 2, 3, 4, 5]
+# first = 1, middle = [2, 3, 4], last = 5
+
+# Ignore values
+_, b, _ = (1, 2, 3)  # Chỉ lấy b = 2
+```
+
+#### Dict Unpacking (Spread)
+
+```python
+# Dict unpacking với **
+defaults = {"color": "red", "size": "medium"}
+custom = {"size": "large", "weight": 10}
+
+merged = {**defaults, **custom}
+# {'color': 'red', 'size': 'large', 'weight': 10}
+
+# Function argument unpacking
+def greet(name, age):
+    print(f"{name} is {age}")
+
+data = {"name": "John", "age": 30}
+greet(**data)  # "John is 30"
+
+# List unpacking với *
+nums = [1, 2, 3]
+more = [0, *nums, 4]  # [0, 1, 2, 3, 4]
+```
+
+#### Nested Unpacking
+
+```python
+# Nested tuple unpacking
+(a, b), (c, d) = (1, 2), (3, 4)
+
+# In for loop
+pairs = [("Alice", 25), ("Bob", 30)]
+for name, age in pairs:
+    print(f"{name}: {age}")
+
+# Dict items unpacking
+user = {"name": "John", "age": 30}
+for key, value in user.items():
+    print(f"{key}: {value}")
 ```
 
 ---
@@ -1147,6 +1287,49 @@ text.endswith("World")    # True
 
 ---
 
+### 2.8. Union & Intersection Types
+
+```python
+from typing import Union, Optional
+
+# Union type (Python 3.5+)
+def process(value: Union[str, int]) -> str:
+    return str(value)
+
+# Python 3.10+ syntax
+def process(value: str | int) -> str:
+    return str(value)
+
+# Optional = Union[X, None]
+def greet(name: Optional[str] = None) -> str:
+    return f"Hello, {name or 'World'}!"
+
+# Type narrowing / Type guard
+def handle(value: str | int):
+    if isinstance(value, str):
+        print(value.upper())  # Type narrowed to str
+    else:
+        print(value + 1)      # Type narrowed to int
+
+# TypeGuard (Python 3.10+)
+from typing import TypeGuard
+
+def is_str_list(val: list) -> TypeGuard[list[str]]:
+    return all(isinstance(x, str) for x in val)
+
+# Type alias
+UserId = int
+UserName = str
+UserInfo = dict[str, str | int]
+
+# NewType for distinct types
+from typing import NewType
+UserId = NewType('UserId', int)
+user_id = UserId(42)  # Type-safe wrapper
+```
+
+---
+
 ## 3. Tầng 3: OOP & Type Relationships
 
 ### 3.1. Class/Object
@@ -1291,6 +1474,35 @@ user = (UserBuilder()
     .build())
 ```
 
+#### Inner/Nested Class
+
+```python
+# Nested class (static-like)
+class Outer:
+    class Inner:
+        def greet(self):
+            return "Hello from Inner"
+
+    def create_inner(self):
+        return self.Inner()
+
+inner = Outer.Inner()
+inner.greet()  # "Hello from Inner"
+
+# Inner class với tham chiếu outer
+class LinkedList:
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next = next_node
+
+    def __init__(self):
+        self.head = None
+
+    def add(self, value):
+        self.head = self.Node(value, self.head)
+```
+
 ---
 
 ### 3.2. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
@@ -1392,9 +1604,62 @@ duck.swim()  # "Swimming!"
 Duck.__mro__
 ```
 
+#### Diamond Problem (MRO)
+
+```python
+# Python giải quyết diamond problem bằng C3 Linearization (MRO)
+class A:
+    def method(self):
+        return "A"
+
+class B(A):
+    def method(self):
+        return "B"
+
+class C(A):
+    def method(self):
+        return "C"
+
+class D(B, C):
+    pass
+
+d = D()
+d.method()  # "B" (theo MRO: D -> B -> C -> A)
+print(D.__mro__)  # (D, B, C, A, object)
+```
+
 ---
 
 ### 3.3. Interface/Trait/Protocol
+
+#### Mixin
+
+```python
+# Mixin - tái sử dụng code không cần kế thừa chính
+class JsonMixin:
+    def to_json(self):
+        import json
+        return json.dumps(self.__dict__)
+
+    @classmethod
+    def from_json(cls, json_str):
+        import json
+        return cls(**json.loads(json_str))
+
+class LogMixin:
+    def log(self, message):
+        print(f"[{self.__class__.__name__}] {message}")
+
+# Sử dụng mixin
+class User(JsonMixin, LogMixin):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+user = User("John", 30)
+user.to_json()       # '{"name": "John", "age": 30}'
+user.log("Created")  # "[User] Created"
+```
 
 #### Protocol (Python 3.8+)
 
@@ -1571,6 +1836,67 @@ from pympler import asizeof
 asizeof.asizeof(x)  # More accurate size
 ```
 
+#### Stack vs Heap
+
+```python
+# Python: Mọi object đều trên heap
+# Biến là reference (trên stack) trỏ đến object (trên heap)
+
+# Value type behavior (immutable)
+a = 10
+b = a     # b là copy của giá trị (vì int là immutable)
+b = 20
+print(a)  # 10 (không bị ảnh hưởng)
+
+# Reference type behavior (mutable) 
+a = [1, 2, 3]
+b = a     # b trỏ cùng object
+b.append(4)
+print(a)  # [1, 2, 3, 4] (bị ảnh hưởng!)
+
+# Copy để tránh shared reference
+import copy
+a = [1, 2, [3, 4]]
+b = a.copy()           # Shallow copy
+c = copy.deepcopy(a)   # Deep copy
+```
+
+#### Memory Safety
+
+```python
+# Python đảm bảo memory safety tự động:
+# - Không có buffer overflow (bounds checking)
+# - Không có dangling pointer (GC quản lý)
+# - Không có use-after-free
+
+# Memory leak có thể xảy ra với circular reference
+class Node:
+    def __init__(self):
+        self.ref = None
+
+a = Node()
+b = Node()
+a.ref = b
+b.ref = a  # Circular reference!
+
+# GC cycle detector sẽ xử lý
+import gc
+gc.collect()  # Force cleanup circular references
+
+# Dùng weakref để tránh circular reference
+import weakref
+
+class Cache:
+    def __init__(self):
+        self._cache = weakref.WeakValueDictionary()
+
+    def get(self, key):
+        return self._cache.get(key)
+
+    def set(self, key, value):
+        self._cache[key] = value
+```
+
 ---
 
 ### 4.2. Property & Getter/Setter
@@ -1722,6 +2048,64 @@ async def fetch_urls(urls):
 # Usage
 urls = ["https://example.com", "https://python.org"]
 results = asyncio.run(fetch_urls(urls))
+```
+
+#### Event Loop
+
+```python
+import asyncio
+
+# Event loop là core của asyncio
+loop = asyncio.get_event_loop()
+
+# asyncio.run() tạo và quản lý event loop tự động
+async def main():
+    print("Start")
+    await asyncio.sleep(1)
+    print("End")
+
+asyncio.run(main())  # Tạo loop, chạy, đóng
+```
+
+#### Semaphore & Barrier
+
+```python
+import asyncio
+import threading
+
+# Async Semaphore - giới hạn số task đồng thời
+async def limited_task(sem, name):
+    async with sem:
+        print(f"{name} running")
+        await asyncio.sleep(1)
+
+async def main():
+    sem = asyncio.Semaphore(3)  # Tối đa 3 task cùng lúc
+    tasks = [limited_task(sem, f"Task-{i}") for i in range(10)]
+    await asyncio.gather(*tasks)
+
+# Threading Barrier
+barrier = threading.Barrier(3)  # Chờ 3 threads
+
+def worker(name):
+    print(f"{name} waiting")
+    barrier.wait()  # Chờ các thread khác
+    print(f"{name} proceeding")
+```
+
+#### Structured Concurrency (Python 3.11+)
+
+```python
+import asyncio
+
+async def main():
+    # TaskGroup - structured concurrency
+    async with asyncio.TaskGroup() as tg:
+        task1 = tg.create_task(fetch_data("url1"))
+        task2 = tg.create_task(fetch_data("url2"))
+    # Tất cả tasks hoàn thành hoặc tất cả bị cancel nếu 1 task lỗi
+
+    print(task1.result(), task2.result())
 ```
 
 ---
@@ -1919,6 +2303,19 @@ def level1():
         raise  # Re-raise exception
 ```
 
+#### Assertion
+
+```python
+# assert - kiểm tra điều kiện (bị disable khi python -O)
+assert len(items) > 0, "List must not be empty"
+assert isinstance(name, str), f"Expected str, got {type(name)}"
+
+# Dùng cho debugging, không dùng cho validation
+def divide(a, b):
+    assert b != 0, "Divisor must not be zero"
+    return a / b
+```
+
 ---
 
 ### 7.2. Error Types
@@ -1960,6 +2357,27 @@ class DatabaseError(AppError):
 class ConnectionError(DatabaseError):
     """Connection error"""
     pass
+```
+
+#### Error Wrapping (Exception Chaining)
+
+```python
+# Exception chaining với from
+try:
+    result = int("abc")
+except ValueError as e:
+    raise RuntimeError("Failed to parse input") from e
+# RuntimeError: Failed to parse input
+# Caused by: ValueError: invalid literal...
+
+# Stack trace với traceback
+import traceback
+
+try:
+    1 / 0
+except ZeroDivisionError:
+    traceback.print_exc()  # In full stack trace
+    tb_str = traceback.format_exc()  # Lấy string
 ```
 
 ---
@@ -2226,6 +2644,91 @@ json.dumps(data, indent=2, sort_keys=True)
 
 ---
 
+### 9.3. Database Access
+
+```python
+import sqlite3
+
+# Connection
+conn = sqlite3.connect('app.db')
+cursor = conn.cursor()
+
+# Create table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE
+    )
+''')
+
+# Prepared statement (parameterized query)
+cursor.execute(
+    "INSERT INTO users (name, email) VALUES (?, ?)",
+    ("John", "john@example.com")
+)
+
+# Transaction
+try:
+    conn.execute("BEGIN")
+    cursor.execute("INSERT INTO users (name, email) VALUES (?, ?)", ("Jane", "jane@example.com"))
+    conn.commit()
+except Exception:
+    conn.rollback()
+    raise
+finally:
+    conn.close()
+
+# Connection pool (với SQLAlchemy)
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///app.db', pool_size=5, max_overflow=10)
+```
+
+### 9.4. CLI I/O
+
+```python
+import sys
+
+# Stdin/Stdout
+name = input("Enter your name: ")  # Đọc từ stdin
+print(f"Hello, {name}", file=sys.stdout)  # Ghi ra stdout
+print("Error!", file=sys.stderr)  # Ghi ra stderr
+
+# argparse - Command line parsing
+import argparse
+
+parser = argparse.ArgumentParser(description="My CLI tool")
+parser.add_argument("-n", "--name", required=True, help="Your name")
+parser.add_argument("-v", "--verbose", action="store_true")
+parser.add_argument("--count", type=int, default=1)
+args = parser.parse_args()
+print(f"Hello, {args.name}")
+
+# click (thư viện bên thứ 3)
+# pip install click
+import click
+
+@click.command()
+@click.option('--name', prompt='Your name', help='The person to greet.')
+@click.option('--count', default=1, help='Number of greetings.')
+def hello(name, count):
+    for _ in range(count):
+        click.echo(f"Hello, {name}!")
+
+# ANSI Colors
+print("\033[31mRed text\033[0m")
+print("\033[32mGreen text\033[0m")
+print("\033[1;34mBold blue\033[0m")
+
+# Rich library for fancy terminal output
+# pip install rich
+from rich.console import Console
+console = Console()
+console.print("[bold red]Error![/bold red] Something went wrong")
+```
+
+---
+
 ## 10. Tầng 10: Data & Serialization
 
 ### 10.1. JSON & Serialization
@@ -2327,6 +2830,24 @@ dt_ny = datetime.now(tz)
 dt_utc = dt_ny.astimezone(timezone.utc)
 ```
 
+#### Timestamp & Calendar
+
+```python
+import time
+from datetime import datetime
+import calendar
+
+# Unix timestamp
+timestamp = time.time()  # 1710000000.123
+dt = datetime.fromtimestamp(timestamp)
+dt.timestamp()  # Ngược lại
+
+# Calendar
+cal = calendar.month(2024, 1)  # Xem lịch tháng 1/2024
+calendar.isleap(2024)  # True (năm nhuận)
+calendar.monthrange(2024, 2)  # (3, 29) - (weekday đầu tháng, số ngày)
+```
+
 ---
 
 ### 10.3. Regular Expression
@@ -2359,6 +2880,39 @@ re.split(r'\s+', "hello world test")  # ["hello", "world", "test"]
 # Compile for reuse
 email_pattern = re.compile(r'[\w.-]+@[\w.-]+')
 email_pattern.findall(text)
+```
+
+### 10.4. XML & CSV Parsing
+
+```python
+# XML Parsing
+import xml.etree.ElementTree as ET
+
+xml_str = '''<users>
+    <user id="1"><name>John</name></user>
+    <user id="2"><name>Jane</name></user>
+</users>'''
+
+root = ET.fromstring(xml_str)
+for user in root.findall('user'):
+    uid = user.get('id')
+    name = user.find('name').text
+    print(f"{uid}: {name}")
+
+# CSV Parsing
+import csv
+
+# Read CSV
+with open('data.csv', 'r') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row['name'], row['age'])
+
+# Write CSV
+with open('output.csv', 'w', newline='') as f:
+    writer = csv.DictWriter(f, fieldnames=['name', 'age'])
+    writer.writeheader()
+    writer.writerow({'name': 'John', 'age': 30})
 ```
 
 ---
@@ -2659,6 +3213,83 @@ class MyClass:
 # Multi-line comment
 # can span
 # multiple lines
+```
+
+---
+
+### 11.8. Design Patterns
+
+```python
+# Observer Pattern
+class EventEmitter:
+    def __init__(self):
+        self._listeners = {}
+
+    def on(self, event, callback):
+        self._listeners.setdefault(event, []).append(callback)
+
+    def emit(self, event, *args):
+        for callback in self._listeners.get(event, []):
+            callback(*args)
+
+emitter = EventEmitter()
+emitter.on("user_created", lambda name: print(f"Welcome {name}!"))
+emitter.emit("user_created", "John")  # "Welcome John!"
+
+# Strategy Pattern
+from abc import ABC, abstractmethod
+
+class SortStrategy(ABC):
+    @abstractmethod
+    def sort(self, data: list) -> list:
+        pass
+
+class BubbleSort(SortStrategy):
+    def sort(self, data):
+        return sorted(data)  # simplified
+
+class QuickSort(SortStrategy):
+    def sort(self, data):
+        return sorted(data)  # simplified
+
+class Sorter:
+    def __init__(self, strategy: SortStrategy):
+        self._strategy = strategy
+
+    def sort(self, data):
+        return self._strategy.sort(data)
+
+# Repository Pattern
+class UserRepository:
+    def __init__(self):
+        self._users = {}
+
+    def save(self, user):
+        self._users[user['id']] = user
+
+    def find_by_id(self, id):
+        return self._users.get(id)
+
+    def find_all(self):
+        return list(self._users.values())
+
+# Decorator Pattern (Python built-in!)
+import functools
+
+def cache(func):
+    memo = {}
+    @functools.wraps(func)
+    def wrapper(*args):
+        if args not in memo:
+            memo[args] = func(*args)
+        return memo[args]
+    return wrapper
+
+@cache
+def fibonacci(n):
+    if n < 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
 ```
 
 ---
@@ -3266,6 +3897,65 @@ subprocess.run(["ls"], capture_output=True, text=True)
 import os, psutil
 os.getpid()
 psutil.Process().memory_info()
+```
+
+---
+
+### 18.6. Math & Numeric
+
+```python
+import math
+import decimal
+import random
+
+# Math functions
+math.sqrt(16)      # 4.0
+math.pow(2, 10)    # 1024.0
+math.abs(-5)       # Lỗi, dùng abs(-5)
+math.ceil(3.2)     # 4
+math.floor(3.8)    # 3
+math.pi            # 3.14159...
+math.sin(math.pi/2)  # 1.0
+math.log(100, 10)  # 2.0
+
+# BigDecimal - số chính xác
+from decimal import Decimal
+a = Decimal('0.1') + Decimal('0.2')  # Decimal('0.3') (chính xác!)
+0.1 + 0.2  # 0.30000000000000004 (float không chính xác)
+
+# Random
+random.random()           # 0.0 - 1.0
+random.randint(1, 100)    # 1 - 100
+random.choice([1, 2, 3])  # Chọn ngẫu nhiên
+random.shuffle([1, 2, 3]) # Xáo trộn in-place
+random.sample(range(100), 5)  # Chọn 5 số không trùng
+```
+
+### 18.7. Encoding
+
+```python
+import base64
+import urllib.parse
+import codecs
+
+# Base64
+encoded = base64.b64encode(b"Hello World")  # b'SGVsbG8gV29ybGQ='
+decoded = base64.b64decode(encoded)          # b'Hello World'
+
+# URL Encoding
+urllib.parse.quote("hello world")      # "hello%20world"
+urllib.parse.unquote("hello%20world")  # "hello world"
+urllib.parse.urlencode({"name": "John", "age": 30})  # "name=John&age=30"
+
+# Unicode / UTF-8
+text = "你好"
+encoded = text.encode('utf-8')    # b'\xe4\xbd\xa0\xe5\xa5\xbd'
+decoded = encoded.decode('utf-8') # '你好'
+
+# Hex encoding
+data = b"Hello"
+hex_str = data.hex()                    # '48656c6c6f'
+bytes.fromhex('48656c6c6f')            # b'Hello'
 ```
 
 ---
