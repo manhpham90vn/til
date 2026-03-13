@@ -2969,6 +2969,7 @@ print(f"Only in A: {only_in_a}")  # Output: Only in A: {'Alice'}
 
 #### Dictionary
 
+```python
 # === Dictionary (dict) - cặp key-value, hash table ===
 
 # Dùng để tra cứu nhanh theo key, tương tự HashMap/Map trong các ngôn ngữ khác
@@ -3007,7 +3008,7 @@ print(user.items()) # Output: dict_items([('name', 'John'), ...])
 # Duyệt key-value
 
 for key, value in user.items():
-print(f"{key}: {value}")
+    print(f"{key}: {value}")
 
 # Output:
 
@@ -3019,7 +3020,7 @@ print(f"{key}: {value}")
 
 # === Dictionary Comprehension ===
 
-square_dict = {x: x\*\*2 for x in range(5)}
+square_dict = {x: x**2 for x in range(5)}
 print(square_dict) # Output: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 
 # === Real-world use cases ===
@@ -3029,15 +3030,15 @@ print(square_dict) # Output: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 text = "hello world hello python world"
 word_count = {}
 for word in text.split():
-word_count[word] = word_count.get(word, 0) + 1
+    word_count[word] = word_count.get(word, 0) + 1
 print(word_count) # Output: {'hello': 2, 'world': 2, 'python': 1}
 
 # 2. Lookup table
 
 ROLES = {
-"admin": {"permissions": ["read", "write", "delete"]},
-"user": {"permissions": ["read"]},
-"guest": {"permissions": []}
+    "admin": {"permissions": ["read", "write", "delete"]},
+    "user": {"permissions": ["read"]},
+    "guest": {"permissions": []}
 }
 print(ROLES["admin"]["permissions"]) # Output: ['read', 'write', 'delete']
 
@@ -3047,6 +3048,7 @@ d1 = {"a": 1, "b": 2}
 d2 = {"b": 3, "c": 4}
 merged = d1 | d2 # Python 3.9+: merge operator
 print(merged) # Output: {'a': 1, 'b': 3, 'c': 4} (b bị ghi đè)
+```
 
 #### None
 
