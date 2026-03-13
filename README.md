@@ -36,18 +36,18 @@
 
 | Ngôn ngữ       | Loại                | Biên dịch/Thông dịch | Typing            |
 | -------------- | ------------------- | -------------------- | ----------------- |
-| **C**          | Systems Programming | Compiled (AOT)       | Static, Weak      |
-| **C++**        | Systems Programming | Compiled (AOT)       | Static, Strong    |
-| **Java**       | Enterprise/JVM      | Compiled (Bytecode)  | Static, Strong    |
-| **Rust**       | Systems Programming | Compiled (AOT)       | Static, Strong    |
-| **Go**         | Systems/Server      | Compiled (AOT)       | Static, Strong    |
-| **Python**     | General Purpose     | Interpreted/Bytecode | Dynamic, Strong   |
-| **TypeScript** | Web/JS Superset     | Transpiled to JS     | Static (optional) |
-| **JavaScript** | Web Scripting       | Interpreted/JIT      | Dynamic, Duck     |
+| [**C**](C.md)          | Systems Programming | Compiled (AOT)       | Static, Weak      |
+| [**C++**](C++.md)        | Systems Programming | Compiled (AOT)       | Static, Strong    |
+| [**Java**](Java.md)       | Enterprise/JVM      | Compiled (Bytecode)  | Static, Strong    |
+| [**Rust**](Rust.md)       | Systems Programming | Compiled (AOT)       | Static, Strong    |
+| [**Go**](Go.md)         | Systems/Server      | Compiled (AOT)       | Static, Strong    |
+| [**Python**](Python.md)     | General Purpose     | Interpreted/Bytecode | Dynamic, Strong   |
+| [**TypeScript**](TypeScript.md) | Web/JS Superset     | Transpiled to JS     | Static (optional) |
+| [**JavaScript**](JavaScript.md) | Web Scripting       | Interpreted/JIT      | Dynamic, Duck     |
 | **Swift**      | iOS/macOS           | Compiled (AOT)       | Static, Strong    |
 | **Kotlin**     | Android/JVM         | Compiled (Bytecode)  | Static, Strong    |
 | **Dart**       | Flutter/Web         | Compiled (AOT/JIT)   | Static, Strong    |
-| **PHP**        | Web Backend         | Interpreted          | Dynamic, Weak     |
+| [**PHP**](PHP.md)        | Web Backend         | Interpreted          | Dynamic, Weak     |
 
 ### Theo Paradigm
 
@@ -60,7 +60,7 @@
 | **Go**         | Concurrent, Imperative, Procedural                 |
 | **Python**     | Multi-paradigm (Functional, OO, Procedural)        |
 | **TypeScript** | Object-Oriented, Functional                        |
-| **JavaScript** | Multi-paradigm (Prototype-based, Functional)       |t
+| **JavaScript** | Multi-paradigm (Prototype-based, Functional)       |
 | **Swift**      | Multi-paradigm (Protocol-oriented, Functional, OO) |
 | **Kotlin**     | Multi-paradigm (Functional, OO)                    |
 | **Dart**       | Multi-paradigm (Class-based, Functional)           |
@@ -99,6 +99,8 @@
 - **Static Variable** - Biến tĩnh (class-level)
 - **Global Variable** - Biến toàn cục
 - **Shadowing** - Biến cùng tên trong scope nhỏ
+- **Scope** - Phạm vi biến (block/function/global scope)
+- **Hoisting** - Đưa khai báo lên đầu scope (JavaScript)
 
 #### 1.2. Khai Báo Hàm (Function Declaration)
 
@@ -114,6 +116,9 @@
 - **Named Parameters** - Tham số có tên
 - **Closure** - Hàm closure (capture biến bên ngoài)
 - **Higher-Order Function** - Hàm nhận/trả về hàm khác
+- **Function Overloading** - Hàm cùng tên, tham số khác (C++, Java, Kotlin)
+- **Inline Function** - Hàm inline (Kotlin, C++)
+- **Tail Recursive Function** - Hàm đệ quy đuôi (Kotlin tailrec, Scala)
 
 #### 1.3. Vòng Lặp (Loops)
 
@@ -126,6 +131,7 @@
 - **Iterator** - Duyệt qua iterator
 - **List Comprehension** - Tạo list từ iterable (Python)
 - **Stream Loop** - Duyệt qua stream (Java/Go)
+- **Generator/Yield** - Hàm sinh giá trị lười biếng (Python, JS, Kotlin)
 
 #### 1.4. Điều Kiện (Conditionals)
 
@@ -137,6 +143,16 @@
 - **Early Return** - Trả về sớm
 - **Elvis Operator** - Toán tử Elvis (??)
 - **Null Coalescing** - Giá trị mặc định khi null
+- **When Expression** - Biểu thức when (Kotlin)
+- **Guard Let** - Unwrap an toàn với guard (Swift)
+
+#### 1.5. Destructuring & Spread (Phân rã & Toán tử mở rộng)
+
+- **Destructuring Assignment** - Phân rã giá trị từ array/object (JS/TS, Python, Rust, Kotlin)
+- **Spread Operator** - Toán tử mở rộng (...) (JS/TS, Kotlin)
+- **Rest Parameters** - Gom các tham số còn lại
+- **Tuple Destructuring** - Phân rã tuple (Rust, Python, Swift)
+- **Struct/Object Destructuring** - Phân rã struct/object
 
 ---
 
@@ -156,6 +172,8 @@
 - **Map/Dict/HashMap** - Từ điển (key-value)
 - **Tuple** - Bộ giá trị
 - **Range** - Khoảng giá trị
+- **Void/Unit/Nothing** - Kiểu rỗng / không có giá trị
+- **Any/Object** - Kiểu gốc (top type)
 
 #### 2.2. Enum
 
@@ -164,6 +182,7 @@
 - **Enum with Methods** - Enum có phương thức
 - **Associated Values** - Giá trị đi kèm (Swift)
 - **Pattern Matching Enum** - So khớp enum
+- **Sealed Interface** - Interface giới hạn implement (Kotlin, Java 17+)
 
 #### 2.3. Nullable/Option Types
 
@@ -194,6 +213,15 @@
 - **Covariance/Contravariance** - Biến đổi kiểu
 - **Type Erasure** - Xóa kiểu (Java)
 
+#### 2.8. Union & Intersection Types (Kiểu hợp & Kiểu giao)
+
+- **Union Type** - Kiểu hợp (A | B) (TypeScript, Python)
+- **Intersection Type** - Kiểu giao (A & B) (TypeScript)
+- **Tagged Union** - Union có nhãn (Rust enum, TypeScript discriminated union)
+- **Type Narrowing** - Thu hẹp kiểu qua kiểm tra điều kiện
+- **Type Guard** - Hàm kiểm tra kiểu (TypeScript)
+- **Type Alias** - Đặt tên alias cho kiểu
+
 #### 2.6. Collection Operations
 
 - **Map/Transform** - Biến đổi từng phần tử
@@ -221,6 +249,8 @@
 - **Regex Match** - So khớp regex
 - **Substring** - Lấy chuỗi con
 - **Length** - Độ dài chuỗi
+- **Multi-line String** - Chuỗi nhiều dòng (raw string, triple quotes)
+- **String Builder** - Xây dựng chuỗi hiệu quả (StringBuilder, StringBuffer)
 
 ---
 
@@ -238,6 +268,10 @@
 - **Builder Pattern** - Pattern xây dựng đối tượng
 - **Static Member** - Thành phần tĩnh (class-level)
 - **Instance Member** - Thành phần instance
+- **Inner Class** - Class bên trong (có tham chiếu outer)
+- **Nested Class** - Class lồng nhau (static, không tham chiếu outer)
+- **Anonymous Class** - Class ẩn danh (Java, Kotlin object expression)
+- **Companion Object** - Object đồng hành (Kotlin)
 
 #### 3.2. Kế Thừa & Đa Hình (Inheritance & Polymorphism)
 
@@ -252,6 +286,7 @@
 - **Polymorphism** - Đa hình
 - **Method Overloading** - Nạp chồng phương thức (cùng tên, tham số khác)
 - **Composition** - Thành phần hơn là kế thừa
+- **Diamond Problem** - Vấn đề đa kế thừa hình thoi (C++, Python MRO)
 
 #### 3.3. Interface/Trait/Protocol
 
@@ -263,6 +298,8 @@
 - **Static Method** - Phương thức tĩnh trong interface
 - **Multiple Interface** - Implement nhiều interface
 - **Interface Extension** - Mở rộng interface
+- **Mixin** - Tái sử dụng code qua mixin (Python, Dart, PHP Trait)
+- **Delegation** - Ủy quyền implementation (Kotlin `by`, Go embedding)
 
 #### 3.4. Visibility/Access Modifiers
 
@@ -288,6 +325,9 @@
 - **Weak Reference** - Tham chiếu yếu
 - **Smart Pointer** - Con trỏ thông minh
 - **RAII** - Resource Acquisition Is Initialization
+- **Stack vs Heap** - Bộ nhớ stack và heap
+- **Value Type vs Reference Type** - Kiểu giá trị và kiểu tham chiếu
+- **Copy-on-Write** - Sao chép khi ghi (Swift, Rust Cow)
 
 #### 4.2. Property & Getter/Setter
 
@@ -298,6 +338,14 @@
 - **Lazy Property** - Thuộc tính trì hoãn
 - **Late Init** - Khởi tạo muộn
 - **Backing Field** - Trường lưu trữ
+
+#### 4.3. Memory Safety (An toàn bộ nhớ)
+
+- **Buffer Overflow** - Tràn bộ đệm
+- **Dangling Pointer** - Con trỏ lơ lửng
+- **Memory Leak** - Rò rỉ bộ nhớ
+- **Use-After-Free** - Sử dụng sau khi giải phóng
+- **Double Free** - Giải phóng hai lần
 
 ---
 
@@ -317,6 +365,14 @@
 - **Await All/Any** - Chờ nhiều task
 - **Race Condition** - Điều kiện tranh chấp
 - **Deadlock Prevention** - Phòng tránh deadlock
+- **Event Loop** - Vòng lặp sự kiện (JS, Dart, Python asyncio)
+- **Callback Queue** - Hàng đợi callback
+- **Microtask/Macrotask** - Phân loại task trong event loop (JS)
+- **Thread Pool** - Nhóm luồng tái sử dụng
+- **Semaphore** - Đếm số luồng truy cập đồng thời
+- **Barrier** - Rào chắn đồng bộ
+- **Read-Write Lock** - Khóa đọc/ghi riêng
+- **Structured Concurrency** - Đồng thời có cấu trúc (Kotlin, Swift)
 
 ---
 
@@ -333,6 +389,17 @@
 - **Monad** - Monad pattern
 - **Functor** - Functor pattern
 
+#### 6.2. Reactive Programming (Lập trình phản ứng)
+
+- **Observable/Stream** - Luồng dữ liệu phản ứng
+- **Observer/Subscriber** - Người quan sát/đăng ký
+- **Operators** - Toán tử biến đổi stream (map, filter, merge)
+- **Backpressure** - Kiểm soát tốc độ dữ liệu
+- **Hot/Cold Observable** - Observable nóng/lạnh
+- **Flow/StateFlow** - Reactive stream (Kotlin)
+- **Combine** - Framework reactive (Swift)
+- **RxJS/RxJava** - Reactive Extensions
+
 ---
 
 ### Tầng 7: Error Handling (Xử lý lỗi)
@@ -348,6 +415,9 @@
 - **Try-with-resources** - Tự động đóng tài nguyên
 - **Error Propagation** - Truyền lỗi lên trên
 - **Recover** - Khôi phục từ panic (Rust)
+- **Defer** - Thực thi khi thoát scope (Go, Swift)
+- **Assertion** - Khẳng định điều kiện (assert, precondition)
+- **Guard** - Kiểm tra điều kiện và thoát sớm (Swift guard)
 
 #### 7.2. Error Types & Patterns
 
@@ -356,6 +426,8 @@
 - **Custom Error Type** - Kiểu lỗi tự định nghĩa
 - **Error Union** - Hợp các kiểu lỗi
 - **Panic** - Lỗi nghiêm trọng (Rust)
+- **Error Wrapping** - Bao bọc lỗi thêm context (Go %w, Rust .context())
+- **Stack Trace** - Vết ngăn xếp lỗi
 
 ---
 
@@ -371,6 +443,8 @@
 - **Default Export** - Xuất mặc định
 - **Re-export** - Xuất lại từ module khác
 - **Namespace** - Không gian tên
+- **Circular Dependency** - Phụ thuộc vòng
+- **Monorepo/Multi-module** - Tổ chức dự án đa module
 
 #### 8.2. Extension Methods
 
@@ -386,6 +460,7 @@
 - **Logical Operators** - Toán tử logic
 - **Custom Operators** - Toán tử tự định nghĩa
 - **Infix Functions** - Hàm infix (Kotlin)
+- **Subscript Operator** - Toán tử truy cập [] (Kotlin, Swift, C++)
 
 ---
 
@@ -401,6 +476,9 @@
 - **Request Body** - Nội dung request
 - **Authentication** - Xác thực
 - **HTTP Client** - Thư viện gọi HTTP
+- **WebSocket** - Giao tiếp hai chiều realtime
+- **SSE (Server-Sent Events)** - Server gửi sự kiện một chiều
+- **Middleware** - Xử lý trung gian trong request pipeline
 
 #### 9.2. File I/O
 
@@ -410,6 +488,20 @@
 - **Stream** - Luồng dữ liệu
 - **Buffer** - Bộ đệm
 - **Async File I/O** - Đọc/ghi bất đồng bộ
+
+#### 9.3. Database Access (Truy cập cơ sở dữ liệu)
+
+- **Connection Pool** - Nhóm kết nối tái sử dụng
+- **Prepared Statement** - Câu lệnh chuẩn bị sẵn
+- **Transaction** - Giao dịch (commit/rollback)
+- **Connection String** - Chuỗi kết nối
+
+#### 9.4. CLI I/O (Nhập/Xuất dòng lệnh)
+
+- **Stdin/Stdout/Stderr** - Luồng nhập/xuất chuẩn
+- **Command Line Parsing** - Phân tích tham số dòng lệnh
+- **ANSI Colors** - Màu sắc terminal
+- **Interactive Prompt** - Tương tác với người dùng qua terminal
 
 ---
 
@@ -422,6 +514,12 @@
 - **JSON Encoder/Decoder** - Bộ mã hóa/giải mã
 - **Field Mapping** - Ánh xạ trường
 - **Naming Strategy** - Quy tắc đặt tên
+- **Protobuf** - Protocol Buffers (Google)
+- **MessagePack** - Binary serialization format
+- **YAML/TOML** - Định dạng cấu hình
+- **Binary Serialization** - Serialization dạng nhị phân
+- **XML Parsing** - Phân tích XML
+- **CSV Parsing** - Phân tích CSV
 
 #### 10.2. Date & Time
 
@@ -430,6 +528,8 @@
 - **Timezone** - Múi giờ
 - **Duration** - Khoảng thời gian
 - **Date Arithmetic** - Tính toán ngày tháng
+- **Timestamp** - Dấu thời gian (Unix timestamp)
+- **Calendar** - Lịch (Calendar API)
 
 #### 10.3. Regular Expression
 
@@ -462,6 +562,9 @@
 - **Assertion** - Khẳng định kết quả
 - **Test Suite** - Bộ test
 - **Before/After Hook** - Thiết lập/cleanup
+- **Table-Driven Tests** - Test dạng bảng (Go)
+- **Snapshot Testing** - So sánh với kết quả lưu trước
+- **Code Coverage** - Độ bao phủ code
 
 #### 11.3. Logging
 
@@ -499,6 +602,17 @@
 - **Type Documentation** - Tài liệu kiểu
 - **README** - Tài liệu project
 
+#### 11.8. Design Patterns (Mẫu thiết kế)
+
+- **Observer Pattern** - Mẫu quan sát
+- **Strategy Pattern** - Mẫu chiến lược
+- **Builder Pattern** - Mẫu xây dựng
+- **Repository Pattern** - Mẫu kho dữ liệu
+- **Adapter Pattern** - Mẫu chuyển đổi
+- **Facade Pattern** - Mẫu mặt tiền
+- **Decorator Pattern** - Mẫu trang trí
+- **Singleton Pattern** - Mẫu đơn thể
+
 ---
 
 ### Tầng 12: Advanced Concepts (Khái niệm nâng cao)
@@ -523,6 +637,9 @@
 - **Move Semantics** - Ngữ nghĩa di chuyển
 - **Lock-free Data Structures** - Cấu trúc dữ liệu không khóa
 - **Domain-Specific Language (DSL)** - Ngôn ngữ miền cụ thể
+- **Compile-time Metaprogramming** - Lập trình meta lúc biên dịch (Rust proc_macro, C++ template metaprogramming)
+- **Code Generation** - Sinh code tự động (Java annotation processing, Go generate)
+- **Phantom Types** - Kiểu ảo để đảm bảo an toàn tại compile-time
 
 ---
 
@@ -625,7 +742,7 @@
 #### 15.3. Symbol Resolution
 
 - **Symbol Visibility** - Visibility của symbol
--** - X **Symbol Collisionung đột symbol
+- **Symbol Collision** - Xung đột symbol
 - **Name Mangling** - Đổi tên hàm (C++)
 - **Symbol Versioning** - Phiên bản symbol
 - **Export/Import** - Xuất/Nhập symbol
@@ -669,6 +786,15 @@
 - **Write Barrier** - Rào chắn ghi
 - **Root Set** - Tập root (stack, heap, registers)
 - **Object Headers** - Header của object trong GC
+
+#### 16.5. Memory Regions (Vùng bộ nhớ)
+
+- **Stack** - Vùng stack (biến cục bộ, frame)
+- **Heap** - Vùng heap (cấp phát động)
+- **BSS Segment** - Vùng biến chưa khởi tạo
+- **Data Segment** - Vùng biến đã khởi tạo
+- **Text Segment** - Vùng mã lệnh (code)
+- **Memory-Mapped I/O** - Ánh xạ bộ nhớ I/O
 
 ---
 
@@ -723,6 +849,8 @@
 - **Stack** - Ngăn xếp
 - **Tree/TreeMap** - Cấu trúc cây
 - **Heap/Priority Queue** - Heap và hàng đợi ưu tiên
+- **BTreeMap/BTreeSet** - Map/Set có thứ tự (Rust, Java TreeMap)
+- **ConcurrentHashMap** - Map an toàn đa luồng (Java, Go sync.Map)
 
 #### 18.2. Utilities
 
@@ -754,6 +882,20 @@
 - **String/Str** - Chuỗi
 - **Regex** - Biểu thức chính quy
 - **Formatter** - Định dạng
+
+#### 18.6. Math & Numeric (Toán học & Số)
+
+- **Math Functions** - Hàm toán học (abs, sqrt, pow, sin, cos)
+- **BigInteger/BigDecimal** - Số lớn tùy ý
+- **Random** - Sinh số ngẫu nhiên
+- **Numeric Conversion** - Chuyển đổi kiểu số
+
+#### 18.7. Encoding (Mã hóa)
+
+- **Base64** - Mã hóa/giải mã Base64
+- **URL Encoding** - Mã hóa URL (percent encoding)
+- **Unicode/UTF-8** - Xử lý Unicode và UTF-8
+- **Hex Encoding** - Mã hóa hex
 
 ---
 
