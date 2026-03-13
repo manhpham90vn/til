@@ -17,6 +17,7 @@
    - [2.5 Generics](#25-generics)
    - [2.6 Collection Operations](#26-collection-operations)
    - [2.7 String Operations](#27-string-operations)
+   - [2.8 Union & Intersection Types](#28-union--intersection-types)
 3. [Tầng 3: OOP & Type Relationships](#tầng-3-oop--type-relationships)
    - [3.1 Class/Object](#31-classobject)
    - [3.2 Kế Thừa & Đa Hình](#32-kế-thừa--đa-hình)
@@ -29,19 +30,27 @@
    - [5.1 Concurrency/Async](#51-concurrencyasync)
 6. [Tầng 6: Paradigm](#tầng-6-paradigm)
    - [6.1 Functional Programming](#61-functional-programming)
+   - [6.2 Reactive Programming](#62-reactive-programming)
 7. [Tầng 7: Error Handling](#tầng-7-error-handling)
    - [7.1 Xử Lý Lỗi](#71-xử-lý-lỗi)
    - [7.2 Error Types](#72-error-types)
 8. [Tầng 8: Module & Organization](#tầng-8-module--organization)
    - [8.1 Import/Module](#81-importmodule)
    - [8.2 Extension Methods](#82-extension-methods)
+   - [8.3 Operator Overloading](#83-operator-overloading)
+   - [8.4 Circular Dependency](#84-circular-dependency)
 9. [Tầng 9: I/O & Networking](#tầng-9-io--networking)
    - [9.1 HTTP & Networking](#91-http--networking)
    - [9.2 File I/O](#92-file-io)
+   - [9.3 Database Access](#93-database-access)
+   - [9.4 CLI I/O](#94-cli-io)
 10. [Tầng 10: Data & Serialization](#tầng-10-data--serialization)
     - [10.1 JSON & Serialization](#101-json--serialization)
     - [10.2 Date & Time](#102-date--time)
     - [10.3 Regular Expression](#103-regular-expression)
+    - [10.4 XML & CSV Parsing](#104-xml--csv-parsing)
+    - [10.5 YAML/TOML](#105-yamltoml)
+    - [10.6 Binary Serialization](#106-binary-serialization-struct)
 11. [Tầng 11: Development Practices](#tầng-11-development-practices)
     - [11.1 Testing](#111-testing)
     - [11.2 Logging](#112-logging)
@@ -49,15 +58,13 @@
     - [11.4 Configuration](#114-configuration)
     - [11.5 Build & Package Management](#115-build--package-management)
     - [11.6 Documentation](#116-documentation)
+    - [11.8 Design Patterns](#118-design-patterns)
 12. [Tầng 12: Advanced Concepts](#tầng-12-advanced-concepts)
     - [12.1 Advanced Concepts](#121-advanced-concepts)
 13. [Tầng 13: Memory Layout](#tầng-13-memory-layout)
     - [13.1 Object Layout](#131-object-layout)
-    - [13.2 Array/String Layout](#132-arraystring-layout)
 14. [Tầng 14: Compilation Model](#tầng-14-compilation-model)
-    - [14.1 Interpreter](#141-interpreter)
-    - [14.2 Bytecode](#142-bytecode)
-    - [14.3 JIT](#143-jit)
+    - [14.1 Interpreter & Bytecode](#141-interpreter--bytecode)
 15. [Tầng 15: Linking Model](#tầng-15-linking-model)
     - [15.1 Module Loading](#151-module-loading)
 16. [Tầng 16: Runtime](#tầng-16-runtime)
@@ -70,15 +77,22 @@
     - [18.1 Collections](#181-collections)
     - [18.2 Utilities](#182-utilities)
     - [18.3 I/O & System](#183-io--system)
+    - [18.6 Math & Numeric](#186-math--numeric)
+    - [18.7 Encoding](#187-encoding)
 19. [Tầng 19: Ecosystem](#tầng-19-ecosystem)
     - [19.1 Web Frameworks](#191-web-frameworks)
     - [19.2 Database & ORM](#192-database--orm)
     - [19.3 Testing](#193-testing)
     - [19.4 Data Science & ML](#194-data-science--ml)
+    - [19.5 Security & Cryptography](#195-security--cryptography)
+    - [19.6 DevOps & Infrastructure](#196-devops--infrastructure)
 20. [Tầng 20: Toolchain](#tầng-20-toolchain)
     - [20.1 Build & Package Management](#201-build--package-management)
     - [20.2 Code Quality](#202-code-quality)
     - [20.3 IDE & Debugging](#203-ide--debugging)
+    - [20.4 Profiling & Performance](#204-profiling--performance)
+    - [20.5 Documentation & Publishing](#205-documentation--publishing)
+    - [20.6 Runtime & Environment](#206-runtime--environment)
 
 ---
 
@@ -367,6 +381,43 @@ class Resource:
 
     def __repr__(self):
         return f"Resource({self.name})"
+```
+
+#### Function Overloading
+
+```python
+# Python không hỗ trợ function overloading trực tiếp
+# Dùng functools.singledispatch
+import functools
+
+@functools.singledispatch
+def process(arg):
+    print(f"Default: {arg}")
+
+@process.register(int)
+def _(arg):
+    print(f"Integer: {arg}")
+
+@process.register(str)
+def _(arg):
+    print(f"String: {arg}")
+
+process(42)       # "Integer: 42"
+process("hello")  # "String: hello"
+process([1, 2])   # "Default: [1, 2]"
+
+# typing.overload (chỉ cho type checking, không runtime)
+from typing import overload
+
+@overload
+def greet(name: str) -> str: ...
+@overload
+def greet(name: str, age: int) -> str: ...
+
+def greet(name, age=None):
+    if age is not None:
+        return f"Hello {name}, age {age}"
+    return f"Hello {name}"
 ```
 
 ---
@@ -879,6 +930,45 @@ callable(callable_func)  # True
 callable(callable_class())  # True nếu có __call__
 ```
 
+#### Byte & ByteArray
+
+```python
+# bytes (immutable)
+b = b"Hello"
+b = bytes([72, 101, 108, 108, 111])
+b[0]  # 72
+
+# bytearray (mutable)
+ba = bytearray(b"Hello")
+ba[0] = 74  # Thay đổi được
+ba.append(33)
+
+# Chuyển đổi
+text = b.decode('utf-8')       # bytes -> str
+data = "Hello".encode('utf-8')  # str -> bytes
+
+# Byte operations
+len(b)           # 5
+b.hex()          # '48656c6c6f'
+bytes.fromhex('48656c6c6f')  # b'Hello'
+```
+
+#### Character (Python không có kiểu char riêng)
+
+```python
+# Python dùng str với length 1 cho character
+ch = 'A'
+len(ch)       # 1
+ord('A')      # 65 (Unicode code point)
+chr(65)       # 'A'
+
+# Unicode
+ord('你')     # 20320
+chr(20320)    # '你'
+'A'.isalpha()  # True
+'1'.isdigit()  # True
+```
+
 ---
 
 ### 2.2. Enum (Python 3.4+)
@@ -1002,6 +1092,37 @@ T = TypeVar('T', bound=int)  # Must be subclass of int
 # TypeVar với Union
 from typing import Union
 T = Union[str, int]  # str | int (Python 3.10+)
+```
+
+#### Covariance/Contravariance
+
+```python
+from typing import TypeVar, Generic, Sequence
+
+# Covariant - dùng cho output (read-only)
+T_co = TypeVar('T_co', covariant=True)
+
+class Producer(Generic[T_co]):
+    def get(self) -> T_co: ...
+
+# Contravariant - dùng cho input (write-only)
+T_contra = TypeVar('T_contra', contravariant=True)
+
+class Consumer(Generic[T_contra]):
+    def accept(self, item: T_contra) -> None: ...
+
+# Ví dụ: Sequence là covariant
+# list[Dog] có thể dùng nơi expect Sequence[Animal]
+from typing import Sequence
+
+class Animal: pass
+class Dog(Animal): pass
+
+def process_animals(animals: Sequence[Animal]) -> None:
+    pass
+
+dogs: list[Dog] = [Dog()]
+process_animals(dogs)  # OK vì Sequence là covariant
 ```
 
 ---
@@ -1149,6 +1270,30 @@ numbers = [1, 2, 3, 4, 5, 6, 7]
 list(chunk(numbers, 3))  # [[1,2,3], [4,5,6], [7]]
 ```
 
+#### Take/Skip
+
+```python
+from itertools import islice, dropwhile, takewhile
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Take (lấy n phần tử đầu)
+list(islice(numbers, 5))  # [1, 2, 3, 4, 5]
+
+# Skip (bỏ n phần tử đầu)
+list(islice(numbers, 3, None))  # [4, 5, 6, 7, 8, 9, 10]
+
+# Take while (lấy khi điều kiện đúng)
+list(takewhile(lambda x: x < 5, numbers))  # [1, 2, 3, 4]
+
+# Drop while / Skip while (bỏ khi điều kiện đúng)
+list(dropwhile(lambda x: x < 5, numbers))  # [5, 6, 7, 8, 9, 10]
+
+# Slice
+numbers[2:5]    # [3, 4, 5] (take 3 from index 2)
+numbers[::2]    # [1, 3, 5, 7, 9] (every 2nd)
+```
+
 #### Zip
 
 ```python
@@ -1283,6 +1428,46 @@ text.index("World")  # 6
 text.find("World")  # 6 (-1 if not found)
 text.startswith("Hello")  # True
 text.endswith("World")    # True
+```
+
+#### Multi-line String
+
+```python
+# Triple quotes
+multi = """This is
+a multi-line
+string"""
+
+# Raw string
+raw = r"No escape: \n \t"
+path = r"C:\Users\name\file.txt"
+```
+
+#### String Builder
+
+```python
+import io
+
+# Cách 1: join (hiệu quả nhất)
+parts = []
+for i in range(1000):
+    parts.append(f"item {i}")
+result = "\n".join(parts)
+
+# Cách 2: io.StringIO
+buffer = io.StringIO()
+for i in range(1000):
+    buffer.write(f"item {i}\n")
+result = buffer.getvalue()
+buffer.close()
+
+# Cách 3: list + join (common pattern)
+def build_html(items):
+    html = ["<ul>"]
+    for item in items:
+        html.append(f"  <li>{item}</li>")
+    html.append("</ul>")
+    return "\n".join(html)
 ```
 
 ---
@@ -1628,6 +1813,86 @@ d.method()  # "B" (theo MRO: D -> B -> C -> A)
 print(D.__mro__)  # (D, B, C, A, object)
 ```
 
+#### Composition (thành phần hơn kế thừa)
+
+```python
+# Composition over Inheritance
+class Engine:
+    def start(self):
+        return "Engine started"
+
+class Wheels:
+    def roll(self):
+        return "Wheels rolling"
+
+class Car:
+    def __init__(self):
+        self.engine = Engine()   # Composition
+        self.wheels = Wheels()   # Composition
+
+    def drive(self):
+        return f"{self.engine.start()}, {self.wheels.roll()}"
+
+car = Car()
+car.drive()  # "Engine started, Wheels rolling"
+```
+
+#### Sealed/Final Class
+
+```python
+# typing.final decorator (Python 3.8+)
+from typing import final
+
+@final
+class Singleton:
+    """Cannot be subclassed"""
+    pass
+
+# class MySingleton(Singleton):  # mypy error: Cannot inherit from final class
+
+# final method
+class Base:
+    @final
+    def critical_method(self):
+        return "Do not override me"
+
+# Lưu ý: @final chỉ enforce tại type checking (mypy), không runtime
+```
+
+#### Delegation
+
+```python
+# Python delegation qua __getattr__
+class Printer:
+    def print_document(self, doc):
+        return f"Printing: {doc}"
+
+class OfficeMachine:
+    def __init__(self):
+        self._printer = Printer()
+
+    def __getattr__(self, name):
+        # Delegate missing attributes to printer
+        return getattr(self._printer, name)
+
+machine = OfficeMachine()
+machine.print_document("Report")  # "Printing: Report"
+
+# Explicit delegation
+class Stack:
+    def __init__(self):
+        self._list = []
+
+    def push(self, item):
+        self._list.append(item)
+
+    def pop(self):
+        return self._list.pop()
+
+    def __len__(self):
+        return len(self._list)  # Delegate to list
+```
+
 ---
 
 ### 3.3. Interface/Trait/Protocol
@@ -1931,6 +2196,37 @@ temp.celsius = 25
 print(temp.fahrenheit)  # 77.0
 ```
 
+#### Lazy Property
+
+```python
+# functools.cached_property (Python 3.8+)
+from functools import cached_property
+
+class DataLoader:
+    @cached_property
+    def data(self):
+        print("Loading data...")  # Chỉ chạy 1 lần
+        return [1, 2, 3, 4, 5]
+
+loader = DataLoader()
+loader.data  # "Loading data..." -> [1, 2, 3, 4, 5]
+loader.data  # [1, 2, 3, 4, 5] (không load lại)
+
+# Manual lazy property
+class Config:
+    def __init__(self):
+        self._settings = None
+
+    @property
+    def settings(self):
+        if self._settings is None:
+            self._settings = self._load_settings()
+        return self._settings
+
+    def _load_settings(self):
+        return {"debug": True}
+```
+
 ---
 
 ## 5. Tầng 5: Concurrency Model
@@ -2108,6 +2404,186 @@ async def main():
     print(task1.result(), task2.result())
 ```
 
+#### Lock/Mutex
+
+```python
+import threading
+import asyncio
+
+# Threading Lock
+lock = threading.Lock()
+counter = 0
+
+def safe_increment():
+    global counter
+    with lock:  # Acquire và release tự động
+        counter += 1
+
+# RLock - Reentrant Lock (có thể acquire nhiều lần từ cùng thread)
+rlock = threading.RLock()
+
+# Async Lock
+async def async_safe():
+    lock = asyncio.Lock()
+    async with lock:
+        # Critical section
+        pass
+
+# Read-Write Lock (dùng RLock pattern)
+import threading
+
+class ReadWriteLock:
+    def __init__(self):
+        self._read_lock = threading.Lock()
+        self._write_lock = threading.Lock()
+        self._readers = 0
+
+    def acquire_read(self):
+        with self._read_lock:
+            self._readers += 1
+            if self._readers == 1:
+                self._write_lock.acquire()
+
+    def release_read(self):
+        with self._read_lock:
+            self._readers -= 1
+            if self._readers == 0:
+                self._write_lock.release()
+```
+
+#### Atomic & GIL
+
+```python
+# Python có GIL (Global Interpreter Lock)
+# - Chỉ 1 thread chạy Python bytecode tại 1 thời điểm
+# - Thích hợp I/O-bound, không tốt cho CPU-bound
+# - Dùng multiprocessing cho CPU-bound
+
+import threading
+
+# Một số operations đã atomic nhờ GIL
+# Nhưng không nên dựa vào, luôn dùng Lock
+
+# threading.Event - flag thread-safe
+event = threading.Event()
+event.set()     # Set flag
+event.clear()   # Clear flag
+event.wait()    # Wait until set
+event.is_set()  # Check flag
+```
+
+#### Future/Promise
+
+```python
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, Future
+import asyncio
+
+# concurrent.futures.Future
+with ThreadPoolExecutor(max_workers=3) as executor:
+    future = executor.submit(pow, 2, 10)  # Submit task
+    result = future.result()               # Block until done -> 1024
+    future.done()                          # True
+
+    # Multiple futures
+    futures = [executor.submit(pow, 2, n) for n in range(5)]
+    from concurrent.futures import as_completed
+    for f in as_completed(futures):
+        print(f.result())
+
+# asyncio Future/Task
+async def main():
+    loop = asyncio.get_event_loop()
+    future = loop.create_future()
+    future.set_result(42)
+    result = await future  # 42
+```
+
+#### Channel (asyncio.Queue)
+
+```python
+import asyncio
+
+async def producer(queue: asyncio.Queue):
+    for i in range(5):
+        await queue.put(i)
+        print(f"Produced: {i}")
+    await queue.put(None)  # Sentinel
+
+async def consumer(queue: asyncio.Queue):
+    while True:
+        item = await queue.get()
+        if item is None:
+            break
+        print(f"Consumed: {item}")
+        queue.task_done()
+
+async def main():
+    queue = asyncio.Queue(maxsize=10)
+    await asyncio.gather(
+        producer(queue),
+        consumer(queue)
+    )
+
+asyncio.run(main())
+
+# multiprocessing Queue
+from multiprocessing import Queue, Process
+
+def mp_producer(q):
+    q.put("hello")
+
+q = Queue()
+p = Process(target=mp_producer, args=(q,))
+p.start()
+print(q.get())  # "hello"
+p.join()
+```
+
+#### Race Condition & Deadlock
+
+```python
+import threading
+
+# Race condition ví dụ - KHÔNG AN TOÀN
+counter = 0
+
+def unsafe_increment():
+    global counter
+    for _ in range(100000):
+        counter += 1  # Race condition!
+
+# Giải pháp: dùng Lock
+lock = threading.Lock()
+
+def safe_increment():
+    global counter
+    for _ in range(100000):
+        with lock:
+            counter += 1
+
+# Deadlock prevention
+# - Luôn acquire locks theo thứ tự nhất quán
+# - Dùng timeout
+lock1 = threading.Lock()
+lock2 = threading.Lock()
+
+def safe_order():
+    with lock1:        # Luôn lock1 trước
+        with lock2:    # Rồi lock2 sau
+            pass
+
+# Dùng timeout
+if lock1.acquire(timeout=5):
+    try:
+        if lock2.acquire(timeout=5):
+            try:
+                pass  # Critical section
+            finally:
+                lock2.release()
+    finally:
+        lock1.release()
+```
+
 ---
 
 ## 6. Tầng 6: Paradigm
@@ -2207,6 +2683,52 @@ cube = partial(power, exponent=3)
 
 square(5)  # 25
 cube(5)    # 125
+```
+
+---
+
+### 6.2. Reactive Programming
+
+```python
+# RxPY - Reactive Extensions for Python
+# pip install reactivex
+import reactivex as rx
+from reactivex import operators as ops
+
+# Observable/Stream
+source = rx.of(1, 2, 3, 4, 5)
+
+# Operators
+source.pipe(
+    ops.map(lambda x: x * 2),
+    ops.filter(lambda x: x > 4)
+).subscribe(
+    on_next=lambda x: print(f"Received: {x}"),
+    on_error=lambda e: print(f"Error: {e}"),
+    on_completed=lambda: print("Done")
+)
+# Received: 6, Received: 8, Received: 10, Done
+
+# Subject (Hot Observable)
+from reactivex.subject import Subject
+
+subject = Subject()
+subject.subscribe(lambda x: print(f"Observer 1: {x}"))
+subject.subscribe(lambda x: print(f"Observer 2: {x}"))
+subject.on_next("Hello")  # Cả 2 observer đều nhận
+
+# asyncio + reactive pattern (built-in)
+import asyncio
+
+async def event_stream():
+    """Simple reactive stream với async generator"""
+    for i in range(5):
+        await asyncio.sleep(0.1)
+        yield i
+
+async def main():
+    async for value in event_stream():
+        print(f"Received: {value}")
 ```
 
 ---
@@ -2483,6 +3005,107 @@ person.greet()  # "Hello, John"
 
 ---
 
+### 8.3. Operator Overloading
+
+```python
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    # Arithmetic Operators
+    def __add__(self, other):       # +
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):       # -
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, scalar):      # *
+        return Vector(self.x * scalar, self.y * scalar)
+
+    def __truediv__(self, scalar):  # /
+        return Vector(self.x / scalar, self.y / scalar)
+
+    def __neg__(self):              # unary -
+        return Vector(-self.x, -self.y)
+
+    # Comparison Operators
+    def __eq__(self, other):        # ==
+        return self.x == other.x and self.y == other.y
+
+    def __lt__(self, other):        # <
+        return abs(self) < abs(other)
+
+    def __le__(self, other):        # <=
+        return abs(self) <= abs(other)
+
+    # Subscript Operator
+    def __getitem__(self, index):   # []
+        return (self.x, self.y)[index]
+
+    def __setitem__(self, index, value):  # [] =
+        if index == 0: self.x = value
+        elif index == 1: self.y = value
+
+    # Logical/Container
+    def __len__(self):              # len()
+        return 2
+
+    def __bool__(self):             # bool()
+        return self.x != 0 or self.y != 0
+
+    def __abs__(self):              # abs()
+        return (self.x**2 + self.y**2) ** 0.5
+
+    def __contains__(self, value):  # in
+        return value in (self.x, self.y)
+
+    def __repr__(self):
+        return f"Vector({self.x}, {self.y})"
+
+# Usage
+v1 = Vector(1, 2)
+v2 = Vector(3, 4)
+v3 = v1 + v2       # Vector(4, 6)
+v4 = v1 * 3        # Vector(3, 6)
+v1 == v2            # False
+v1[0]               # 1
+len(v1)             # 2
+```
+
+### 8.4. Circular Dependency
+
+```python
+# Circular import problem
+# module_a.py
+# from module_b import func_b  # Error!
+
+# Giải pháp 1: Import trong function
+def my_func():
+    from module_b import func_b
+    func_b()
+
+# Giải pháp 2: Import module thay vì import function
+import module_b
+module_b.func_b()
+
+# Giải pháp 3: Tách interface ra module riêng
+# interfaces.py -> module_a.py imports from interfaces
+#               -> module_b.py imports from interfaces
+
+# Giải pháp 4: TYPE_CHECKING (chỉ import cho type hints)
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from module_b import ClassB  # Chỉ import khi type checking
+
+def process(obj: 'ClassB') -> None:  # String annotation
+    pass
+```
+
+---
+
 ## 9. Tầng 9: I/O & Networking
 
 ### 9.1. HTTP & Networking
@@ -2553,6 +3176,132 @@ async def fetch():
             return await response.json()
 
 result = asyncio.run(fetch())
+```
+
+#### WebSocket
+
+```python
+# pip install websockets
+import asyncio
+import websockets
+
+# Server
+async def handler(websocket):
+    async for message in websocket:
+        await websocket.send(f"Echo: {message}")
+
+async def main():
+    async with websockets.serve(handler, "localhost", 8765):
+        await asyncio.Future()  # Run forever
+
+# Client
+async def client():
+    async with websockets.connect("ws://localhost:8765") as ws:
+        await ws.send("Hello")
+        response = await ws.recv()
+        print(response)  # "Echo: Hello"
+```
+
+#### SSE (Server-Sent Events)
+
+```python
+# Server (FastAPI)
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import asyncio
+
+app = FastAPI()
+
+async def event_generator():
+    for i in range(10):
+        yield f"data: Event {i}\n\n"
+        await asyncio.sleep(1)
+
+@app.get("/events")
+async def sse():
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+# Client
+import requests
+
+response = requests.get("http://localhost:8000/events", stream=True)
+for line in response.iter_lines():
+    print(line.decode())
+```
+
+#### Middleware
+
+```python
+# Flask middleware
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.before_request
+def before_request():
+    print(f"Before: {request.method} {request.path}")
+
+@app.after_request
+def after_request(response):
+    print(f"After: {response.status_code}")
+    return response
+
+# FastAPI middleware
+from fastapi import FastAPI, Request
+import time
+
+app = FastAPI()
+
+@app.middleware("http")
+async def add_process_time(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
+```
+
+#### Stream & Buffer
+
+```python
+import io
+
+# BytesIO - binary buffer
+buf = io.BytesIO()
+buf.write(b"Hello World")
+buf.seek(0)
+data = buf.read()  # b"Hello World"
+
+# StringIO - text buffer
+buf = io.StringIO()
+buf.write("Hello\n")
+buf.write("World\n")
+buf.seek(0)
+content = buf.getvalue()  # "Hello\nWorld\n"
+
+# BufferedReader/Writer
+with open("file.bin", "rb") as f:
+    reader = io.BufferedReader(f)
+    chunk = reader.read(1024)  # Read 1KB chunks
+```
+
+#### Async File I/O
+
+```python
+# pip install aiofiles
+import aiofiles
+import asyncio
+
+async def read_file():
+    async with aiofiles.open("data.txt", mode="r") as f:
+        content = await f.read()
+    return content
+
+async def write_file():
+    async with aiofiles.open("output.txt", mode="w") as f:
+        await f.write("Hello async world!")
+
+asyncio.run(read_file())
 ```
 
 ---
@@ -2726,6 +3475,12 @@ from rich.console import Console
 console = Console()
 console.print("[bold red]Error![/bold red] Something went wrong")
 ```
+
+---
+
+### 9.5. Async File I/O (aiofiles)
+
+Xem section [Async File I/O](#async-file-io) ở trên.
 
 ---
 
@@ -2913,6 +3668,71 @@ with open('output.csv', 'w', newline='') as f:
     writer = csv.DictWriter(f, fieldnames=['name', 'age'])
     writer.writeheader()
     writer.writerow({'name': 'John', 'age': 30})
+```
+
+### 10.5. YAML/TOML
+
+```python
+# YAML - pip install pyyaml
+import yaml
+
+# Read YAML
+with open('config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+# Write YAML
+with open('output.yaml', 'w') as f:
+    yaml.dump(config, f, default_flow_style=False)
+
+# Parse string
+yaml_str = """
+name: John
+age: 30
+skills:
+  - Python
+  - Django
+"""
+data = yaml.safe_load(yaml_str)
+
+# TOML (Python 3.11+ built-in)
+import tomllib  # Python 3.11+
+
+with open('config.toml', 'rb') as f:
+    config = tomllib.load(f)
+
+# Older Python: pip install tomli
+import tomli
+with open('config.toml', 'rb') as f:
+    config = tomli.load(f)
+
+# Write TOML: pip install tomli-w
+import tomli_w
+with open('output.toml', 'wb') as f:
+    tomli_w.dump(config, f)
+```
+
+### 10.6. Binary Serialization (struct)
+
+```python
+import struct
+
+# Pack (Python -> bytes)
+packed = struct.pack('iif', 1, 2, 3.14)
+# i = int (4 bytes), f = float (4 bytes)
+
+# Unpack (bytes -> Python)
+a, b, c = struct.unpack('iif', packed)
+# a=1, b=2, c=3.14
+
+# MessagePack - pip install msgpack
+import msgpack
+
+data = {"name": "John", "age": 30}
+packed = msgpack.packb(data)
+unpacked = msgpack.unpackb(packed)  # {'name': 'John', 'age': 30}
+
+# Protobuf - pip install protobuf
+# Requires .proto file compilation
 ```
 
 ---
@@ -3475,6 +4295,99 @@ with managed_resource() as r:
     print(f"Using {r}")
 ```
 
+#### FFI (Foreign Function Interface)
+
+```python
+# ctypes - gọi C functions từ Python
+import ctypes
+
+# Load shared library
+lib = ctypes.CDLL('./mylib.so')  # Linux
+# lib = ctypes.CDLL('./mylib.dll')  # Windows
+
+# Call C function
+lib.add.argtypes = [ctypes.c_int, ctypes.c_int]
+lib.add.restype = ctypes.c_int
+result = lib.add(3, 4)  # 7
+
+# cffi - pip install cffi
+from cffi import FFI
+ffi = FFI()
+ffi.cdef("int add(int, int);")
+lib = ffi.dlopen('./mylib.so')
+result = lib.add(3, 4)  # 7
+
+# C extension module (setup.py)
+# Dùng Cython, pybind11, hoặc Python C API
+```
+
+#### Lazy Evaluation
+
+```python
+# Python generators là lazy evaluation
+def lazy_range(n):
+    i = 0
+    while i < n:
+        yield i
+        i += 1
+
+# Không tạo tất cả giá trị cùng lúc
+for x in lazy_range(1_000_000):
+    if x > 10:
+        break
+
+# itertools - lazy operations
+from itertools import islice, count
+
+# Lấy 5 số chẵn đầu tiên từ dãy vô hạn
+evens = (x for x in count(0) if x % 2 == 0)
+first_5_evens = list(islice(evens, 5))  # [0, 2, 4, 6, 8]
+
+# map/filter trả về iterator lazy
+numbers = range(1_000_000)
+squared = map(lambda x: x**2, numbers)  # Lazy!
+filtered = filter(lambda x: x > 100, squared)  # Still lazy!
+first_10 = list(islice(filtered, 10))  # Chỉ tính 10 giá trị
+```
+
+#### DSL (Domain-Specific Language)
+
+```python
+# Python cho phép tạo DSL đơn giản với:
+# - Operator overloading
+# - Decorators
+# - Context managers
+# - Metaclasses
+
+# Ví dụ: Query DSL
+class Query:
+    def __init__(self, table):
+        self._table = table
+        self._conditions = []
+
+    def where(self, condition):
+        self._conditions.append(condition)
+        return self  # Fluent interface
+
+    def select(self, *fields):
+        self._fields = fields
+        return self
+
+    def build(self):
+        sql = f"SELECT {', '.join(self._fields)} FROM {self._table}"
+        if self._conditions:
+            sql += " WHERE " + " AND ".join(self._conditions)
+        return sql
+
+# Usage
+query = (Query("users")
+    .select("name", "email")
+    .where("age > 18")
+    .where("active = true")
+    .build())
+# "SELECT name, email FROM users WHERE age > 18 AND active = true"
+```
+
 ---
 
 ## 13. Tầng 13: Memory Layout
@@ -3711,35 +4624,35 @@ class Duck:
 
 ### 17.2. Context Managers
 
-```
+```python
 class Dog:
-def speak(self):
-return "Woof!"
+    def speak(self):
+        return "Woof!"
 
 def make_speak(obj):
-return obj.speak()
+    return obj.speak()
 
 # Both work!
-
-make_speak(Duck()) # "Quack!"
-make_speak(Dog()) # "Woof!"
+make_speak(Duck())  # "Quack!"
+make_speak(Dog())   # "Woof!"
 
 # Protocol-based (Python 3.8+)
-
 from typing import Protocol
 
 class Speakable(Protocol):
-def speak(self) -> str: ...
+    def speak(self) -> str: ...
 
 class Cat:
-def speak(self) -> str:
-return "Meow!"
+    def speak(self) -> str:
+        return "Meow!"
 
 def process(obj: Speakable) -> str:
-return obj.speak()
+    return obj.speak()
 
-process(Cat()) # Works!
+process(Cat())  # Works!
 ```
+
+---
 
 ## 18. Tầng 18: Standard Library
 
@@ -3790,6 +4703,41 @@ t = (1, 2, 3)
 from collections import namedtuple
 ("Point", ["Point = namedtuplex", "y"])
 p = Point(1, 2)
+```
+
+#### Heap/Priority Queue
+
+```python
+import heapq
+
+# Min heap
+numbers = [3, 1, 4, 1, 5, 9]
+heapq.heapify(numbers)  # Transform list into heap
+
+heapq.heappush(numbers, 2)   # Push
+smallest = heapq.heappop(numbers)  # Pop smallest: 1
+
+# N smallest/largest
+heapq.nsmallest(3, numbers)  # [1, 2, 3]
+heapq.nlargest(3, numbers)   # [9, 5, 4]
+
+# Priority Queue (với tuple)
+tasks = []
+heapq.heappush(tasks, (1, "High priority"))
+heapq.heappush(tasks, (3, "Low priority"))
+heapq.heappush(tasks, (2, "Medium priority"))
+
+# Pop theo priority
+while tasks:
+    priority, task = heapq.heappop(tasks)
+    print(f"{priority}: {task}")
+
+# queue.PriorityQueue (thread-safe)
+from queue import PriorityQueue
+pq = PriorityQueue()
+pq.put((1, "task1"))
+pq.put((2, "task2"))
+print(pq.get())  # (1, "task1")
 ```
 
 ### 18.2. Utilities
@@ -4168,9 +5116,7 @@ def test_mock(MockClass):
 
 ---
 
-## 20. Tầng 20: Toolchain
-
-### 2.1. Build & Package Management
+### 19.4. Data Science & ML
 
 #### NumPy
 
@@ -4254,9 +5200,76 @@ error = mean_squared_error(y_test, predictions)
 
 ---
 
+### 19.5. Security & Cryptography
+
+```python
+# hashlib - hàm băm
+import hashlib
+
+hash_sha256 = hashlib.sha256(b"Hello").hexdigest()
+hash_md5 = hashlib.md5(b"Hello").hexdigest()
+
+# Password hashing - bcrypt
+# pip install bcrypt
+import bcrypt
+
+password = b"my_password"
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+bcrypt.checkpw(password, hashed)  # True
+
+# secrets - sinh số ngẫu nhiên an toàn
+import secrets
+
+token = secrets.token_hex(32)       # Token hex
+token_url = secrets.token_urlsafe(32)  # Token URL-safe
+
+# JWT - pip install PyJWT
+import jwt
+
+token = jwt.encode({"user_id": 123}, "secret", algorithm="HS256")
+data = jwt.decode(token, "secret", algorithms=["HS256"])
+
+# cryptography - pip install cryptography
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+f = Fernet(key)
+encrypted = f.encrypt(b"Hello World")
+decrypted = f.decrypt(encrypted)  # b"Hello World"
+```
+
+### 19.6. DevOps & Infrastructure
+
+```python
+# Docker
+# Dockerfile cho Python
+"""
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "main.py"]
+"""
+
+# Docker SDK - pip install docker
+import docker
+client = docker.from_env()
+client.containers.list()
+
+# Fabric - SSH automation
+# pip install fabric
+from fabric import Connection
+
+conn = Connection('user@host')
+result = conn.run('ls -la')
+```
+
+---
+
 ## 20. Tầng 20: Toolchain
 
-### 20.2. Build & Package Management
+### 20.1. Build & Package Management
 
 #### pip & venv
 
@@ -4293,7 +5306,7 @@ poetry build
 name = "mypackage"
 version = "1.0.0"
 description = "My package"
-requires-python = ">=3.8"
+requires-python = ">= 3.8"
 dependencies = []
 
 [project.optional-dependencies]
@@ -4316,7 +5329,7 @@ profile = "black"
 
 ---
 
-### 20.3. Code Quality
+### 20.2. Code Quality
 
 #### Black (Formatter)
 
@@ -4366,7 +5379,7 @@ repos:
 
 ---
 
-### 20.4. IDE & Debugging
+### 20.3. IDE & Debugging
 
 #### VS Code
 
@@ -4403,6 +5416,98 @@ breakpoint()
 
 # VS Code / PyCharm debugging
 # Set breakpoints in IDE
+```
+
+---
+
+### 20.4. Profiling & Performance
+
+```python
+# cProfile - built-in profiler
+import cProfile
+
+def my_function():
+    return sum(range(1000000))
+
+cProfile.run('my_function()')
+
+# Profile to file
+cProfile.run('my_function()', 'output.prof')
+
+# Visualize with snakeviz
+# pip install snakeviz
+# snakeviz output.prof
+
+# timeit - benchmark
+import timeit
+
+timeit.timeit('sum(range(1000))', number=10000)
+
+# line_profiler - pip install line_profiler
+# @profile
+# def my_function():
+#     ...
+# kernprof -l -v script.py
+
+# memory_profiler - pip install memory_profiler
+from memory_profiler import profile
+
+@profile
+def memory_heavy():
+    return [i for i in range(1000000)]
+
+# tracemalloc (built-in)
+import tracemalloc
+
+tracemalloc.start()
+# ... code ...
+snapshot = tracemalloc.take_snapshot()
+top = snapshot.statistics('lineno')
+for stat in top[:5]:
+    print(stat)
+```
+
+### 20.5. Documentation & Publishing
+
+```python
+# Sphinx - sinh tài liệu
+# pip install sphinx
+# sphinx-quickstart docs/
+# sphinx-build docs/ docs/_build/
+
+# mkdocs - pip install mkdocs
+# mkdocs new myproject
+# mkdocs serve
+# mkdocs build
+
+# pdoc - simple doc generation
+# pip install pdoc
+# pdoc mymodule --output-dir docs/
+
+# PyPI publishing
+# pip install twine build
+# python -m build
+# twine upload dist/*
+```
+
+### 20.6. Runtime & Environment
+
+```bash
+# pyenv - quản lý phiên bản Python
+pyenv install 3.11.0
+pyenv global 3.11.0
+pyenv local 3.11.0
+
+# Implementations
+# CPython - default, reference implementation
+# PyPy - JIT compiler, faster for some workloads
+# Jython - Python on JVM
+# IronPython - Python on .NET
+
+# REPL
+python -i           # Interactive mode
+ipython              # Enhanced REPL (pip install ipython)
+jupyter notebook     # Jupyter (pip install jupyter)
 ```
 
 ---
