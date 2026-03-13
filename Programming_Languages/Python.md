@@ -204,273 +204,463 @@ int("10") + 5     # ✅ 15 - ép string thành int trước
 
 ```python
 # === Khai báo biến cơ bản (dynamic typing) ===
-# Python không cần từ khóa let/var/const, gán trực tiếp
-x = 10                    # int - số nguyên
-name = "Python"           # str - chuỗi ký tự
-is_active = True          # bool - giá trị boolean
-prices = [1.5, 2.0, 3.5]  # list - danh sách (mutable)
-coords = (10, 20)         # tuple - bộ giá trị (immutable)
-tags = {"python", "code"} # set - tập hợp không trùng lặp
-user = {"name": "John"}   # dict - từ điển key-value
+# Python không cần từ khóa let/var/const - gán trực tiếp tên_biến = giá_trị
+# Kiểu dữ liệu được xác định tự động tại runtime dựa trên giá trị gán
+
+x = 10                    # Tạo biến x với giá trị 10 → Python tự nhận kiểu int
+name = "Python"           # Tạo biến name với chuỗi "Python" → kiểu str (string)
+is_active = True          # Tạo biến boolean với giá trị True (viết hoa đầu)
+prices = [1.5, 2.0, 3.5]  # List (mảng) chứa các số thực - có thể thay đổi (mutable)
+coords = (10, 20)         # Tuple - cặp giá trị cố định, KHÔNG thể thay đổi (immutable)
+tags = {"python", "code"} # Set - tập hợp các phần tử DUY NHẤT, không trùng lặp
+user = {"name": "John"}   # Dict (dictionary) - cặp key-value, tra cứu theo key
 
 # === Type annotation (Python 3.5+) ===
+# Cú pháp: ten_bien: kieu_du_lieu = gia_tri
 # Chỉ là gợi ý cho IDE/type checker, KHÔNG enforce tại runtime
-x: int = 10               # Gợi ý x là int
-name: str = "Python"       # Gợi ý name là str
-is_active: bool = True     # Gợi ý is_active là bool
-prices: list[float] = [1.5, 2.0]  # Python 3.9+ syntax
+# Giúp IDE đề xuất autocomplete và phát hiện lỗi sớm
 
-# ⚠️ Lưu ý: annotation KHÔNG ngăn gán sai kiểu tại runtime
-x: int = 10
-x = "hello"  # KHÔNG lỗi runtime! Chỉ mypy/IDE cảnh báo
-print(x)     # Output: hello
-print(type(x))  # Output: <class 'str'>
+x: int = 10               # Gợi ý x thuộc kiểu int (số nguyên)
+name: str = "Python"       # Gợi ý name thuộc kiểu str (chuỗi)
+is_active: bool = True     # Gợi ý is_active thuộc kiểu bool (boolean)
+prices: list[float] = [1.5, 2.0]  # Python 3.9+ - list chứa float (generic syntax)
+
+# ⚠️ Lưu ý QUAN TRỌNG: annotation KHÔNG ngăn gán sai kiểu tại runtime
+# Type annotation chỉ là "gợi ý" - Python hoàn toàn bỏ qua tại runtime
+x: int = 10               # Khai báo x là int (gợi ý)
+x = "hello"               # Gán string cho x - Python KHÔNG báo lỗi!
+# Lý do: Python là dynamic typing, kiểu được xác định tại runtime
+print(x)                   # Output: hello
+print(type(x))             # Output: <class 'str'>  → x thực sự là string
 
 # === Multiple assignment (gán nhiều biến cùng lúc) ===
-a, b, c = 1, 2, 3         # a=1, b=2, c=3 (tuple unpacking ngầm)
-x = y = z = 0             # Cả 3 biến cùng trỏ đến object 0
+# Tuple unpacking: Python tự động pack các giá trị thành tuple
+a, b, c = 1, 2, 3         # Gán đồng thời a=1, b=2, c=3 (từ tuple ẩn)
+x = y = z = 0             # Cả 3 biến cùng trỏ đến object 0 (cùng id)
 print(a, b, c)             # Output: 1 2 3
 print(x, y, z)             # Output: 0 0 0
 
-# ⚠️ Edge case: multiple assignment với mutable object
-a = b = []      # a và b cùng trỏ đến 1 list!
-a.append(1)     # Thay đổi list
-print(b)        # Output: [1] ← b cũng bị ảnh hưởng!
-# Giải pháp: tạo list riêng
-a, b = [], []   # 2 list khác nhau
-a.append(1)
-print(b)        # Output: [] ← b không bị ảnh hưởng
+# ⚠️ Edge case: multiple assignment với mutable object - NGUY HIỂM!
+# Khi dùng = với mutable object (list, dict, set), TẤT CẢ biến trỏ cùng 1 object
+a = b = []                # a và b cùng trỏ đến 1 list rỗng trong memory!
+a.append(1)               # Thêm phần tử vào list mà a trỏ đến
+print(b)                  # Output: [1]  ← b cũng bị ảnh hưởng! (cùng list)
+# Giải pháp: tạo list riêng biệt cho mỗi biến
+a, b = [], []              # Tạo 2 list ĐỘC LẬP trong memory
+a.append(1)               # Chỉ thêm vào list a
+print(b)                  # Output: []  ← b không bị ảnh hưởng
 
-# === Augmented assignment (gán kết hợp) ===
-count = 0
-count += 1    # count = count + 1 → 1
-count -= 1    # count = count - 1 → 0
-count *= 5    # count = count * 5 → 0
-count //= 2   # count = count // 2 (chia lấy phần nguyên)
-count **= 3   # count = count ** 3 (lũy thừa)
+# === Augmented assignment (gán kết hợp toán tử) ===
+# Cú pháp: bien_toan_tu= gia_tri  → bien = bien toan_tu gia_tri
+count = 0                 # Khởi tạo count = 0
+count += 1                # count = count + 1 → 1 (tăng 1 đơn vị)
+count -= 1                # count = count - 1 → 0 (giảm 1 đơn vị)
+count *= 5                # count = count * 5 → 0 (nhân với 5)
+count //= 2               # count = count // 2 → 0 (chia lấy phần nguyên, 0//2=0)
+count **= 3               # count = count ** 3 → 0 (lũy thừa, 0**3=0)
+
+# === Real-world use case: Cấu hình ứng dụng ===
+# Khai báo biến cấu hình theo quy ước UPPER_CASE
+API_BASE_URL = "https://api.example.com/v1"  # URL API cố định
+MAX_RETRY_ATTEMPTS = 3                         # Số lần thử lại tối đa
+DEFAULT_TIMEOUT_SECONDS = 30                   # Timeout mặc định (giây)
+ALLOWED_HTTP_METHODS = {"GET", "POST", "PUT", "DELETE"}  # Methods được phép
+
+# Truy cập trong code
+def call_api(endpoint):
+    url = f"{API_BASE_URL}/{endpoint}"  # Nối chuỗi f-string
+    print(f"Calling: {url}")            # Output: Calling: https://api.example.com/v1/endpoint
+    return {"status": "success"}
+
+# === Edge case: Tên biến không hợp lệ ===
+# 123abc = 10        # ❌ SyntaxError: invalid token (không bắt đầu bằng số)
+# my-var = 1        # ❌ SyntaxError: không dùng dấu gạch ngang
+# class = "test"    # ❌ SyntaxError: từ khóa Python không dùng được
+my_var = 1           # ✅ Dùng underscore (snake_case - convention Python)
+myVar = 1            # ✅ CamelCase cũng được nhưng ít dùng trong Python
+_ = 10               # ✅ Biến "vô nghĩa" thường dùng cho giá trị không dùng đến
 ```
 
 #### Immutable - Hằng số
 
 ```python
-# === Python KHÔNG có const/final keyword ===
-# Quy ước: viết HOA toàn bộ để đánh dấu constant
-MAX_SIZE = 100              # Hằng số cấu hình
-PI = 3.14159                # Hằng số toán học
-BASE_URL = "https://api.example.com"  # URL không đổi
-DEFAULT_TIMEOUT = 30        # Timeout mặc định (giây)
+# === Python KHÔNG có const/final keyword như Java/C++ ===
+# Quy ước (convention) PEP 8: viết HOA toàn bộ + underscore để đánh dấu constant
+# Đây là thỏa thuận giữa lập trình viên, Python không enforce
+
+MAX_SIZE = 100              # Hằng số giới hạn kích thước (số nguyên)
+PI = 3.14159                # Hằng số toán học π
+BASE_URL = "https://api.example.com"  # URL gốc của API, không thay đổi
+DEFAULT_TIMEOUT = 30        # Timeout mặc định tính bằng giây
 
 # ⚠️ Lưu ý: đây chỉ là QUY ƯỚC, Python vẫn cho phép gán lại
-MAX_SIZE = 200  # KHÔNG lỗi! Nhưng vi phạm convention
+MAX_SIZE = 200              # KHÔNG lỗi runtime! Nhưng vi phạm convention
+# → Dùng linter (flake8, pylint) hoặc mypy để phát hiện vi phạm
 
 # === Dùng tuple cho immutable data ===
-COORDS = (10, 20)           # Tuple - không thể thay đổi phần tử
-# COORDS[0] = 5            # ❌ TypeError: 'tuple' does not support item assignment
+# Tuple không có method .append(), .remove() → không thể thay đổi cấu trúc
+COORDS = (10, 20)           # Tọa độ cố định (x, y)
+# COORDS[0] = 5            # ❌ TypeError: 'tuple' object does not support item assignment
 
-RGB_RED = (255, 0, 0)       # Màu đỏ - không nên thay đổi
-ALLOWED_METHODS = ("GET", "POST", "PUT", "DELETE")
+RGB_RED = (255, 0, 0)       # Màu đỏ theo RGB - không nên thay đổi
+ALLOWED_METHODS = ("GET", "POST", "PUT", "DELETE")  # HTTP methods hợp lệ
 
 # === Dùng frozenset cho tập hợp immutable ===
+# frozenset giống set nhưng không thể thêm/xóa phần tử sau khi tạo
 VALID_STATUS = frozenset({"active", "inactive", "pending"})
-# VALID_STATUS.add("banned")  # ❌ AttributeError: 'frozenset' has no 'add'
+# VALID_STATUS.add("banned")  # ❌ AttributeError: 'frozenset' object has no attribute 'add'
+print("active" in VALID_STATUS)   # Output: True  (vẫn có thể kiểm tra membership)
+print("banned" in VALID_STATUS)   # Output: False
 
-# === Real-world: dùng Enum cho hằng số có cấu trúc (xem section 2.2) ===
 # === Real-world: dùng Final từ typing (Python 3.8+) ===
+# Final cho phép type checker (mypy) phát hiện khi bạn vô tình gán lại
 from typing import Final
-MAX_RETRIES: Final = 3      # Type checker sẽ cảnh báo nếu gán lại
-# MAX_RETRIES = 5           # ❌ mypy error (nhưng runtime vẫn ok)
+
+MAX_RETRIES: Final = 3      # Khai báo MAX_RETRIES là hằng số cuối cùng
+API_KEY: Final[str] = "sk-abc123"  # Chỉ định cả kiểu dữ liệu
+# MAX_RETRIES = 5           # ❌ mypy error: Cannot assign to final name "MAX_RETRIES"
+# Nhưng runtime vẫn chạy bình thường - Final chỉ là hint cho type checker
+
+# === Real-world use case: Cấu hình database ===
+DB_HOST: Final = "localhost"
+DB_PORT: Final = 5432
+DB_NAME: Final = "myapp"
+DB_POOL_SIZE: Final = 10    # Số connection tối đa trong pool
+
+# Dùng trong code
+def get_connection_string() -> str:
+    return f"postgresql://{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+print(get_connection_string())  # Output: postgresql://localhost:5432/myapp
+
+# === Edge case: Hằng số trong module ===
+# Thường đặt hằng số ở đầu file hoặc trong file config.py riêng
+# Tránh "magic numbers" - số không có tên trong code
+# ❌ Không nên:
+# if len(users) > 100:  # 100 là magic number, không rõ ý nghĩa
+#     ...
+# ✅ Nên:
+MAX_USERS_PER_PAGE = 100
+# if len(users) > MAX_USERS_PER_PAGE:  # Rõ ràng hơn
+#     ...
 ```
 
 #### Type Inference
 
 ```python
-# === Python tự suy luận kiểu dựa trên giá trị gán ===
-x = 10              # int - suy luận từ literal số nguyên
-y = 3.14            # float - suy luận từ literal số thực
-z = "hello"         # str - suy luận từ literal chuỗi
-w = True            # bool - suy luận từ literal boolean
-n = None            # NoneType - giá trị null
+# === Python tự suy luận kiểu dựa trên giá trị gán (type inference) ===
+# Không cần khai báo kiểu - Python tự xác định tại runtime
 
-# === Kiểm tra kiểu tại runtime ===
+x = 10              # Literal số nguyên → Python suy luận kiểu int
+y = 3.14            # Literal số thực (có dấu chấm) → Python suy luận kiểu float
+z = "hello"         # Literal chuỗi (trong nháy đơn/kép) → Python suy luận kiểu str
+w = True            # Literal boolean (True/False viết hoa) → Python suy luận kiểu bool
+n = None            # Literal None → Python suy luận kiểu NoneType (giá trị null)
+c = 3 + 4j          # Literal số phức (j là đơn vị ảo) → Python suy luận kiểu complex
+
+# === Kiểm tra kiểu tại runtime với type() ===
+# type() trả về đối tượng kiểu (class) của biến
 print(type(x))             # Output: <class 'int'>
 print(type(y))             # Output: <class 'float'>
 print(type(z))             # Output: <class 'str'>
+print(type(w))             # Output: <class 'bool'>
+print(type(n))             # Output: <class 'NoneType'>
+print(type(c))             # Output: <class 'complex'>
 
-# isinstance() - kiểm tra có phải kiểu đó không (bao gồm kế thừa)
-print(isinstance(x, int))       # Output: True
-print(isinstance(x, (int, float)))  # Output: True (kiểm tra nhiều kiểu)
-print(isinstance(True, int))    # Output: True ← bool kế thừa từ int!
+# === isinstance() - kiểm tra kiểu có xét kế thừa ===
+# isinstance(obj, type) → True nếu obj là instance của type hoặc subclass của type
+print(isinstance(x, int))           # Output: True  (x là int)
+print(isinstance(x, (int, float)))  # Output: True  (kiểm tra nhiều kiểu cùng lúc)
+print(isinstance(True, int))        # Output: True  ← bool kế thừa từ int!
+print(isinstance(True, bool))       # Output: True
+print(isinstance(1.0, int))         # Output: False (float không kế thừa int)
 
-# ⚠️ type() vs isinstance():
-# type() chỉ kiểm tra kiểu chính xác, không xét kế thừa
-# isinstance() xét cả kế thừa (khuyến khích dùng hơn)
+# ⚠️ type() vs isinstance() - khi nào dùng cái nào?
+# type() chỉ kiểm tra kiểu CHÍNH XÁC, không xét kế thừa → dùng khi cần phân biệt chính xác
+# isinstance() xét cả kế thừa → dùng khi muốn kiểm tra "có phải loại này không"
 class Animal: pass
 class Dog(Animal): pass
-dog = Dog()
-print(type(dog) == Animal)       # Output: False (Dog ≠ Animal)
-print(isinstance(dog, Animal))   # Output: True  (Dog kế thừa Animal)
 
-# === Chuyển đổi kiểu tường minh (type casting) ===
-int("42")       # str → int: 42
-float("3.14")   # str → float: 3.14
-str(42)         # int → str: "42"
-bool(0)         # int → bool: False
-bool(1)         # int → bool: True
-list("abc")     # str → list: ['a', 'b', 'c']
-tuple([1,2,3])  # list → tuple: (1, 2, 3)
-set([1,1,2])    # list → set: {1, 2}
+dog = Dog()                          # Tạo instance của Dog
+print(type(dog) == Animal)           # Output: False (Dog ≠ Animal, khác nhau)
+print(type(dog) == Dog)              # Output: True  (Dog == Dog, chính xác)
+print(isinstance(dog, Animal))       # Output: True  (Dog kế thừa Animal)
+print(isinstance(dog, Dog))          # Output: True
 
-# ⚠️ Edge case: chuyển đổi thất bại
-# int("abc")    # ❌ ValueError: invalid literal for int()
-# int("3.14")   # ❌ ValueError: phải dùng float() trước
-int(float("3.14"))  # ✅ 3 (float → int cắt phần thập phân)
+# === Chuyển đổi kiểu tường minh (explicit type casting) ===
+# Python không tự ép kiểu ngầm → phải gọi hàm chuyển đổi tường minh
+print(int("42"))        # Output: 42    (str → int: parse chuỗi số)
+print(float("3.14"))    # Output: 3.14  (str → float: parse chuỗi số thực)
+print(str(42))          # Output: 42    (int → str: chuyển số thành chuỗi)
+print(bool(0))          # Output: False (int → bool: 0 là falsy)
+print(bool(1))          # Output: True  (int → bool: khác 0 là truthy)
+print(bool(""))         # Output: False (str → bool: chuỗi rỗng là falsy)
+print(bool("hello"))    # Output: True  (str → bool: chuỗi không rỗng là truthy)
+print(list("abc"))      # Output: ['a', 'b', 'c']  (str → list: tách từng ký tự)
+print(tuple([1,2,3]))   # Output: (1, 2, 3)         (list → tuple)
+print(set([1,1,2,2]))   # Output: {1, 2}             (list → set: loại bỏ trùng lặp)
+
+# ⚠️ Edge case: chuyển đổi thất bại → ValueError
+# int("abc")            # ❌ ValueError: invalid literal for int() with base 10: 'abc'
+# int("3.14")           # ❌ ValueError: phải dùng float() trước, không parse trực tiếp
+# float("hello")        # ❌ ValueError: could not convert string to float: 'hello'
+print(int(float("3.14")))  # Output: 3  ✅ str → float → int (cắt phần thập phân)
+print(int(3.99))           # Output: 3  ✅ float → int (KHÔNG làm tròn, chỉ cắt)
+
+# ⚠️ Edge case: bool là subclass của int
+print(True + True)         # Output: 2  (True = 1, nên 1 + 1 = 2)
+print(True * 5)            # Output: 5  (True = 1, nên 1 * 5 = 5)
+print(False + 10)          # Output: 10 (False = 0, nên 0 + 10 = 10)
+
+# === Real-world: kiểm tra kiểu trước khi xử lý ===
+def process_value(value):
+    """Xử lý giá trị theo kiểu dữ liệu."""
+    if isinstance(value, str):
+        return value.upper()          # Chuỗi → chuyển hoa
+    elif isinstance(value, (int, float)):
+        return value * 2              # Số → nhân đôi
+    elif isinstance(value, list):
+        return sorted(value)          # List → sắp xếp
+    else:
+        return str(value)             # Kiểu khác → chuyển thành chuỗi
+
+print(process_value("hello"))         # Output: HELLO
+print(process_value(21))              # Output: 42
+print(process_value([3, 1, 2]))       # Output: [1, 2, 3]
+print(process_value(None))            # Output: None
 ```
 
 #### Global Variable
 
 ```python
 # === Biến toàn cục (global variable) ===
-# Khai báo ngoài mọi function → có thể đọc từ bất kỳ đâu
-global_var = "I am global"
+# Biến khai báo ở cấp module (ngoài mọi function/class) → có thể đọc từ bất kỳ đâu
+global_var = "I am global"  # Biến global - tồn tại suốt vòng đời chương trình
 
 def access_global():
     # ĐỌC biến global → không cần từ khóa 'global'
-    print(global_var)  # Output: I am global
+    # Python tìm theo LEGB: Local → Enclosing → Global → Built-in
+    print(global_var)       # Output: I am global (tìm thấy ở Global scope)
 
 def modify_global():
-    # GHI biến global → BẮT BUỘC dùng từ khóa 'global'
-    global global_var           # Khai báo sẽ dùng biến global
-    global_var = "Modified"     # Thay đổi giá trị biến global
+    # GHI biến global → BẮT BUỘC khai báo 'global' trước
+    # Nếu không có 'global', Python sẽ tạo biến LOCAL mới thay vì sửa global
+    global global_var           # Báo Python: global_var ở đây là biến GLOBAL
+    global_var = "Modified"     # Thay đổi giá trị biến global thực sự
 
 def without_global_keyword():
-    # Không dùng 'global' → Python tạo biến LOCAL mới
-    global_var = "Local only"   # Đây là biến local, không ảnh hưởng global
-    print(global_var)           # Output: Local only
+    # Không dùng 'global' → Python tạo biến LOCAL mới, che khuất biến global
+    global_var = "Local only"   # Biến local mới, KHÔNG ảnh hưởng global
+    print(global_var)           # Output: Local only (đọc biến local)
 
-# Thứ tự gọi:
+# Thứ tự gọi để thấy sự khác biệt:
 access_global()               # Output: I am global
 modify_global()               # Thay đổi global_var thành "Modified"
-access_global()               # Output: Modified
-without_global_keyword()      # Output: Local only (biến local)
-access_global()               # Output: Modified (global không bị thay đổi)
+access_global()               # Output: Modified  (global đã bị thay đổi)
+without_global_keyword()      # Output: Local only (biến local trong function)
+access_global()               # Output: Modified  (global vẫn là "Modified")
 
-# ⚠️ Lưu ý: hạn chế dùng global variable
-# - Khó debug, khó test, khó theo dõi ai thay đổi
-# - Thay thế bằng: class attribute, function parameter, module-level constant
+# ⚠️ Lưu ý: hạn chế dùng global variable vì:
+# - Khó debug: không biết ai thay đổi giá trị
+# - Khó test: function phụ thuộc vào state bên ngoài
+# - Khó đọc: phải tìm khắp file để hiểu giá trị hiện tại
+# ✅ Thay thế bằng: class attribute, function parameter, dependency injection
+
+# === Real-world: module-level state (dùng cẩn thận) ===
+_cache = {}  # Dấu _ đầu = "private" theo convention
+
+def get_user(user_id: int) -> dict:
+    """Lấy user với cache đơn giản."""
+    if user_id not in _cache:           # Kiểm tra cache
+        # Giả lập gọi database
+        _cache[user_id] = {"id": user_id, "name": f"User {user_id}"}
+    return _cache[user_id]              # Trả về từ cache
+
+print(get_user(1))   # Output: {'id': 1, 'name': 'User 1'}  (gọi DB)
+print(get_user(1))   # Output: {'id': 1, 'name': 'User 1'}  (từ cache)
+print(get_user(2))   # Output: {'id': 2, 'name': 'User 2'}  (gọi DB)
 ```
 
 #### Static Variable (Class-level)
 
 ```python
 # === Biến class (class variable / static variable) ===
-# Chia sẻ giữa TẤT CẢ instances của class
+# Biến class được chia sẻ giữa TẤT CẢ instances của class
+# Thay đổi ở một nơi → thấy ở mọi nơi
 class Counter:
-    count = 0  # Biến class - thuộc về class, không thuộc instance
+    count = 0              # Biến class - thuộc về class, KHÔNG thuộc instance
 
     def __init__(self):
-        Counter.count += 1  # Truy cập qua TÊN CLASS, không qua self
+        # Truy cập biến class qua TÊN CLASS (Counter.count), không phải self.count
+        Counter.count += 1  # Tăng biến class mỗi khi tạo instance mới
 
     def __del__(self):
-        Counter.count -= 1  # Giảm khi object bị xóa
+        # Giảm biến class khi object bị xóa (garbage collected)
+        Counter.count -= 1
 
+# Kiểm tra số lượng instance đã tạo
 print(Counter.count)  # Output: 0 (chưa tạo instance nào)
 
-c1 = Counter()
-print(Counter.count)  # Output: 1
+c1 = Counter()              # Tạo instance thứ 1
+print(Counter.count)  # Output: 1 (c1: count tăng lên 1)
 
-c2 = Counter()
-print(Counter.count)  # Output: 2
+c2 = Counter()              # Tạo instance thứ 2
+print(Counter.count)  # Output: 2 (c2: count tăng lên 2)
 
-c3 = Counter()
-print(Counter.count)  # Output: 3
+c3 = Counter()              # Tạo instance thứ 3
+print(Counter.count)  # Output: 3 (c3: count tăng lên 3)
 
-del c3
-print(Counter.count)  # Output: 2 (c3 bị xóa)
+del c3                      # Xóa instance c3 (gọi __del__)
+print(Counter.count)  # Output: 2 (count giảm xuống 2)
 
 # ⚠️ Edge case: gán qua instance tạo biến instance MỚI, không thay đổi class variable
+# Đây là PITFALL phổ biến trong Python!
 class Config:
-    debug = False  # Class variable
+    debug = False           # Class variable - thuộc về class
 
-cfg1 = Config()
-cfg2 = Config()
-cfg1.debug = True        # Tạo biến INSTANCE cho cfg1, KHÔNG thay đổi class variable!
-print(cfg1.debug)        # Output: True  (instance variable)
-print(cfg2.debug)        # Output: False (vẫn đọc class variable)
-print(Config.debug)      # Output: False (class variable không đổi)
+cfg1 = Config()             # Tạo instance 1
+cfg2 = Config()             # Tạo instance 2
 
-# Để thay đổi class variable → dùng tên class
-Config.debug = True
-print(cfg2.debug)        # Output: True (giờ mới thay đổi cho tất cả)
+# Gán qua instance tạo INSTANCE VARIABLE mới, KHÔNG thay đổi class variable!
+cfg1.debug = True           # Tạo biến instance 'debug' mới cho cfg1
+print(cfg1.debug)          # Output: True  (đọc instance variable)
+print(cfg2.debug)          # Output: False (vẫn đọc class variable!)
+print(Config.debug)        # Output: False (class variable vẫn không đổi)
+
+# Để thay đổi class variable → dùng TÊN CLASS
+Config.debug = True         # Thay đổi biến class trực tiếp
+print(cfg2.debug)          # Output: True  (giờ mới thay đổi)
+print(Config.debug)        # Output: True
+
+# === Real-world: đếm số lượng objects, cache chung, cấu hình chia sẻ ===
+class DatabaseConnection:
+    _pool_size = 0         # Class variable: số connection trong pool
+    _active_connections = 0 # Class variable: số connection đang dùng
+    _max_connections = 10  # Class variable: giới hạn tối đa
+
+    def __init__(self):
+        # Chỉ tạo connection nếu chưa đạt giới hạn
+        if DatabaseConnection._active_connections < DatabaseConnection._max_connections:
+            DatabaseConnection._active_connections += 1
+            self.connected = True
+        else:
+            self.connected = False
+            raise RuntimeError("Connection pool exhausted")
+
+    def close(self):
+        if self.connected:
+            DatabaseConnection._active_connections -= 1
+
+    @classmethod
+    def status(cls):
+        return f"Active: {cls._active_connections}/{cls._max_connections}"
+
+# Test
+try:
+    conn1 = DatabaseConnection()
+    conn2 = DatabaseConnection()
+    print(DatabaseConnection.status())  # Output: Active: 2/10
+    conn1.close()
+    print(DatabaseConnection.status())  # Output: Active: 1/10
+except Exception as e:
+    print(f"Error: {e}")
 ```
 
 #### Scope & Shadowing
 
 ```python
-# === Python có LEGB rule ===
-# L - Local:     biến trong hàm hiện tại
-# E - Enclosing: biến trong hàm bao ngoài (closure)
-# G - Global:    biến cấp module (file)
-# B - Built-in:  biến/hàm có sẵn (print, len, type...)
+# === Python có LEGB rule - thứ tự tìm biến ===
+# Khi truy cập biến, Python tìm theo thứ tự:
+# 1. L - Local:     biến trong hàm hiện tại
+# 2. E - Enclosing: biến trong hàm bao ngoài (closure/nested function)
+# 3. G - Global:    biến cấp module (file .py)
+# 4. B - Built-in:  biến/hàm có sẵn (print, len, type, str, int...)
 
-x = "global"        # (G) Global scope
+x = "global"        # (G) Global scope - biến ở cấp module
 
 def outer():
-    x = "enclosing"  # (E) Enclosing scope - shadow biến global x
+    x = "enclosing"  # (E) Enclosing scope - biến trong function bao ngoài
 
     def inner():
-        x = "local"  # (L) Local scope - shadow biến enclosing x
-        print(x)     # Output: local (tìm L trước → thấy)
+        x = "local"  # (L) Local scope - biến trong function hiện tại
+        print(x)     # Output: local (tìm thấy ở L trước → dừng tìm)
 
     inner()
-    print(x)  # Output: enclosing (L của inner không ảnh hưởng)
+    print(x)         # Output: enclosing (L của inner không ảnh hưởng đến E)
 
 outer()
-print(x)      # Output: global (E và L không ảnh hưởng)
+print(x)             # Output: global (E và L không ảnh hưởng đến G)
 
-# === nonlocal - thay đổi biến enclosing ===
+# === nonlocal - thay đổi biến enclosing (trong nested function) ===
+# nonlocal cho phép sửa biến ở enclosing scope (không phải global)
 def counter():
-    count = 0              # Biến enclosing
+    count = 0              # Biến enclosing (trong outer function)
 
     def increment():
-        nonlocal count     # Khai báo dùng biến từ enclosing scope
-        count += 1         # Thay đổi biến enclosing
+        nonlocal count     # Khai báo: biến count ở đây là từ enclosing scope
+        count += 1         # Thay đổi biến enclosing, không tạo biến local
         return count
 
-    return increment
+    return increment       # Trả về function chưa gọi (closure)
 
-c = counter()
-print(c())  # Output: 1
-print(c())  # Output: 2
-print(c())  # Output: 3
+c = counter()              # Tạo closure với count = 0
+print(c())                 # Output: 1 (increment: 0 + 1 = 1)
+print(c())                 # Output: 2 (increment: 1 + 1 = 2)
+print(c())                 # Output: 3 (increment: 2 + 1 = 3)
 
-# ⚠️ Không có nonlocal → UnboundLocalError
+# ⚠️ PITFALL: Không có nonlocal → UnboundLocalError
+# Python phân tích code TRƯỚC KHI chạy, thấy count ở vế trái → coi là local
+# Nhưng local chưa được gán → lỗi!
 def bad_counter():
     count = 0
     def increment():
-        # count += 1       # ❌ UnboundLocalError: 'count' referenced before assignment
-        # Python thấy count ở vế trái → coi là local → chưa gán → lỗi
+        # count += 1       # ❌ UnboundLocalError: local variable 'count' referenced before assignment
+        # Giải pháp: dùng nonlocal count hoặc dùng list/dict (mutable trick)
         pass
     return increment
 
 # === Built-in scope (B) ===
-# print, len, type, int, str... là built-in
-# ⚠️ Có thể shadow built-in (KHÔNG nên làm)
-# list = [1, 2, 3]  # Shadow built-in list()!
-# list("abc")        # ❌ TypeError: 'list' object is not callable
-# Giải pháp: đặt tên khác
-my_list = [1, 2, 3]  # ✅ Không shadow built-in
+# Python có sẵn nhiều hàm và kiểu dữ liệu built-in
+# print, len, type, int, str, list, dict, set, tuple, range, enumerate, zip...
+# ⚠️ Có thể vô tình shadow built-in (KHÔNG nên làm!)
+# list = [1, 2, 3]          # ❌ Shadow built-in list()!
+# print(list)                # Output: [1, 2, 3] (không còn là hàm)
+# list("abc")                # ❌ TypeError: 'list' object is not callable
+
+# ✅ Giải pháp: đặt tên khác hoặc dùng underscore prefix
+my_list = [1, 2, 3]        # ✅ Không shadow built-in
+_builtin_list = list       # Lưu lại built-in nếu cần dùng
 
 # === Real-world: dùng closure làm factory function ===
+# Tạo các function với behavior khác nhau dựa trên tham số
 def make_logger(prefix):
-    """Tạo hàm log với prefix cố định"""
+    """Factory function: tạo hàm log với prefix cố định."""
     def log(message):
+        # Inner function "nhớ" prefix từ enclosing scope (closure)
         print(f"[{prefix}] {message}")
-    return log
+    return log                # Trả về function chưa gọi
 
-info = make_logger("INFO")
-error = make_logger("ERROR")
-info("Server started")    # Output: [INFO] Server started
-error("Connection lost")  # Output: [ERROR] Connection lost
+info = make_logger("INFO")   # Tạo logger với prefix = "INFO"
+error = make_logger("ERROR") # Tạo logger với prefix = "ERROR"
+debug = make_logger("DEBUG") # Tạo logger với prefix = "DEBUG"
+
+info("Server started")       # Output: [INFO] Server started
+error("Connection lost")     # Output: [ERROR] Connection lost
+debug("Processing request")  # Output: [DEBUG] Processing request
+
+# === Real-world: closure với configuration ===
+def create_formatter(decimal_places: int, prefix: str = "$"):
+    """Tạo hàm format tiền tệ với cấu hình cố định."""
+    def format(amount: float) -> str:
+        return f"{prefix}{amount:.{decimal_places}f}"
+    return format
+
+format_currency = create_formatter(decimal_places=2)    # 2 chữ số thập phân
+format_stock = create_formatter(decimal_places=4, prefix="") # 4 chữ số, không prefix
+
+print(format_currency(99.9))   # Output: $99.90
+print(format_currency(100))    # Output: $100.00
+print(format_stock(123.456789)) # Output: 123.4568
 ```
 
 ---
@@ -481,29 +671,33 @@ error("Connection lost")  # Output: [ERROR] Connection lost
 
 ```python
 # === Function không có return (trả về None ngầm) ===
+# Cú pháp: def ten_ham(tham_so): → thụt lề 4 spaces
 def greet():
-    print("Hello!")          # Chỉ in ra, không trả về gì
+    print("Hello!")          # In ra màn hình, không trả về giá trị
 
-result = greet()             # Output: Hello!
-print(result)                # Output: None (function không return → trả về None)
+result = greet()             # Gọi function → in "Hello!" và gán kết quả vào result
+# Output: Hello!
+print(result)                # Output: None  (function không có return → trả về None ngầm)
 
 # === Function có return ===
 def add(a, b):
-    return a + b             # Trả về tổng a + b
+    return a + b             # Tính tổng và trả về kết quả cho caller
 
-print(add(3, 5))             # Output: 8
-print(add("Hello", " World"))  # Output: Hello World (+ cũng nối string)
+print(add(3, 5))             # Output: 8      (3 + 5 = 8)
+print(add("Hello", " World"))  # Output: Hello World  (+ với string = nối chuỗi)
 
 # === Function với type hints (Python 3.5+) ===
-# Type hints giúp IDE hiểu code, KHÔNG enforce tại runtime
+# Cú pháp: def ten(tham_so: kieu) -> kieu_tra_ve:
+# Type hints giúp IDE autocomplete và phát hiện lỗi, KHÔNG enforce tại runtime
 def greet(name: str) -> str:
     """Trả về lời chào với tên được truyền vào."""
-    return f"Hello, {name}!"
+    return f"Hello, {name}!"  # f-string: nhúng biến vào chuỗi
 
 print(greet("Python"))       # Output: Hello, Python!
-print(greet(42))             # Output: Hello, 42! (runtime vẫn chạy, mypy sẽ cảnh báo)
+print(greet(42))             # Output: Hello, 42!  (runtime vẫn chạy, mypy sẽ cảnh báo)
 
 # === Docstring (Google style) ===
+# Docstring là chuỗi đầu tiên trong function, dùng để mô tả function
 def calculate_area(width: float, height: float) -> float:
     """Tính diện tích hình chữ nhật.
 
@@ -524,28 +718,65 @@ def calculate_area(width: float, height: float) -> float:
         ValueError: Dimensions must be positive
     """
     if width <= 0 or height <= 0:
-        raise ValueError("Dimensions must be positive")
-    return width * height
+        raise ValueError("Dimensions must be positive")  # Ném exception nếu input không hợp lệ
+    return width * height                                  # Trả về diện tích
 
-print(calculate_area(5, 3))  # Output: 15
+print(calculate_area(5, 3))   # Output: 15.0
+print(calculate_area(2.5, 4)) # Output: 10.0
+# calculate_area(-1, 5)       # ❌ ValueError: Dimensions must be positive
 
 # === Multiple return values (trả về tuple ngầm) ===
+# Python không có cú pháp return nhiều giá trị riêng biệt
+# Thực chất là trả về 1 tuple, sau đó unpack
 def divide(a, b):
     """Trả về thương và phần dư."""
-    quotient = a // b        # Phần nguyên
-    remainder = a % b        # Phần dư
-    return quotient, remainder  # Trả về tuple (quotient, remainder)
+    quotient = a // b           # Phép chia lấy phần nguyên (floor division)
+    remainder = a % b           # Phép chia lấy phần dư (modulo)
+    return quotient, remainder  # Trả về tuple (quotient, remainder) ngầm
 
-q, r = divide(17, 5)        # Tuple unpacking
-print(f"17 ÷ 5 = {q} dư {r}")  # Output: 17 ÷ 5 = 3 dư 2
+q, r = divide(17, 5)           # Tuple unpacking: q=3, r=2
+print(f"17 ÷ 5 = {q} dư {r}") # Output: 17 ÷ 5 = 3 dư 2
 
-# === Early return pattern ===
+result = divide(17, 5)         # Không unpack → nhận tuple
+print(result)                  # Output: (3, 2)
+print(result[0])               # Output: 3  (phần nguyên)
+print(result[1])               # Output: 2  (phần dư)
+
+# === Early return pattern (guard clause) ===
+# Thoát sớm khi điều kiện không thỏa → tránh lồng if sâu
 def find_user(user_id: int) -> dict | None:
     """Tìm user theo ID, trả về None nếu không tìm thấy."""
     if user_id <= 0:
-        return None          # Early return - thoát sớm nếu ID không hợp lệ
-    # ... logic tìm kiếm ...
-    return {"id": user_id, "name": "John"}
+        return None              # Guard: thoát sớm nếu ID không hợp lệ
+    if user_id > 1000:
+        return None              # Guard: thoát sớm nếu ID vượt giới hạn
+    # Logic chính chỉ chạy khi input hợp lệ
+    return {"id": user_id, "name": f"User {user_id}"}
+
+print(find_user(0))             # Output: None  (ID không hợp lệ)
+print(find_user(-5))            # Output: None  (ID âm)
+print(find_user(42))            # Output: {'id': 42, 'name': 'User 42'}
+
+# === Real-world: function xử lý dữ liệu ===
+def parse_price(price_str: str) -> float | None:
+    """Parse chuỗi giá tiền thành float.
+    Xử lý các định dạng: "$99.99", "99.99", "99,99"
+    """
+    if not price_str:
+        return None                          # Chuỗi rỗng → None
+    cleaned = price_str.strip()             # Xóa khoảng trắng đầu/cuối
+    cleaned = cleaned.replace("$", "")      # Xóa ký hiệu tiền tệ
+    cleaned = cleaned.replace(",", ".")     # Thay dấu phẩy bằng dấu chấm
+    try:
+        return float(cleaned)               # Chuyển thành float
+    except ValueError:
+        return None                          # Không parse được → None
+
+print(parse_price("$99.99"))   # Output: 99.99
+print(parse_price("99,99"))    # Output: 99.99
+print(parse_price("  $50  "))  # Output: 50.0
+print(parse_price("abc"))      # Output: None
+print(parse_price(""))         # Output: None
 ```
 
 #### Parameters
@@ -580,71 +811,126 @@ print(good_append(1))             # Output: [1]
 print(good_append(2))             # Output: [2] ← Đúng!
 
 # === Positional và Keyword arguments ===
+# Python cho phép gọi function theo 2 cách: theo vị trí hoặc theo tên
 def create_user(name, email, age):
+    """Tạo user dict từ thông tin."""
     return {"name": name, "email": email, "age": age}
 
-# Gọi theo vị trí (positional)
+# Gọi theo vị trí (positional arguments)
+# Thứ tự argument phải khớp với thứ tự parameter trong function definition
 user1 = create_user("John", "john@example.com", 25)
+print(user1)  # Output: {'name': 'John', 'email': 'john@example.com', 'age': 25}
 
-# Gọi theo tên (keyword) - thứ tự tùy ý
+# Gọi theo tên (keyword arguments)
+# Dùng ten_tham_so=gia_tri → thứ tự không quan trọng
 user2 = create_user(age=25, name="John", email="john@example.com")
+print(user2)  # Output: {'name': 'John', 'email': 'john@example.com', 'age': 25}
 
-# Mix (positional phải đứng trước keyword)
+# Mix cả hai (positional phải đứng trước keyword)
 user3 = create_user("John", age=25, email="john@example.com")
-# create_user(name="John", "john@example.com", 25)  # ❌ SyntaxError
+print(user3)  # Output: {'name': 'John', 'email': 'john@example.com', 'age': 25}
+# create_user(name="John", "john@example.com", 25)  # ❌ SyntaxError: positional argument follows keyword argument
 
 # === Keyword-only arguments (Python 3.0+) ===
-# Tham số sau * BẮT BUỘC phải truyền bằng tên
+# Tham số sau * hoặc *args BẮT BUỘC phải truyền bằng tên (keyword)
+# Dấu * ngăn việc truyền positional vào các tham số sau nó
 def connect(host, port, *, timeout=30, retries=3):
+    """Kết nối đến server với các tham số tùy chọn."""
     print(f"Connecting to {host}:{port} (timeout={timeout}s, retries={retries})")
 
-connect("localhost", 8080)                     # Output: Connecting to localhost:8080 (timeout=30s, retries=3)
-connect("localhost", 8080, timeout=60)         # Output: Connecting to localhost:8080 (timeout=60s, retries=3)
-# connect("localhost", 8080, 60)              # ❌ TypeError: takes 2 positional arguments
+connect("localhost", 8080)                        # Truyền đủ 2 required params
+# Output: Connecting to localhost:8080 (timeout=30s, retries=3)
+connect("localhost", 8080, timeout=60)            # Ghi đè timeout bằng keyword
+# Output: Connecting to localhost:8080 (timeout=60s, retries=3)
+# connect("localhost", 8080, 60)                 # ❌ TypeError: positional argument not allowed
 
 # === Positional-only arguments (Python 3.8+) ===
-# Tham số trước / BẮT BUỘC phải truyền theo vị trí
+# Tham số trước / BẮT BUỘC phải truyền theo vị trí, KHÔNG được dùng keyword
+# / ngăn việc truyền keyword vào các tham số trước nó
 def power(base, exp, /):
+    """Tính lũy thừa: base^exp."""
     return base ** exp
 
-print(power(2, 10))        # Output: 1024
-# power(base=2, exp=10)    # ❌ TypeError: positional-only argument
+print(power(2, 10))             # Output: 1024 (truyền theo vị trí)
+# power(base=2, exp=10)        # ❌ TypeError: positional-only argument
 
-# === *args và **kwargs ===
+# === *args và **kwargs - Variadic parameters ===
+# *args: thu thập TẤT CẢ positional arguments thành tuple
+# **kwargs: thu thập TẤT CẢ keyword arguments thành dict
 def func(*args, **kwargs):
-    print(f"args = {args}")      # args là tuple chứa positional arguments
-    print(f"kwargs = {kwargs}")  # kwargs là dict chứa keyword arguments
+    print(f"args = {args}")       # Tuple: (1, 2, 3)
+    print(f"kwargs = {kwargs}")   # Dict: {'name': 'John', 'age': 25}
 
 func(1, 2, 3, name="John", age=25)
 # Output: args = (1, 2, 3)
 # Output: kwargs = {'name': 'John', 'age': 25}
 
-# Real-world: wrapper function
+# === Real-world: wrapper/decorator function ===
+import time
+
 def log_call(func):
-    """Decorator ghi log khi gọi function."""
-    def wrapper(*args, **kwargs):   # Nhận mọi loại argument
-        print(f"Calling {func.__name__} with args={args}, kwargs={kwargs}")
-        return func(*args, **kwargs)  # Forward tất cả cho function gốc
+    """Decorator: ghi log thời gian thực thi và tham số."""
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        print(f"📞 Calling {func.__name__}(args={args}, kwargs={kwargs})")
+        result = func(*args, **kwargs)  # Gọi function gốc, forward tất cả args/kwargs
+        elapsed = time.time() - start
+        print(f"✅ {func.__name__} returned {result} in {elapsed:.4f}s")
+        return result
     return wrapper
+
+@log_call
+def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(result)
+# Output:
+# 📞 Calling add(args=(5, 3), kwargs={})
+# ✅ add returned 8 in 0.0000s
+# 8
+
+# === Real-world: API endpoint handler ===
+def handle_request(method, path, *args, **kwargs):
+    """Xử lý HTTP request với các tham số tùy ý."""
+    print(f"{method} {path}")
+    if args:
+        print(f"  Positional args: {args}")
+    if kwargs:
+        print(f"  Query params: {kwargs}")
+    return {"status": "ok"}
+
+handle_request("GET", "/users", 1, 2, page=1, limit=10)
+# Output:
+# GET /users
+#   Positional args: (1, 2)
+#   Query params: {'page': 1, 'limit': 10}
 ```
 
 #### Variadic Parameters
 
 ```python
 # === *args - nhận số lượng positional arguments không giới hạn ===
+# *args thu thập tất cả positional arguments thừa vào 1 TUPLE
+# Tên "args" là convention, có thể đặt tên khác (*numbers, *items...)
 def sum_all(*numbers):
     """Tính tổng tất cả các số truyền vào."""
-    print(f"Received: {numbers}")  # numbers là tuple
-    return sum(numbers)
+    print(f"Received: {numbers}")  # numbers là tuple, không phải list
+    return sum(numbers)            # sum() tính tổng các phần tử trong iterable
 
-print(sum_all(1, 2, 3, 4, 5))     # Output: Received: (1, 2, 3, 4, 5) → 15
-print(sum_all())                    # Output: Received: () → 0 (tuple rỗng → sum = 0)
-print(sum_all(10))                  # Output: Received: (10,) → 10
+print(sum_all(1, 2, 3, 4, 5))     # Output: Received: (1, 2, 3, 4, 5)
+                                   # Output: 15
+print(sum_all())                   # Output: Received: ()
+                                   # Output: 0  (tuple rỗng → sum = 0)
+print(sum_all(10))                 # Output: Received: (10,)
+                                   # Output: 10
 
 # === **kwargs - nhận số lượng keyword arguments không giới hạn ===
+# **kwargs thu thập tất cả keyword arguments thừa vào 1 DICT
+# Tên "kwargs" là convention, có thể đặt tên khác (**options, **params...)
 def print_info(**info):
     """In thông tin từ keyword arguments."""
-    for key, value in info.items():
+    for key, value in info.items():  # Duyệt qua dict
         print(f"  {key}: {value}")
 
 print_info(name="John", age=25, city="HCM")
@@ -654,17 +940,18 @@ print_info(name="John", age=25, city="HCM")
 #   city: HCM
 
 # === Kết hợp tất cả loại parameters ===
+# Thứ tự BẮT BUỘC: positional → *args → keyword-only → **kwargs
 def complex_func(required, *args, default="value", **kwargs):
     """
-    required: bắt buộc
-    *args:    positional arguments thừa
-    default:  keyword argument có giá trị mặc định
-    **kwargs: keyword arguments thừa
+    required: tham số bắt buộc (positional)
+    *args:    positional arguments thừa → tuple
+    default:  keyword-only argument có giá trị mặc định
+    **kwargs: keyword arguments thừa → dict
     """
-    print(f"required={required}")
-    print(f"args={args}")
-    print(f"default={default}")
-    print(f"kwargs={kwargs}")
+    print(f"required={required}")  # Tham số bắt buộc
+    print(f"args={args}")          # Tuple các positional thừa
+    print(f"default={default}")    # Keyword-only với default
+    print(f"kwargs={kwargs}")      # Dict các keyword thừa
 
 complex_func("hello", 1, 2, default="custom", extra="data")
 # Output:
@@ -674,144 +961,261 @@ complex_func("hello", 1, 2, default="custom", extra="data")
 #   kwargs={'extra': 'data'}
 
 # === Unpacking arguments khi gọi function ===
+# Dùng * để unpack list/tuple thành positional arguments
+# Dùng ** để unpack dict thành keyword arguments
 def greet(name, age, city):
     print(f"{name}, {age} tuổi, sống ở {city}")
 
 # Unpack list/tuple với *
 args = ["John", 25, "HCM"]
 greet(*args)                  # Output: John, 25 tuổi, sống ở HCM
+# Tương đương: greet("John", 25, "HCM")
 
 # Unpack dict với **
 kwargs = {"name": "John", "age": 25, "city": "HCM"}
 greet(**kwargs)               # Output: John, 25 tuổi, sống ở HCM
+# Tương đương: greet(name="John", age=25, city="HCM")
+
+# === Real-world: merge dicts với ** (Python 3.5+) ===
+defaults = {"timeout": 30, "retries": 3, "debug": False}
+overrides = {"timeout": 60, "debug": True}
+config = {**defaults, **overrides}  # Merge: overrides ghi đè defaults
+print(config)  # Output: {'timeout': 60, 'retries': 3, 'debug': True}
+
+# === Real-world: forward arguments đến function khác ===
+def create_connection(host, port, **options):
+    """Tạo connection với các tùy chọn."""
+    print(f"Connecting to {host}:{port}")
+    print(f"Options: {options}")
+
+def create_ssl_connection(host, port, **options):
+    """Tạo SSL connection - thêm ssl=True rồi forward."""
+    options["ssl"] = True          # Thêm option ssl
+    options["ssl_verify"] = True   # Thêm option ssl_verify
+    create_connection(host, port, **options)  # Forward tất cả options
+
+create_ssl_connection("api.example.com", 443, timeout=30)
+# Output:
+# Connecting to api.example.com:443
+# Options: {'timeout': 30, 'ssl': True, 'ssl_verify': True}
+
+# ⚠️ Edge case: *args và **kwargs phải ở đúng vị trí
+# def bad(a, *args, b, **kwargs, c):  # ❌ SyntaxError: **kwargs phải cuối cùng
+# def bad(*args, *more):              # ❌ SyntaxError: chỉ 1 *args
+# def bad(**kw1, **kw2):             # ❌ SyntaxError: chỉ 1 **kwargs
 ```
 
 #### Lambda/Arrow Function
 
 ```python
 # === Lambda (anonymous function - hàm ẩn danh) ===
+# Lambda là function không có tên, dùng cho các tác vụ đơn giản
 # Cú pháp: lambda tham_số: biểu_thức
-# Chỉ chứa 1 biểu thức duy nhất, tự return kết quả
-square = lambda x: x ** 2           # Bình phương
-add = lambda a, b: a + b            # Cộng 2 số
-identity = lambda x: x              # Trả về chính nó
-always_true = lambda: True          # Không có tham số
+# Chỉ chứa 1 biểu thức duy nhất, tự return kết quả (không cần từ khóa return)
+square = lambda x: x ** 2           # Nhận x, trả về x bình phương
+add = lambda a, b: a + b            # Nhận a, b, trả về a + b
+identity = lambda x: x              # Nhận x, trả về chính x
+always_true = lambda: True          # Không tham số, luôn trả về True
 
-print(square(5))                     # Output: 25
-print(add(3, 4))                     # Output: 7
+print(square(5))                     # Output: 25  (5 ** 2)
+print(add(3, 4))                     # Output: 7   (3 + 4)
+print(identity(42))                  # Output: 42
+print(always_true())                 # Output: True
 
 # === Dùng lambda với higher-order functions ===
+# map(), filter(), sorted() nhận function làm tham số → dùng lambda tiện
 numbers = [1, 2, 3, 4, 5]
 
-# map() - áp dụng function cho mỗi phần tử
+# map(function, iterable) - áp dụng function cho MỖI phần tử, trả về map object
 squared = list(map(lambda x: x ** 2, numbers))
 print(squared)                       # Output: [1, 4, 9, 16, 25]
 
-# filter() - lọc phần tử thỏa điều kiện
+# filter(function, iterable) - lọc phần tử THỎA ĐIỀU KIỆN (function trả về True)
 evens = list(filter(lambda x: x % 2 == 0, numbers))
 print(evens)                         # Output: [2, 4]
 
-# sorted() - sắp xếp với custom key
+# sorted(iterable, key=function) - sắp xếp theo giá trị trả về của key function
 words = ["banana", "apple", "cherry", "date"]
 sorted_by_len = sorted(words, key=lambda w: len(w))
 print(sorted_by_len)                 # Output: ['date', 'apple', 'banana', 'cherry']
+# Giải thích: len("date")=4, len("apple")=5, len("banana")=6, len("cherry")=6
 
-# === Lambda với conditional (ternary) ===
+# === Lambda với conditional (ternary expression) ===
+# Cú pháp: gia_tri_true if condition else gia_tri_false
 max_val = lambda a, b: a if a > b else b
-print(max_val(10, 20))               # Output: 20
+print(max_val(10, 20))               # Output: 20  (10 > 20? Không → trả b)
 
 classify = lambda x: "even" if x % 2 == 0 else "odd"
 print(classify(7))                   # Output: odd
+print(classify(8))                   # Output: even
 
-# ⚠️ Khi nào KHÔNG nên dùng lambda:
-# - Logic phức tạp → dùng def
+# === Real-world: lambda với các hàm phổ biến ===
+# max(), min() với key
+names = ["Alice", "Bob", "Charlie", "David"]
+print(max(names, key=lambda n: len(n)))  # Output: Charlie (dài nhất)
+print(min(names, key=lambda n: len(n)))  # Output: Bob (ngắn nhất)
+
+# reduce() từ functools - giảm list thành 1 giá trị
+from functools import reduce
+product = reduce(lambda a, b: a * b, [1, 2, 3, 4, 5])
+print(product)                       # Output: 120  (1*2*3*4*5)
+
+# === ⚠️ Khi nào KHÔNG nên dùng lambda ===
+# - Logic phức tạp → dùng def (lambda chỉ 1 dòng)
 # - Cần nhiều dòng code → dùng def
-# - Cần docstring → dùng def
-# - Gán lambda cho biến → dùng def (PEP 8)
+# - Cần docstring → dùng def (lambda không có tên, khó debug)
+# - Gán lambda cho biến → dùng def (PEP 8 khuyên nên dùng def)
 
-# ❌ Không nên
+# ❌ Không nên: gán lambda cho biến (PEP 8 violation)
 double = lambda x: x * 2
 
-# ✅ Nên
+# ✅ Nên: dùng def thay thế
 def double(x):
     return x * 2
+
+# === Real-world: dùng lambda đúng cách ===
+# 1. Sort một list các dict theo key
+users = [
+    {"name": "Alice", "age": 30},
+    {"name": "Bob", "age": 25},
+    {"name": "Charlie", "age": 35}
+]
+sorted_users = sorted(users, key=lambda u: u["age"])
+print([u["name"] for u in sorted_users])  # Output: ['Bob', 'Alice', 'Charlie']
+
+# 2. Filter dicts
+adults = list(filter(lambda u: u["age"] >= 18, users))
+print([u["name"] for u in adults])        # Output: ['Alice', 'Bob', 'Charlie']
+
+# 3. Map để transform dicts
+names_upper = list(map(lambda u: u["name"].upper(), users))
+print(names_upper)                        # Output: ['ALICE', 'BOB', 'CHARLIE']
 ```
 
 #### Closure
 
 ```python
 # === Closure - function "nhớ" biến từ scope bên ngoài ===
-# Khi inner function tham chiếu biến của outer function,
-# biến đó được "capture" và tồn tại sau khi outer function kết thúc
+# Closure xảy ra khi inner function tham chiếu biến của outer function
+# Biến đó được "capture" vào closure và tồn tại sau khi outer function kết thúc
+# Closure = function + môi trường (environment) chứa các biến được capture
 
 def outer(x):
-    # x là biến enclosing - sẽ được capture bởi inner
+    # x là biến enclosing - sẽ được capture bởi inner function
     def inner(y):
-        return x + y      # Closure: inner "nhớ" giá trị x
-    return inner          # Trả về function inner (chưa gọi)
+        return x + y      # inner "nhớ" x từ outer scope (closure)
+    return inner          # Trả về function inner (chưa gọi, chỉ trả về object)
 
-# Tạo các closure khác nhau
-add_10 = outer(10)        # x = 10 được capture
-add_100 = outer(100)      # x = 100 được capture
+# Tạo các closure khác nhau với x khác nhau
+add_10 = outer(10)        # Tạo closure với x = 10 được capture
+add_100 = outer(100)      # Tạo closure với x = 100 được capture
 
-print(add_10(5))          # Output: 15 (10 + 5)
-print(add_10(20))         # Output: 30 (10 + 20)
-print(add_100(5))         # Output: 105 (100 + 5)
+print(add_10(5))          # Output: 15  (x=10, y=5 → 10 + 5)
+print(add_10(20))         # Output: 30  (x=10, y=20 → 10 + 20)
+print(add_100(5))         # Output: 105 (x=100, y=5 → 100 + 5)
 
-# === Real-world: closure làm counter ===
-def make_counter(start=0):
-    count = start
+# Kiểm tra closure variables
+print(add_10.__closure__)           # Output: (<cell at 0x...>,)
+print(add_10.__closure__[0].cell_contents)  # Output: 10 (giá trị x được capture)
+
+# === Real-world: closure làm counter với state ===
+def make_counter(start=0, step=1):
+    """Factory tạo counter với start và step tùy chỉnh."""
+    count = start          # Biến enclosing - state của counter
+
     def counter():
-        nonlocal count    # Cần nonlocal để thay đổi biến enclosing
-        count += 1
+        nonlocal count     # Cần nonlocal để thay đổi biến enclosing
+        count += step      # Tăng theo step
         return count
-    return counter
 
-counter = make_counter()
+    return counter         # Trả về closure
+
+counter = make_counter()           # start=0, step=1
 print(counter())          # Output: 1
 print(counter())          # Output: 2
+print(counter())          # Output: 3
+
+counter_by_5 = make_counter(start=0, step=5)  # Đếm theo 5
+print(counter_by_5())     # Output: 5
+print(counter_by_5())     # Output: 10
 
 # === Real-world: closure làm rate limiter đơn giản ===
 import time
+
 def make_rate_limiter(min_interval=1.0):
     """Tạo function giới hạn tần suất gọi."""
-    last_call = [0]       # Dùng list để tránh nonlocal (trick cũ)
+    last_call = [0]        # Dùng list để tránh nonlocal (trick cũ, nay dùng nonlocal)
+
     def limiter():
-        elapsed = time.time() - last_call[0]
+        elapsed = time.time() - last_call[0]  # Thời gian từ lần gọi trước
         if elapsed < min_interval:
             print(f"Rate limited! Wait {min_interval - elapsed:.1f}s")
             return False
-        last_call[0] = time.time()
+        last_call[0] = time.time()  # Cập nhật thời gian gọi cuối
         return True
+
     return limiter
 
-# ⚠️ Edge case: closure và loop
-# Closure capture BIẾN, không capture GIÁ TRỊ tại thời điểm tạo
+# === ⚠️ PITFALL: closure và loop - lỗi phổ biến nhất ===
+# Closure capture BIẾN (tham chiếu), không capture GIÁ TRỊ tại thời điểm tạo
 funcs = []
 for i in range(3):
-    funcs.append(lambda: i)  # Tất cả lambda cùng tham chiếu biến i
+    funcs.append(lambda: i)  # Tất cả lambda cùng tham chiếu biến i (cùng object)
 
-print([f() for f in funcs])   # Output: [2, 2, 2] ← KHÔNG phải [0, 1, 2]!
-# Vì khi gọi, i = 2 (giá trị cuối cùng sau vòng lặp)
+print([f() for f in funcs])   # Output: [2, 2, 2]  ← KHÔNG phải [0, 1, 2]!
+# Lý do: khi gọi f(), i đã là 2 (giá trị cuối sau vòng lặp)
+# Tất cả lambda đều trỏ đến CÙNG biến i, không phải copy của i
 
-# ✅ Giải pháp: dùng default argument để capture giá trị
+# ✅ Giải pháp 1: dùng default argument để capture giá trị tại thời điểm tạo
 funcs = []
 for i in range(3):
-    funcs.append(lambda i=i: i)  # i=i capture giá trị tại thời điểm tạo
+    funcs.append(lambda i=i: i)  # i=i: tạo local variable i với giá trị hiện tại
 
-print([f() for f in funcs])   # Output: [0, 1, 2] ← Đúng!
+print([f() for f in funcs])   # Output: [0, 1, 2]  ← Đúng!
+
+# ✅ Giải pháp 2: dùng functools.partial
+from functools import partial
+
+def get_value(i):
+    return i
+
+funcs = [partial(get_value, i) for i in range(3)]
+print([f() for f in funcs])   # Output: [0, 1, 2]  ← Đúng!
+
+# === Real-world: closure làm memoization đơn giản ===
+def make_memoized(func):
+    """Tạo phiên bản memoized của function."""
+    cache = {}             # Dict lưu kết quả đã tính
+
+    def memoized(*args):
+        if args not in cache:
+            cache[args] = func(*args)  # Tính và lưu vào cache
+        return cache[args]             # Trả về từ cache
+
+    return memoized
+
+@make_memoized
+def fibonacci(n):
+    """Tính số Fibonacci thứ n."""
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+print(fibonacci(10))  # Output: 55
+print(fibonacci(30))  # Output: 832040  (nhanh nhờ cache)
 ```
 
 #### Higher-Order Function
 
 ```python
 # === Higher-Order Function (HOF) ===
-# Function nhận function khác làm tham số HOẶC trả về function
+# HOF = function nhận function khác làm tham số HOẶC trả về function
+# Python treat functions as first-class objects → có thể gán, truyền, trả về
 
-# --- Nhận function làm tham số ---
+# --- Type 1: Nhận function làm tham số ---
 def apply_twice(func, x):
     """Áp dụng function 2 lần liên tiếp."""
-    return func(func(x))     # func(func(x))
+    return func(func(x))     # Gọi func 2 lần: func(func(x))
 
 def add_five(x):
     return x + 5
@@ -819,127 +1223,210 @@ def add_five(x):
 result = apply_twice(add_five, 10)  # add_five(add_five(10)) = add_five(15) = 20
 print(result)                        # Output: 20
 
-# --- Trả về function ---
+# --- Type 2: Trả về function ---
 def multiplier(factor):
-    """Factory: tạo function nhân với factor."""
+    """Factory: tạo function nhân với factor cố định."""
     def multiply(x):
-        return x * factor
-    return multiply
+        return x * factor      # inner function "nhớ" factor (closure)
+    return multiply            # Trả về function, chưa gọi
 
-double = multiplier(2)               # Tạo function nhân 2
-triple = multiplier(3)               # Tạo function nhân 3
+double = multiplier(2)               # Tạo function nhân với 2
+triple = multiplier(3)               # Tạo function nhân với 3
 
-print(double(5))                     # Output: 10
-print(triple(5))                     # Output: 15
+print(double(5))                     # Output: 10  (5 * 2)
+print(triple(5))                     # Output: 15  (5 * 3)
 
-# === Real-world: retry logic ===
+# === Real-world: retry logic với HOF ===
 import time
 
 def with_retry(func, max_retries=3, delay=1):
-    """Wrap function với retry logic."""
+    """Wrap function với retry logic - HOF nhận function, trả về function."""
     def wrapper(*args, **kwargs):
-        for attempt in range(max_retries):
+        for attempt in range(max_retries):      # Thử max_retries lần
             try:
-                return func(*args, **kwargs)
+                return func(*args, **kwargs)    # Thử gọi function
             except Exception as e:
                 print(f"Attempt {attempt + 1} failed: {e}")
-                if attempt < max_retries - 1:
-                    time.sleep(delay)
-        raise Exception(f"All {max_retries} attempts failed")
+                if attempt < max_retries - 1:   # Nếu còn lần thử
+                    time.sleep(delay)            # Đợi delay giây
+        raise Exception(f"All {max_retries} attempts failed")  # Thử hết rồi → lỗi
     return wrapper
 
-# === Built-in HOFs phổ biến ===
+def unstable_api_call():
+    """API call có thể thất bại ngẫu nhiên."""
+    import random
+    if random.random() < 0.5:  # 50% chance thất bại
+        raise ConnectionError("Random failure!")
+    return "Success!"
+
+safe_call = with_retry(unstable_api_call, max_retries=3, delay=0.1)
+# Test: chạy nhiều lần để xem retry hoạt động
+
+# === Built-in HOFs phổ biến trong Python ===
 numbers = [1, 2, 3, 4, 5]
 
-# map - biến đổi mỗi phần tử
+# map(function, iterable) - biến đổi mỗi phần tử
 print(list(map(str, numbers)))        # Output: ['1', '2', '3', '4', '5']
 
-# filter - lọc phần tử
+# filter(function, iterable) - lọc phần tử thỏa điều kiện
 print(list(filter(lambda x: x > 3, numbers)))  # Output: [4, 5]
 
-# sorted - sắp xếp với key function
+# sorted(iterable, key=function) - sắp xếp theo key
 users = [{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]
-sorted_users = sorted(users, key=lambda u: u["age"])
-print(sorted_users[0]["name"])        # Output: Alice
+sorted_users = sorted(users, key=lambda u: u["age"])  # Sắp xếp theo age
+print(sorted_users[0]["name"])        # Output: Alice (age=25 nhỏ nhất)
 
-# min/max với key
+# min(iterable, key=function) / max(iterable, key=function)
 print(min(users, key=lambda u: u["age"])["name"])  # Output: Alice
 print(max(users, key=lambda u: u["age"])["name"])  # Output: Bob
+
+# === Real-world: Debounce function ===
+import time
+
+def debounce(wait):
+    """Tạo debounced function - chỉ gọi sau khi đợi wait giây không có request mới."""
+    timer = [None]  # Dùng list để mutable
+
+    def debounced(func):
+        def wrapper(*args, **kwargs):
+            def call_it():
+                timer[0] = None
+                return func(*args, **kwargs)
+
+            if timer[0]:
+                timer[0].cancel()  # Hủy timer cũ
+            timer[0] = threading.Timer(wait, call_it)
+            timer[0].start()
+
+        return wrapper
+    return debounced
+
+# Test debounce với threading
+import threading
+@debounce(0.5)
+def save_to_db(data):
+    print(f"Saving {data} to database...")
+
+# Khi gọi nhiều lần liên tiếp, chỉ lần cuối mới thực sự gọi function
 ```
 
 #### Method trong Class
 
 ```python
 # === 3 loại method trong class ===
+# 1. Instance method: nhận self → truy cập instance attributes
+# 2. Class method: nhận cls → truy cập class attributes, dùng làm factory
+# 3. Static method: không nhận self/cls → utility function đặt trong class
 
 class Calculator:
-    precision = 2  # Class variable
+    precision = 2              # Class variable: số chữ số thập phân mặc định
 
     def __init__(self, name="Basic"):
-        self.name = name                     # Instance variable
+        self.name = name       # Instance variable: tên riêng của mỗi calculator
 
     # --- Instance method ---
-    # Tham số đầu tiên là self (instance hiện tại)
+    # Tham số đầu tiên LUÔN là self (tham chiếu đến instance hiện tại)
+    # Có thể truy cập cả instance variable (self.name) và class variable (self.precision)
     def multiply(self, a, b):
-        result = round(a * b, self.precision)  # Truy cập instance qua self
+        result = round(a * b, self.precision)  # Làm tròn theo precision của instance
         print(f"[{self.name}] {a} × {b} = {result}")
         return result
 
     # --- Class method ---
-    # Tham số đầu tiên là cls (class hiện tại)
-    # Dùng cho factory method, thao tác class variable
+    # Decorator @classmethod → Python tự động truyền class (cls) làm tham số đầu
+    # Dùng cho: factory method, thao tác class variable, alternative constructors
     @classmethod
     def set_precision(cls, precision):
-        cls.precision = precision             # Thay đổi class variable
+        cls.precision = precision  # Thay đổi class variable → ảnh hưởng TẤT CẢ instances
 
     @classmethod
     def create_scientific(cls):
-        """Factory method tạo calculator khoa học."""
-        calc = cls("Scientific")              # cls() = Calculator()
-        calc.precision = 10
+        """Factory method: tạo calculator khoa học với precision cao."""
+        calc = cls("Scientific")   # cls() = Calculator() → tạo instance mới
+        calc.precision = 10        # Ghi đè precision cho instance này
         return calc
 
     # --- Static method ---
-    # KHÔNG nhận self hay cls, không truy cập instance/class
-    # Chỉ là function tiện ích đặt trong class cho gọn
+    # Decorator @staticmethod → không nhận self hay cls
+    # Không truy cập được instance hay class attributes
+    # Chỉ là utility function đặt trong class cho gọn về mặt tổ chức
     @staticmethod
     def add(a, b):
-        return a + b
+        return a + b               # Không cần self hay cls
 
 # Sử dụng:
-calc = Calculator("MyCalc")
-calc.multiply(3, 4)                          # Output: [MyCalc] 3 × 4 = 12
+calc = Calculator("MyCalc")        # Tạo instance với name="MyCalc"
+calc.multiply(3, 4)                # Output: [MyCalc] 3 × 4 = 12
 
-Calculator.set_precision(4)                  # Thay đổi precision cho TẤT CẢ instance
-print(Calculator.add(10, 20))                # Output: 30 (không cần instance)
+Calculator.set_precision(4)        # Thay đổi precision cho TẤT CẢ instances
+print(Calculator.add(10, 20))      # Output: 30  (gọi static method qua class)
+print(calc.add(10, 20))            # Output: 30  (cũng có thể gọi qua instance)
 
-sci = Calculator.create_scientific()         # Factory method
-sci.multiply(1, 3)                           # Output: [Scientific] 1 × 3 = 3
+sci = Calculator.create_scientific()  # Gọi factory method
+sci.multiply(1, 3)                    # Output: [Scientific] 1 × 3 = 3.0000000000
+
+# ⚠️ Phân biệt khi nào dùng loại nào:
+# - Instance method: khi cần truy cập/thay đổi state của instance (self.xxx)
+# - Class method: khi cần factory method, thay đổi class variable, alternative constructor
+# - Static method: khi logic không phụ thuộc vào instance hay class
+
+# === Real-world: class với đầy đủ 3 loại method ===
+class Temperature:
+    """Lớp đại diện nhiệt độ với các phương thức chuyển đổi."""
+    _unit = "Celsius"  # Class variable: đơn vị mặc định
+
+    def __init__(self, value: float):
+        self.value = value  # Instance variable: giá trị nhiệt độ
+
+    # Instance method: chuyển đổi dựa trên giá trị của instance
+    def to_fahrenheit(self) -> float:
+        return self.value * 9/5 + 32  # Công thức C → F
+
+    def to_kelvin(self) -> float:
+        return self.value + 273.15    # Công thức C → K
+
+    # Class method: factory method tạo từ Fahrenheit
+    @classmethod
+    def from_fahrenheit(cls, f: float) -> "Temperature":
+        celsius = (f - 32) * 5/9     # Công thức F → C
+        return cls(celsius)           # Tạo instance mới
+
+    # Static method: kiểm tra nhiệt độ hợp lệ (không cần instance/class)
+    @staticmethod
+    def is_valid(value: float) -> bool:
+        return value >= -273.15       # Nhiệt độ tuyệt đối tối thiểu
+
+# Test
+t = Temperature(100)                  # 100°C
+print(t.to_fahrenheit())              # Output: 212.0  (100°C = 212°F)
+print(t.to_kelvin())                  # Output: 373.15 (100°C = 373.15K)
+
+t2 = Temperature.from_fahrenheit(32) # Tạo từ 32°F = 0°C
+print(t2.value)                       # Output: 0.0
+
+print(Temperature.is_valid(-300))     # Output: False  (dưới 0K)
+print(Temperature.is_valid(25))       # Output: True
 ```
 
 #### Constructor & Destructor
 
 ```python
-# === __init__ (Constructor) và __del__ (Destructor) ===
+# === __init__ (Constructor) ===
+# __init__ được gọi TỰ ĐỘNG khi tạo instance mới với ClassName(...)
+# Dùng để khởi tạo instance attributes
 
 class Resource:
     def __init__(self, name: str):
         """Constructor - khởi tạo object.
         Gọi tự động khi tạo instance bằng Resource("...")
         """
-        self.name = name                     # Gán thuộc tính cho instance
-        self.is_open = True                  # Trạng thái mặc định
+        self.name = name                     # Tạo/gán instance attribute
+        self.is_open = True                  # Khởi tạo trạng thái mặc định
         print(f"✅ Creating resource: {name}")
 
-    def __del__(self):
-        """Destructor - dọn dẹp tài nguyên.
-        Gọi tự động khi object bị garbage collected.
-        ⚠️ Không đảm bảo thời điểm gọi chính xác!
-        """
-        print(f"🗑️ Deleting resource: {self.name}")
-
     def __repr__(self):
-        """Biểu diễn chính thức (dùng trong debug, repr())."""
+        """Biểu diễn chính thức (dùng trong debug, repr(), list())."""
+        # !r dùng repr() để hiển thị chuỗi có quotes
         return f"Resource(name={self.name!r}, is_open={self.is_open})"
 
     def __str__(self):
@@ -948,29 +1435,60 @@ class Resource:
         return f"Resource '{self.name}' ({status})"
 
 # Sử dụng:
-r = Resource("DB Connection")               # Output: ✅ Creating resource: DB Connection
-print(r)                                     # Output: Resource 'DB Connection' (open)
-print(repr(r))                               # Output: Resource(name='DB Connection', is_open=True)
+r = Resource("DB Connection")          # Output: ✅ Creating resource: DB Connection
+print(r)                              # Output: Resource 'DB Connection' (open) → __str__()
+print(repr(r))                        # Output: Resource(name='DB Connection', is_open=True) → __repr__()
 
-del r                                        # Output: 🗑️ Deleting resource: DB Connection
+# === __del__ (Destructor) - HIẾM KHI DÙNG ===
+# __del__ được gọi khi object bị garbage collected (không còn tham chiếu)
+# ⚠️ CẢNH BÁO: Không đảm bảo thời điểm gọi, không tin cậy cho cleanup
+class Demo:
+    def __del__(self):
+        print(f"🗑️ Object is being deleted!")
 
-# ⚠️ Lưu ý: __del__ KHÔNG tin cậy cho cleanup
-# Dùng context manager (with statement) thay thế:
+d = Demo()  # Tạo object
+del d       # Xóa tham chiếu → có thể gọi __del__ ngay hoặc không
+
+# ⚠️ __del__ KHÔNG tin cậy - dùng context manager thay thế:
+# Context manager đảm bảo cleanup luôn chạy dù có exception hay không
+
 class ManagedResource:
     def __enter__(self):
-        print("Acquiring resource")
-        return self
+        """Được gọi khi bắt đầu với: with ... as ... """
+        print("Acquiring resource")  # Setup: mở file, kết nối DB, lock...
+        return self                  # Đối tượng được gán cho biến sau 'as'
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print("Releasing resource")          # ĐẢM BẢO chạy dù có exception
-        return False
+        """Được gọi khi kết thúc block (dù bình thường hay có exception)."""
+        print("Releasing resource")  # Teardown: đóng file, đóng DB, unlock...
+        return False                 # False = không swallow exception
 
 with ManagedResource() as r:
     print("Using resource")
-# Output:
-#   Acquiring resource
-#   Using resource
-#   Releasing resource
+    # Output:
+    #   Acquiring resource
+    #   Using resource
+    #   Releasing resource
+# Khi ra khỏi block, __exit__ LUÔN ĐƯỢC GỌI
+
+# === Real-world: context manager với file ===
+# Python có sẵn file objects là context managers
+with open("test.txt", "w") as f:
+    f.write("Hello, World!")  # Viết vào file
+    # Khi ra khỏi block, file TỰ ĐỘNG ĐƯỢC ĐÓNG
+
+# === Real-world: context manager với database ===
+# class DatabaseConnection:
+#     def __enter__(self):
+#         self.conn = connect_to_db()
+#         return self.conn
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         self.conn.close()
+#         return False
+#
+# with DatabaseConnection() as conn:
+#     conn.execute("INSERT INTO users VALUES (1, 'John')")
+#     # Database connection được đóng tự động
 ```
 
 #### Function Overloading
@@ -1043,119 +1561,235 @@ print(greet("John", 30))     # Output: Hello John, you are 30 years old
 #### For Loop
 
 ```python
-# === range() - tạo dãy số ===
+# === range() - tạo dãy số (không tạo list, chỉ là lazy iterator) ===
 # range(stop)         → 0 đến stop-1
 # range(start, stop)  → start đến stop-1
 # range(start, stop, step) → start, start+step, start+2*step, ...
 
-for i in range(5):              # Từ 0 đến 4 (5 phần tử)
+# range(5) = [0, 1, 2, 3, 4] - 5 phần tử, bắt đầu từ 0
+for i in range(5):
     print(i, end=" ")           # Output: 0 1 2 3 4
 
-for i in range(1, 6):           # Từ 1 đến 5
+print()  # Xuống dòng
+
+# range(1, 6) = [1, 2, 3, 4, 5] - bắt đầu từ 1, kết thúc ở 5 (6-1)
+for i in range(1, 6):
     print(i, end=" ")           # Output: 1 2 3 4 5
 
-for i in range(0, 10, 2):       # Từ 0 đến 8, bước 2
+print()
+
+# range(0, 10, 2) = [0, 2, 4, 6, 8] - bước nhảy 2
+for i in range(0, 10, 2):
     print(i, end=" ")           # Output: 0 2 4 6 8
 
-for i in range(5, 0, -1):       # Đếm ngược: 5 → 1
+print()
+
+# range(5, 0, -1) = [5, 4, 3, 2, 1] - đếm ngược
+for i in range(5, 0, -1):
     print(i, end=" ")           # Output: 5 4 3 2 1
 
+print()
+
 # === For với iterable (list, tuple, str, dict...) ===
+# Python for loop duyệt trực tiếp từng phần tử, không cần index
 fruits = ["apple", "banana", "cherry"]
 for fruit in fruits:            # Duyệt trực tiếp từng phần tử
     print(fruit)
-# Output: apple / banana / cherry (mỗi dòng 1 từ)
+# Output:
+# apple
+# banana
+# cherry
 
 # Duyệt string từng ký tự
 for ch in "Python":
     print(ch, end="")           # Output: Python
+print()
 
-# Duyệt dict (mặc định duyệt key)
+# Duyệt dict (mặc định duyệt key, không phải value)
 user = {"name": "John", "age": 30}
-for key in user:
+for key in user:               # Iterating over dict = iterating over keys
     print(f"{key} = {user[key]}")
-# Output: name = John / age = 30
+# Output:
+# name = John
+# age = 30
+
+# Duyệt values trực tiếp
+for value in user.values():
+    print(value, end=" ")      # Output: John 30
+
+print()
+
+# Duyện key-value pairs
+for key, value in user.items():
+    print(f"{key}:{value}", end=" ")  # Output: name:John age:30
+
+print()
 
 # === enumerate() - duyệt với index ===
+# Trả về tuple (index, value) cho mỗi phần tử
+fruits = ["apple", "banana", "cherry"]
 for i, fruit in enumerate(fruits):          # Bắt đầu từ index 0
     print(f"{i}: {fruit}")
-# Output: 0: apple / 1: banana / 2: cherry
+# Output:
+# 0: apple
+# 1: banana
+# 2: cherry
 
-for i, fruit in enumerate(fruits, start=1):  # Bắt đầu từ index 1
+for i, fruit in enumerate(fruits, start=1):  # start=1: bắt đầu đếm từ 1
     print(f"{i}. {fruit}")
-# Output: 1. apple / 2. banana / 3. cherry
+# Output:
+# 1. apple
+# 2. banana
+# 3. cherry
 
 # === zip() - duyệt nhiều iterable song song ===
+# Zip ghép các phần tử cùng index từ nhiều iterables
 names = ["Alice", "Bob", "Charlie"]
 ages = [25, 30, 35]
 cities = ["HCM", "HN", "DN"]
 
 for name, age, city in zip(names, ages, cities):
     print(f"{name} ({age}) - {city}")
-# Output: Alice (25) - HCM / Bob (30) - HN / Charlie (35) - DN
+# Output:
+# Alice (25) - HCM
+# Bob (30) - HN
+# Charlie (35) - DN
 
-# ⚠️ zip() dừng ở iterable NGẮN nhất
+# ⚠️ PITFALL: zip() dừng ở iterable NGẮN nhất
 for a, b in zip([1, 2, 3], [10, 20]):
     print(a, b)
-# Output: 1 10 / 2 20 (phần tử 3 bị bỏ!)
+# Output:
+# 1 10
+# 2 20
+# (phần tử thứ 3 bị bỏ vì list thứ 2 chỉ có 2 phần tử)
 
-# Dùng itertools.zip_longest() để padding
+# ✅ Dùng itertools.zip_longest() để padding cho iterable ngắn
 from itertools import zip_longest
 for a, b in zip_longest([1, 2, 3], [10, 20], fillvalue=0):
     print(a, b)
-# Output: 1 10 / 2 20 / 3 0
+# Output:
+# 1 10
+# 2 20
+# 3 0  (fillvalue=0 cho phần tử thiếu)
 
-# === Real-world: duyệt file line by line (memory-efficient) ===
-# with open("data.txt") as f:
-#     for line_num, line in enumerate(f, 1):
-#         print(f"Line {line_num}: {line.strip()}")
+# === Real-world: xử lý dữ liệu với enumerate và zip ===
+sales = [100, 200, 150, 300]
+products = ["A", "B", "C", "D"]
+
+# Tính tổng doanh thu
+total = sum(sales)
+print(f"Total: {total}")  # Output: Total: 750
+
+# In báo cáo doanh thu theo sản phẩm
+print("=== Sales Report ===")
+for i, (product, sale) in enumerate(zip(products, sales), 1):
+    print(f"{i}. {product}: ${sale}")
+
+# Output:
+# === Sales Report ===
+# 1. A: $100
+# 2. B: $200
+# 3. C: $150
+# 4. D: $300
 ```
 
 #### While Loop
 
 ```python
 # === While cơ bản ===
+# While lặp khi điều kiện là True
 count = 0
-while count < 5:               # Lặp khi điều kiện còn True
-    print(count, end=" ")       # Output: 0 1 2 3 4
-    count += 1                  # ⚠️ PHẢI cập nhật biến, nếu không → infinite loop
+while count < 5:               # Lặp trong khi count < 5
+    print(count, end=" ")       # In rồi tăng count
+    count += 1                  # Cập nhật biến để tránh infinite loop!
+# Output: 0 1 2 3 4
+
+# ⚠️ CẢNH BÁO: Infinite loop - vòng lặp vô tận
+# while True:
+#     print("This runs forever!")  # Chỉ thoát bằng Ctrl+C hoặc break
 
 # === Infinite loop + break (pattern phổ biến) ===
-while True:                     # Vòng lặp vô hạn
-    user_input = input("Enter 'quit' to exit: ")
-    if user_input == 'quit':
-        break                   # Thoát vòng lặp
-    print(f"You entered: {user_input}")
+# Dùng while True khi không biết trước số lần lặp
+# while True:                     # Vòng lặp vô hạn
+#     user_input = input("Enter 'quit' to exit: ")
+#     if user_input == 'quit':
+#         break                   # Thoát vòng lặp ngay lập tức
+#     print(f"You entered: {user_input}")
 
 # === While với else (chạy khi KHÔNG break) ===
+# Python đặc biệt: while có else block!
 count = 0
 while count < 3:
-    print(count, end=" ")       # Output: 0 1 2
+    print(count, end=" ")       # 0 1 2
     count += 1
 else:
     print("Done!")              # Output: Done! (chạy vì không có break)
+# Output: 0 1 2 Done!
+
+# So sánh với break:
+count = 0
+while count < 3:
+    print(count, end=" ")
+    if count == 1:
+        break                  # Thoát sớm khi count = 1
+    count += 1
+else:
+    print("Done!")              # KHÔNG chạy vì có break
+# Output: 0 1
 
 # === Walrus operator := trong while (Python 3.8+) ===
-# Gán và kiểm tra cùng lúc
+# Gán và kiểm tra cùng lúc - tránh phải viết 2 dòng
 import random
 while (n := random.randint(1, 10)) != 7:    # Gán n rồi kiểm tra
     print(f"Got {n}, not 7...")
 print(f"Found 7!")
 
-# === Real-world: retry pattern ===
+# === Real-world: retry pattern với while-else ===
 max_retries = 3
 attempt = 0
+
 while attempt < max_retries:
     try:
-        # result = connect_to_server()
-        print(f"Attempt {attempt + 1}: success!")
+        result = "success"  # Giả lập gọi API
+        print(f"Attempt {attempt + 1}: {result}!")
         break                   # Thành công → thoát
-    except Exception:
+    except Exception as e:
         attempt += 1
-        print(f"Attempt {attempt} failed, retrying...")
+        print(f"Attempt {attempt} failed: {e}")
 else:
-    # else chạy khi while kết thúc bình thường (không break)
+    # else chạy khi while kết thúc bình thường (điều kiện = False)
+    # Nghĩa là đã thử hết max_retries mà không break
     print("All retries exhausted!")
+
+# === Real-world: đọc input cho đến khi hợp lệ ===
+def get_positive_number():
+    """Yêu cầu user nhập số dương."""
+    while True:
+        user_input = input("Enter a positive number: ")
+        if user_input.isdigit() and int(user_input) > 0:
+            return int(user_input)
+        print("Invalid input. Try again.")
+
+# number = get_positive_number()
+# print(f"You entered: {number}")
+
+# === Real-world: game loop ===
+# def game_loop():
+#     """Game loop đơn giản."""
+#     player_hp = 100
+#     while player_hp > 0:
+#         action = input("Choose action (attack/run): ")
+#         if action == "attack":
+#             damage = random.randint(10, 30)
+#             player_hp -= damage
+#             print(f"You took {damage} damage! HP: {player_hp}")
+#         elif action == "run":
+#             print("You ran away!")
+#             break
+#         else:
+#             print("Invalid action!")
+#     else:
+#         print("Game Over!")  # Chạy khi player_hp <= 0
 ```
 
 #### For-each/List Comprehension
@@ -1887,201 +2521,602 @@ for i, (item) in enumerate(items, 1):
 #### Integer
 
 ```python
-# Integer (unlimited precision trong Python 3)
-x = 10
-negative = -5
-hex_val = 0xFF      # 255
-binary_val = 0b1010  # 10
-octal_val = 0o777    # 511
+# === Integer (số nguyên) - unlimited precision trong Python 3 ===
+# Python 3 không giới hạn kích thước int (khác C/Java có int32/int64)
+x = 10                  # Số nguyên dương
+negative = -5           # Số nguyên âm
+big = 10 ** 100         # Số rất lớn (googol) - Python xử lý được!
 
-# Operations
-5 + 3    # 8 (addition)
-5 - 3    # 2 (subtraction)
-5 * 3    # 15 (multiplication)
-5 / 3    # 1.666... (division)
-5 // 3   # 1 (floor division)
-5 % 3    # 2 (modulus)
-5 ** 3   # 125 (exponentiation)
-abs(-5)   # 5
-divmod(5, 3)  # (1, 2)
+# Các hệ cơ số khác nhau
+hex_val = 0xFF          # Hexadecimal (0x prefix) → 255
+binary_val = 0b1010     # Binary (0b prefix) → 10
+octal_val = 0o777       # Octal (0o prefix) → 511
+
+print(hex_val)          # Output: 255
+print(binary_val)       # Output: 10
+print(octal_val)        # Output: 511
+
+# Dấu _ để dễ đọc số lớn (Python 3.6+)
+million = 1_000_000     # Dễ đọc hơn 1000000
+print(million)          # Output: 1000000
+
+# === Các phép toán số học ===
+print(5 + 3)            # Output: 8   (cộng)
+print(5 - 3)            # Output: 2   (trừ)
+print(5 * 3)            # Output: 15  (nhân)
+print(5 / 3)            # Output: 1.6666666666666667  (chia - luôn trả về float!)
+print(5 // 3)           # Output: 1   (chia lấy phần nguyên - floor division)
+print(5 % 3)            # Output: 2   (chia lấy phần dư - modulo)
+print(5 ** 3)           # Output: 125 (lũy thừa)
+print(abs(-5))          # Output: 5   (giá trị tuyệt đối)
+print(divmod(5, 3))     # Output: (1, 2)  (trả về tuple (thương, dư))
+
+# ⚠️ Edge case: phép chia / luôn trả về float
+print(type(10 / 2))     # Output: <class 'float'>  (10/2 = 5.0, không phải 5!)
+print(type(10 // 2))    # Output: <class 'int'>    (10//2 = 5)
+
+# ⚠️ Edge case: floor division với số âm
+print(-7 // 2)          # Output: -4  (floor về phía âm vô cực, không phải -3!)
+print(-7 % 2)           # Output: 1   (luôn cùng dấu với divisor)
+
+# === Real-world: kiểm tra số chẵn/lẻ, chia hết ===
+def is_even(n: int) -> bool:
+    return n % 2 == 0   # Số chẵn khi chia 2 dư 0
+
+def is_divisible(n: int, divisor: int) -> bool:
+    return n % divisor == 0
+
+print(is_even(10))      # Output: True
+print(is_even(7))       # Output: False
+print(is_divisible(15, 3))  # Output: True  (15 chia hết cho 3)
 ```
 
 #### Float
 
 ```python
-# Float (double precision)
-x = 3.14
-y = -2.5
-scientific = 1.5e10  # 15000000000.0
+# === Float (số thực) - double precision (64-bit IEEE 754) ===
+x = 3.14                # Số thực thông thường
+y = -2.5                # Số thực âm
+scientific = 1.5e10     # Ký hiệu khoa học: 1.5 × 10^10 = 15000000000.0
+small = 1.5e-10         # 1.5 × 10^-10 = 0.00000000015
 
-# Operations
-3.14 + 1.0   # 4.14
-3.14 * 2     # 6.28
-3.14 / 2     # 1.57
+print(scientific)       # Output: 15000000000.0
+print(small)            # Output: 1.5e-10
 
-# Special values
-float('inf')    # Infinity
-float('-inf')   # -Infinity
-float('nan')    # Not a Number
+# === Phép toán ===
+print(3.14 + 1.0)       # Output: 4.140000000000001  (floating point imprecision!)
+print(3.14 * 2)         # Output: 6.28
+print(3.14 / 2)         # Output: 1.57
+
+# ⚠️ PITFALL: Floating point imprecision
+print(0.1 + 0.2)        # Output: 0.30000000000000004  (KHÔNG phải 0.3!)
+print(0.1 + 0.2 == 0.3) # Output: False  ← Đây là lỗi phổ biến!
+
+# ✅ Giải pháp: dùng round() hoặc math.isclose()
 import math
-math.isnan(float('nan'))  # True
-math.isinf(float('inf'))  # True
+print(round(0.1 + 0.2, 10))           # Output: 0.3
+print(math.isclose(0.1 + 0.2, 0.3))  # Output: True  (so sánh với tolerance)
+
+# Hoặc dùng Decimal cho tính toán tài chính
+from decimal import Decimal
+print(Decimal("0.1") + Decimal("0.2"))  # Output: 0.3  (chính xác!)
+
+# === Special values ===
+print(float('inf'))     # Output: inf   (dương vô cực)
+print(float('-inf'))    # Output: -inf  (âm vô cực)
+print(float('nan'))     # Output: nan   (Not a Number)
+
+import math
+print(math.isnan(float('nan')))   # Output: True
+print(math.isinf(float('inf')))   # Output: True
+print(math.isfinite(3.14))        # Output: True
+
+# ⚠️ Edge case: NaN không bằng chính nó!
+nan = float('nan')
+print(nan == nan)       # Output: False  (NaN ≠ NaN theo IEEE 754)
+print(math.isnan(nan))  # Output: True   (dùng isnan() để kiểm tra)
+
+# ⚠️ Edge case: Infinity arithmetic
+print(float('inf') + 1)    # Output: inf
+print(float('inf') - float('inf'))  # Output: nan  (vô cực - vô cực = không xác định)
+
+# === Real-world: làm tròn số ===
+price = 99.999
+print(round(price, 2))  # Output: 100.0  (làm tròn 2 chữ số thập phân)
+print(round(price, 0))  # Output: 100.0  (làm tròn về số nguyên, vẫn là float)
+print(int(price))       # Output: 99     (cắt phần thập phân, không làm tròn)
 ```
 
 #### Boolean
 
 ```python
-# Boolean
-is_active = True
-is_deleted = False
+# === Boolean - kiểu dữ liệu logic ===
+# bool là subclass của int: True = 1, False = 0
+is_active = True        # Giá trị True (viết hoa chữ đầu)
+is_deleted = False      # Giá trị False (viết hoa chữ đầu)
 
-# Operations
-True and False   # False
-True or False    # True
-not True         # False
+# === Phép toán logic ===
+print(True and False)   # Output: False (AND: cả 2 phải True)
+print(True or False)    # Output: True  (OR: ít nhất 1 True)
+print(not True)         # Output: False (NOT: đảo ngược)
+print(not False)        # Output: True
 
-# Truthy/Falsy values
-# Falsy: None, False, 0, 0.0, '', [], {}, set()
-# Truthy: mọi giá trị khác
-bool(0)     # False
-bool(1)     # True
-bool([])    # False
-bool([1])   # True
+# === Truthy/Falsy values ===
+# Falsy (coi như False): None, False, 0, 0.0, 0j, "", [], (), {}, set(), frozenset()
+# Truthy (coi như True): mọi giá trị khác
+print(bool(0))          # Output: False (số 0)
+print(bool(1))          # Output: True  (số khác 0)
+print(bool(-1))         # Output: True  (số âm cũng truthy)
+print(bool([]))         # Output: False (list rỗng)
+print(bool([1]))        # Output: True  (list có phần tử)
+print(bool(""))         # Output: False (chuỗi rỗng)
+print(bool("0"))        # Output: True  (chuỗi "0" là truthy! Khác số 0)
+print(bool(None))       # Output: False (None là falsy)
+
+# ⚠️ Edge case: bool là subclass của int
+print(True + True)      # Output: 2   (True = 1, 1 + 1 = 2)
+print(True * 5)         # Output: 5   (True = 1, 1 * 5 = 5)
+print(False + 10)       # Output: 10  (False = 0, 0 + 10 = 10)
+print(sum([True, False, True, True]))  # Output: 3 (đếm số True)
+
+# ⚠️ Edge case: "0" là truthy nhưng 0 là falsy
+print(bool("0"))        # Output: True  (chuỗi "0" không rỗng → truthy)
+print(bool(0))          # Output: False (số 0 → falsy)
+
+# === Short-circuit evaluation ===
+# and: nếu vế trái False → trả về vế trái (không eval vế phải)
+# or:  nếu vế trái True → trả về vế trái (không eval vế phải)
+print(False and 1/0)    # Output: False (không eval 1/0 → không lỗi!)
+print(True or 1/0)      # Output: True  (không eval 1/0 → không lỗi!)
+
+# === Real-world: dùng truthy/falsy để viết code ngắn gọn ===
+name = ""
+display_name = name or "Anonymous"  # Nếu name falsy → dùng "Anonymous"
+print(display_name)     # Output: Anonymous
+
+items = []
+if not items:           # Kiểm tra list rỗng
+    print("No items")   # Output: No items
+
+# Đếm số phần tử thỏa điều kiện
+numbers = [1, 2, 3, 4, 5, 6]
+even_count = sum(1 for n in numbers if n % 2 == 0)
+print(even_count)       # Output: 3  (2, 4, 6)
 ```
 
 #### String
 
 ```python
-# String
-s1 = 'Hello'
-s2 = "World"
-s3 = '''Multi
+# === String (chuỗi) - immutable sequence of characters ===
+# Python strings là immutable - không thể thay đổi sau khi tạo
+s1 = 'Hello'             # Single quotes
+s2 = "World"             # Double quotes (giống nhau)
+s3 = '''Multi             # Triple quotes cho chuỗi nhiều dòng
 line
 string'''
-s4 = """Multi
+s4 = """Multi            # Triple double quotes cũng được
 line
 string"""
 
-# String methods
+# === String methods ===
 s = "Hello World"
-s.upper()        # "HELLO WORLD"
-s.lower()        # "hello world"
-s.capitalize()   # "Hello world"
-s.strip()        # Remove whitespace
-s.split()        # ['Hello', 'World']
-s.replace('World', 'Python')  # "Hello Python"
-s.find('World')  # 6
-s.startswith('Hello')  # True
-s.endswith('World')    # True
 
-# f-string (Python 3.6+)
+# Chuyển đổi case
+print(s.upper())           # Output: HELLO WORLD (viết hoa tất cả)
+print(s.lower())           # Output: hello world (viết thường tất cả)
+print(s.capitalize())      # Output: Hello world (viết hoa chữ đầu)
+print(s.title())           # Output: Hello World (viết hoa chữ đầu mỗi từ)
+print(s.swapcase())        # Output: hELLO wORLD (đảo ngược case)
+
+# Tìm kiếm và thay thế
+print(s.find('World'))     # Output: 6 (vị trí bắt đầu của 'World', -1 nếu không tìm thấy)
+print(s.find('Python'))    # Output: -1 (không tìm thấy)
+print(s.index('World'))    # Output: 6 (giống find nhưng ValueError nếu không tìm thấy)
+print(s.replace('World', 'Python'))  # Output: Hello Python (thay thế chuỗi)
+print(s.replace('o', '0'))          # Output: Hell0 W0rld (thay thế tất cả)
+
+# Kiểm tra đầu/cuối
+print(s.startswith('Hello'))  # Output: True (kiểm tra bắt đầu)
+print(s.endswith('World'))    # Output: True (kiểm tra kết thúc)
+print(s.startswith('hello'))  # Output: False (case-sensitive!)
+
+# Cắt và tách
+print(s.split())             # Output: ['Hello', 'World'] (tách theo khoảng trắng)
+print("a,b,c".split(','))   # Output: ['a', 'b', 'c'] (tách theo dấu phẩy)
+print("  hello  ".strip())  # Output: hello (xóa khoảng trắng đầu/cuối)
+print("hello".ljust(10))    # Output: 'hello     ' (căn trái, thêm space)
+print("hello".rjust(10))    # Output: '     hello' (căn phải)
+print("hello".center(10))   # Output: '  hello   ' (căn giữa)
+
+# Định dạng
 name = "Python"
 version = 3.11
-f"Welcome to {name} {version}"  # "Welcome to Python 3.11"
+print(f"Welcome to {name} {version}")  # Output: Welcome to Python 3.11 (f-string)
+print(f"{name:*>10}")                   # Output: ****Python (fill với *)
+print(f"{version:.2f}")                 # Output: 3.11 (format số thập phân)
+
+# === Edge cases và lưu ý quan trọng ===
+# ⚠️ String là immutable - không thể thay đổi
+s = "hello"
+# s[0] = 'H'        # ❌ TypeError: 'str' object does not support item assignment
+s = s.upper()       # ✅ Phải gán biến mới
+print(s)             # Output: HELLO
+
+# ⚠️ Index out of range
+try:
+    print(s[100])    # ❌ IndexError: string index out of range
+except IndexError as e:
+    print(f"Error: {e}")  # Output: Error: string index out of range
+
+# ⚠️ Falsy string
+print(bool(""))      # Output: False (chuỗi rỗng là falsy)
+print(bool(" "))     # Output: True (khoảng trắng là truthy!)
+
+# === Real-world use cases ===
+# 1. Validation
+email = "user@example.com"
+is_valid = "@" in email and "." in email.split("@")[-1]
+print(f"Email valid: {is_valid}")  # Output: Email valid: True
+
+# 2. Parse data
+log = "2024-01-15 ERROR: Connection failed"
+date, level, msg = log.split(" ", 2)  # Split tối đa 2 lần
+print(f"Date: {date}, Level: {level}")  # Output: Date: 2024-01-15, Level: ERROR
+
+# 3. Sanitize input
+user_input = "  <script>alert('xss')</script>  "
+cleaned = user_input.strip().replace("<", "&lt;").replace(">", "&gt;")
+print(cleaned)  # Output: &lt;script&gt;alert('xss')&lt;/script&gt;
+
+# 4. Build URL query string
+params = {"name": "John", "age": "30", "city": "NYC"}
+query = "&".join(f"{k}={v}" for k, v in params.items())
+print(query)  # Output: name=John&age=30&city=NYC
 ```
 
 #### List
 
 ```python
-# List (mutable sequence)
+
+# === List (danh sách) - mutable sequence ===
+# List có thể thay đổi sau khi tạo - thêm, xóa, sửa
+numbers = [1, 2, 3, 4, 5]       # Tạo list
+mixed = [1, "hello", 3.14, True]  # List chứa nhiều kiểu (dynamic typing)
+
+# === List Methods ===
 numbers = [1, 2, 3, 4, 5]
-mixed = [1, "hello", 3.14, True]
 
-# Methods
-numbers.append(6)      # Thêm vào cuối
-numbers.insert(0, 0)   # Chèn tại vị trí
-numbers.remove(1)      # Xóa theo giá trị
-popped = numbers.pop() # Xóa và trả về phần tử cuối
-numbers.sort()         # Sắp xếp
-numbers.reverse()      # Đảo ngược
+# Thêm phần tử
+numbers.append(6)                  # Thêm vào cuối → [1, 2, 3, 4, 5, 6]
+print(numbers)                     # Output: [1, 2, 3, 4, 5, 6]
 
-# Slicing
+numbers.insert(0, 0)               # Chèn tại index 0 → [0, 1, 2, 3, 4, 5, 6]
+print(numbers)                     # Output: [0, 1, 2, 3, 4, 5, 6]
+
+# Xóa phần tử
+numbers.remove(0)                  # Xóa theo giá trị (xóa đầu tiên tìm thấy)
+print(numbers)                     # Output: [1, 2, 3, 4, 5, 6]
+
+popped = numbers.pop()            # Xóa và trả về phần tử CUỐI
+print(popped)                     # Output: 6
+print(numbers)                    # Output: [1, 2, 3, 4, 5]
+
+numbers.clear()                   # Xóa tất cả phần tử
+print(numbers)                    # Output: []
+
+# Sắp xếp và đảo ngược
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+numbers.sort()                    # Sắp xếp tăng dần (in-place)
+print(numbers)                    # Output: [1, 1, 2, 3, 4, 5, 6, 9]
+
+numbers.sort(reverse=True)        # Sắp xếp giảm dần
+print(numbers)                    # Output: [9, 6, 5, 4, 3, 2, 1, 1]
+
+numbers.reverse()                 # Đảo ngược (in-place)
+print(numbers)                    # Output: [1, 1, 2, 3, 4, 5, 6, 9]
+
+# === Slicing - trích xuất phần tử ===
 lst = [0, 1, 2, 3, 4]
-lst[1:3]    # [1, 2]
-lst[:3]     # [0, 1, 2]
-lst[3:]     # [3, 4]
-lst[::2]    # [0, 2, 4] (step 2)
-lst[::-1]   # [4, 3, 2, 1, 0] (reverse)
+print(lst[1:3])     # Output: [1, 2]      (index 1 đến 2, không bao gồm 3)
+print(lst[:3])      # Output: [0, 1, 2]    (từ đầu đến index 2)
+print(lst[3:])      # Output: [3, 4]       (từ index 3 đến cuối)
+print(lst[::2])     # Output: [0, 2, 4]    (bước nhảy 2)
+print(lst[::-1])    # Output: [4, 3, 2, 1, 0]  (đảo ngược)
+
+# ⚠️ Edge case: index âm
+print(lst[-1])      # Output: 4   (phần tử cuối cùng)
+print(lst[-2])      # Output: 3   (phần tử thứ 2 từ cuối)
+
+# === Real-world: List operations ===
+# Lọc phần tử
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = [n for n in numbers if n % 2 == 0]
+print(evens)                     # Output: [2, 4, 6, 8, 10]
+
+# Tìm max/min
+print(max(numbers))              # Output: 10
+print(min(numbers))              # Output: 1
+
+# Kiểm tra membership
+print(5 in numbers)             # Output: True
+
+# List comprehension với if-else
+labels = ["even" if n % 2 == 0 else "odd" for n in range(5)]
+print(labels)                    # Output: ['even', 'odd', 'even', 'odd', 'even']
 ```
 
 #### Tuple
 
 ```python
-# Tuple (immutable sequence)
-point = (10, 20)
-coords = (1, 2, 3)
-single = (1,)  # Cần dấu phẩy
+# === Tuple - immutable sequence ===
+# Tuple không thể thay đổi sau khi tạo (immutable)
+# Dùng cho: tọa độ, trả về nhiều giá trị, dictionary keys
+point = (10, 20)                 # Tọa độ 2D
+coords = (1, 2, 3)               # Tuple 3 phần tử
 
-# Unpacking
-x, y = point  # x=10, y=20
-a, b, c = coords
+# ⚠️ Tuple với 1 phần tử cần dấu phẩy!
+single = (1,)                     # Tuple 1 phần tử (cần ,)
+not_tuple = (1)                   # Đây là int, KHÔNG phải tuple!
+print(type(single))               # Output: <class 'tuple'>
+print(type(not_tuple))            # Output: <class 'int'>
 
-# Named tuple
+# === Unpacking ===
+x, y = point                     # Unpack tuple vào 2 biến
+print(f"x={x}, y={y}")          # Output: x=10, y=20
+a, b, c = coords                 # Unpack tuple 3 phần tử
+print(a, b, c)                   # Output: 1 2 3
+
+# === Named tuple (dùng khi cần truy cập theo tên) ===
 from collections import namedtuple
-Point = namedtuple('Point', ['x', 'y'])
-p = Point(10, 20)
-p.x  # 10
-p.y  # 20
+Point = namedtuple('Point', ['x', 'y'])  # Định nghĩa named tuple
+p = Point(10, 20)                         # Tạo instance
+print(p.x)                # Output: 10  (truy cập như attribute)
+print(p.y)                # Output: 20
+print(p[0])               # Output: 10  (cũng có thể truy cập như tuple)
+print(p[1])               # Output: 20
+
+# Named tuple với default values (Python 3.7+)
+from collections import namedtuple
+Point3D = namedtuple('Point3D', ['x', 'y', 'z'], defaults=(0, 0))
+p2 = Point3D(10, 20)  # z sẽ là 0
+print(p2)               # Output: Point3D(x=10, y=20, z=0)
+
+# === Real-world use cases ===
+# 1. Trả về nhiều giá trị từ function
+def get_stats(numbers):
+    return min(numbers), max(numbers), sum(numbers) / len(numbers)
+
+min_val, max_val, avg = get_stats([1, 2, 3, 4, 5])
+print(f"Min: {min_val}, Max: {max_val}, Avg: {avg}")
+# Output: Min: 1, Max: 5, Avg: 3.0
+
+# 2. Swap không cần biến tạm
+a, b = 1, 2
+a, b = b, a
+print(f"a={a}, b={b}")  # Output: a=2, b=1
+
+# 3. Dùng làm dictionary key (vì hashable/immutable)
+locations = {
+    (10, 20): "Office",
+    (30, 40): "Home"
+}
+print(locations[(10, 20)])  # Output: Office
 ```
 
 #### Set
 
 ```python
-# Set (unordered, no duplicates)
-s = {1, 2, 3, 3, 3}  # {1, 2, 3}
+# === Set - tập hợp không có phần tử trùng lặp, không có thứ tự ===
+# Dùng cho: loại bỏ trùng lặp, kiểm tra membership nhanh O(1), phép toán tập hợp
+s = {1, 2, 3, 3, 3}             # Tạo set - tự động loại bỏ trùng lặp
+print(s)                          # Output: {1, 2, 3}  (thứ tự không đảm bảo)
 
-# Methods
-s.add(4)          # Thêm
-s.remove(1)       # Xóa (lỗi nếu không tồn tại)
-s.discard(1)      # Xóa (không lỗi)
-s.pop()           # Xóa và trả về phần tử bất kỳ
+# ⚠️ Set rỗng phải dùng set(), không phải {}
+empty_set = set()                 # ✅ Set rỗng
+empty_dict = {}                   # ❌ Đây là dict rỗng, không phải set!
+print(type(empty_set))            # Output: <class 'set'>
+print(type(empty_dict))           # Output: <class 'dict'>
 
-# Set operations
+# === Set Methods ===
+s = {1, 2, 3}
+s.add(4)                          # Thêm phần tử
+print(s)                          # Output: {1, 2, 3, 4}
+
+s.remove(1)                       # Xóa phần tử (KeyError nếu không tồn tại)
+print(s)                          # Output: {2, 3, 4}
+
+s.discard(100)                    # Xóa phần tử (KHÔNG lỗi nếu không tồn tại)
+print(s)                          # Output: {2, 3, 4}  (không thay đổi)
+
+popped = s.pop()                  # Xóa và trả về phần tử BẤT KỲ (không đoán được)
+print(popped)                     # Output: 2 (hoặc 3 hoặc 4 - không đảm bảo)
+
+# === Set Operations (phép toán tập hợp) ===
 a = {1, 2, 3}
 b = {2, 3, 4}
-a | b     # Union: {1, 2, 3, 4}
-a & b     # Intersection: {2, 3}
-a - b     # Difference: {1}
-a ^ b     # Symmetric difference: {1, 4}
+
+print(a | b)                      # Output: {1, 2, 3, 4}  (Union - hợp)
+print(a & b)                      # Output: {2, 3}         (Intersection - giao)
+print(a - b)                      # Output: {1}            (Difference - hiệu: a trừ b)
+print(b - a)                      # Output: {4}            (Difference: b trừ a)
+print(a ^ b)                      # Output: {1, 4}         (Symmetric difference - phần không chung)
+
+# Kiểm tra quan hệ
+print(a.issubset({1, 2, 3, 4}))  # Output: True  (a ⊆ {1,2,3,4})
+print(a.issuperset({1, 2}))      # Output: True  (a ⊇ {1,2})
+print(a.isdisjoint({5, 6}))      # Output: True  (không có phần tử chung)
+
+# === Real-world use cases ===
+# 1. Loại bỏ trùng lặp
+emails = ["a@x.com", "b@x.com", "a@x.com", "c@x.com"]
+unique_emails = list(set(emails))
+print(unique_emails)              # Output: ['a@x.com', 'b@x.com', 'c@x.com'] (thứ tự có thể khác)
+
+# 2. Kiểm tra membership nhanh O(1) - nhanh hơn list O(n)
+VALID_ROLES = {"admin", "user", "moderator"}
+user_role = "admin"
+if user_role in VALID_ROLES:
+    print(f"Role {user_role} is valid")  # Output: Role admin is valid
+
+# 3. Tìm phần tử chung/khác nhau
+users_a = {"Alice", "Bob", "Charlie"}
+users_b = {"Bob", "Charlie", "David"}
+common = users_a & users_b
+print(f"Common users: {common}")  # Output: Common users: {'Bob', 'Charlie'}
+only_in_a = users_a - users_b
+print(f"Only in A: {only_in_a}")  # Output: Only in A: {'Alice'}
 ```
 
 #### Dictionary
 
-```python
-# Dictionary (key-value)
+# === Dictionary (dict) - cặp key-value, hash table ===
+
+# Dùng để tra cứu nhanh theo key, tương tự HashMap/Map trong các ngôn ngữ khác
+
 user = {
-    "name": "John",
-    "age": 30,
-    "email": "john@example.com"
+"name": "John",
+"age": 30,
+"email": "john@example.com"
 }
 
-# Methods
-user["name"]          # "John"
-user.get("name")      # "John"
-user.get("phone", "N/A")  # "N/A" (default)
-user["phone"] = "123" # Thêm/cập nhật
-user.pop("age")       # Xóa và trả về
-user.keys()           # dict_keys(['name', 'email', 'phone'])
-user.values()         # dict_values(['John', 'john@example.com', '123'])
-user.items()          # dict_items([('name', 'John'), ...])
+# === Truy cập ===
 
-# Dictionary comprehension
-square_dict = {x: x**2 for x in range(5)}
-```
+print(user["name"]) # Output: John (truy cập trực tiếp - lỗi nếu không có key)
+print(user.get("name")) # Output: John (truy cập an toàn)
+print(user.get("phone", "N/A")) # Output: N/A (default nếu key không tồn tại)
+print(user.get("phone")) # Output: None (không có default → None)
+
+# === Thêm/Sửa/Xóa ===
+
+user["phone"] = "123-456" # Thêm hoặc cập nhật key
+print(user["phone"]) # Output: 123-456
+
+user["age"] = 31 # Cập nhật giá trị
+print(user["age"]) # Output: 31
+
+popped = user.pop("age") # Xóa và trả về giá trị
+print(popped) # Output: 31
+print("age" in user) # Output: False (đã bị xóa)
+
+# === Duyệt Dictionary ===
+
+print(user.keys()) # Output: dict_keys(['name', 'email', 'phone'])
+print(user.values()) # Output: dict_values(['John', 'john@example.com', '123-456'])
+print(user.items()) # Output: dict_items([('name', 'John'), ...])
+
+# Duyệt key-value
+
+for key, value in user.items():
+print(f"{key}: {value}")
+
+# Output:
+
+# name: John
+
+# email: john@example.com
+
+# phone: 123-456
+
+# === Dictionary Comprehension ===
+
+square_dict = {x: x\*\*2 for x in range(5)}
+print(square_dict) # Output: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+
+# === Real-world use cases ===
+
+# 1. Count occurrences
+
+text = "hello world hello python world"
+word_count = {}
+for word in text.split():
+word_count[word] = word_count.get(word, 0) + 1
+print(word_count) # Output: {'hello': 2, 'world': 2, 'python': 1}
+
+# 2. Lookup table
+
+ROLES = {
+"admin": {"permissions": ["read", "write", "delete"]},
+"user": {"permissions": ["read"]},
+"guest": {"permissions": []}
+}
+print(ROLES["admin"]["permissions"]) # Output: ['read', 'write', 'delete']
+
+# 3. Merge dicts (Python 3.9+)
+
+d1 = {"a": 1, "b": 2}
+d2 = {"b": 3, "c": 4}
+merged = d1 | d2 # Python 3.9+: merge operator
+print(merged) # Output: {'a': 1, 'b': 3, 'c': 4} (b bị ghi đè)
 
 #### None
 
 ```python
-# None (null value)
-value = None
+# === None - giá trị null của Python ===
+# None là singleton - chỉ có 1 object None trong toàn bộ chương trình
+# Dùng để biểu diễn "không có giá trị", "chưa khởi tạo", "không tìm thấy"
+value = None                      # Gán None
 
-# Check None
+# === Kiểm tra None ===
+# ✅ Luôn dùng 'is' hoặc 'is not' để kiểm tra None
 if value is None:
-    print("No value")
+    print("No value")             # Output: No value
 
-# is vs ==
-value is None    # Recommended
-value == None    # Works but not recommended
+if value is not None:
+    print("Has value")
+else:
+    print("Still None")           # Output: Still None
+
+# ❌ Không nên dùng == với None (có thể bị override bởi __eq__)
+# value == None  # Works nhưng không phải best practice
+
+# === None trong function ===
+def find_user(user_id: int):
+    """Trả về None nếu không tìm thấy."""
+    if user_id == 1:
+        return {"id": 1, "name": "John"}
+    return None                   # Explicit return None
+
+user = find_user(1)
+print(user)                       # Output: {'id': 1, 'name': 'John'}
+
+user = find_user(999)
+print(user)                       # Output: None
+
+# Kiểm tra trước khi dùng
+if user is not None:
+    print(user["name"])
+else:
+    print("User not found")       # Output: User not found
+
+# === None vs 0 vs "" vs [] ===
+# Tất cả đều falsy nhưng có ý nghĩa khác nhau
+print(None is None)               # Output: True
+print(0 is None)                  # Output: False (0 ≠ None)
+print("" is None)                 # Output: False ("" ≠ None)
+print([] is None)                 # Output: False ([] ≠ None)
+
+# ⚠️ Edge case: None trong list
+items = [1, None, 3, None, 5]
+non_none = [x for x in items if x is not None]
+print(non_none)                   # Output: [1, 3, 5]
+
+# === Real-world: Optional pattern ===
+from typing import Optional
+
+def get_config(key: str) -> Optional[str]:
+    """Lấy config, trả về None nếu không tồn tại."""
+    config = {"host": "localhost", "port": "5432"}
+    return config.get(key)        # dict.get() trả về None nếu không có key
+
+host = get_config("host")
+print(host)                       # Output: localhost
+
+db_name = get_config("db_name")
+print(db_name)                    # Output: None
+
+# Dùng walrus operator để kiểm tra và gán cùng lúc
+if (host := get_config("host")) is not None:
+    print(f"Connecting to {host}")  # Output: Connecting to localhost
 ```
 
 #### Callable
@@ -4286,7 +5321,7 @@ b = a     # b là copy của giá trị (vì int là immutable)
 b = 20
 print(a)  # 10 (không bị ảnh hưởng)
 
-# Reference type behavior (mutable) 
+# Reference type behavior (mutable)
 a = [1, 2, 3]
 b = a     # b trỏ cùng object
 b.append(4)
@@ -4412,36 +5447,111 @@ class Config:
 import threading
 import time
 
+# === Threading - chạy nhiều threads trong cùng process ===
+# ⚠️ Python có GIL (Global Interpreter Lock) → threads không chạy song song CPU-bound tasks
+# Tốt cho I/O-bound tasks (network, file, database)
+
 def worker(name, delay):
-    print(f"{name} started")
-    time.sleep(delay)
-    print(f"{name} finished")
+    """Worker function chạy trong thread riêng."""
+    print(f"{name} started")      # Thread bắt đầu
+    time.sleep(delay)             # Simulate I/O operation
+    print(f"{name} finished")     # Thread hoàn thành
 
-# Tạo thread
-t1 = threading.Thread(target=worker, args=("Thread-1", 2))
-t2 = threading.Thread(target=worker, args=("Thread-2", 1))
+# Tạo thread với target function và arguments
+t1 = threading.Thread(target=worker, args=("Thread-1", 2))  # Chạy sau 2 giây
+t2 = threading.Thread(target=worker, args=("Thread-2", 1))  # Chạy sau 1 giây
 
-t1.start()
-t2.start()
+t1.start()                       # Bắt đầu thread (non-blocking)
+t2.start()                       # Bắt đầu thread (non-blocking)
 
-t1.join()  # Đợi thread kết thúc
-t2.join()
+# ⚠️ join() chặn cho đến khi thread hoàn thành
+t1.join()                        # Đợi t1 hoàn thành
+t2.join()                        # Đợi t2 hoàn thành
 
-# Thread với class
+print("All threads done!")       # Output sau khi cả 2 thread hoàn thành
+
+# === Thread với class ===
 class MyThread(threading.Thread):
+    """Custom thread class."""
     def __init__(self, name):
-        super().__init__()
+        super().__init__()        # Gọi constructor của threading.Thread
         self.name = name
 
     def run(self):
+        """Method này tự động chạy khi thread.start() được gọi."""
         print(f"Running {self.name}")
 
-# Thread pool
+# Sử dụng
+thread = MyThread("CustomThread")
+thread.start()
+thread.join()
+
+# === Thread Pool - tái sử dụng threads ===
 from concurrent.futures import ThreadPoolExecutor
 
 with ThreadPoolExecutor(max_workers=3) as executor:
-    executor.submit(worker, "Task-1", 1)
-    executor.map(lambda x: worker(x, 1), ["A", "B", "C"])
+    # submit() - gửi task cho executor, trả về Future
+    future1 = executor.submit(worker, "Task-1", 1)
+    future2 = executor.submit(worker, "Task-2", 1)
+
+    # map() - gửi nhiều tasks với các arguments khác nhau
+    results = executor.map(lambda x: worker(x, 1), ["A", "B", "C"])
+
+# === Real-world: Download nhiều files đồng thời ===
+import urllib.request
+
+def download(url):
+    """Download một URL."""
+    try:
+        with urllib.request.urlopen(url, timeout=5) as response:
+            return response.read()
+    except Exception as e:
+        return f"Error: {e}"
+
+urls = [
+    "https://python.org",
+    "https://github.com",
+    "https://stackoverflow.com"
+]
+
+with ThreadPoolExecutor(max_workers=5) as executor:
+    results = list(executor.map(download, urls))
+    # Download tất cả URLs song song
+
+# === ⚠️ Thread Safety - Race Condition ===
+# Khi nhiều threads cùng truy cập shared data → race condition
+counter = 0
+
+def increment():
+    global counter
+    for _ in range(100000):
+        counter += 1  # ⚠️ KHÔNG atomic - race condition!
+
+threads = [threading.Thread(target=increment) for _ in range(5)]
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()
+
+print(f"Expected: 500000, Actual: {counter}")  # Output: < 500000 (mất updates!)
+
+# ✅ Giải pháp: dùng Lock
+counter = 0
+lock = threading.Lock()
+
+def increment_safe():
+    global counter
+    for _ in range(100000):
+        with lock:                    # Lock trước khi đọc/ghi
+            counter += 1
+
+threads = [threading.Thread(target=increment_safe) for _ in range(5)]
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()
+
+print(f"Expected: 500000, Actual: {counter}")  # Output: 500000 (đúng!)
 ```
 
 #### Multiprocessing
@@ -4450,24 +5560,76 @@ with ThreadPoolExecutor(max_workers=3) as executor:
 import multiprocessing
 from multiprocessing import Process, Pool
 
+# === Multiprocessing - chạy nhiều processes riêng biệt ===
+# Mỗi process có Python interpreter riêng → KHÔNG bị GIL
+# Tốt cho CPU-bound tasks (tính toán nặng, xử lý ảnh, ML)
+# ⚠️ Overhead cao hơn threading (tạo process tốn thời gian hơn)
+
 def worker(x):
+    """CPU-bound task: tính bình phương."""
     return x * x
 
-# Process
+# === Process đơn lẻ ===
+# ⚠️ PHẢI có if __name__ == '__main__' trên Windows/macOS
 if __name__ == '__main__':
-    p = Process(target=worker, args=(5,))
-    p.start()
-    p.join()
+    p = Process(target=worker, args=(5,))  # Tạo process mới
+    p.start()                               # Bắt đầu process
+    p.join()                                # Đợi process hoàn thành
+    print("Process done")
 
-# Pool
-with Pool(4) as pool:
-    result = pool.map(worker, [1, 2, 3, 4])
-    # [1, 4, 9, 16]
+# === Pool - quản lý nhiều processes ===
+# Pool tạo sẵn N processes, tái sử dụng cho nhiều tasks
+if __name__ == '__main__':
+    with Pool(4) as pool:                   # 4 worker processes
+        result = pool.map(worker, [1, 2, 3, 4])  # Phân phối tasks
+        print(result)                       # Output: [1, 4, 9, 16]
 
-# Shared memory
+    # Pool.starmap() cho functions nhiều arguments
+    def add(a, b):
+        return a + b
+
+    with Pool(4) as pool:
+        results = pool.starmap(add, [(1, 2), (3, 4), (5, 6)])
+        print(results)                      # Output: [3, 7, 11]
+
+# === Shared memory - chia sẻ dữ liệu giữa processes ===
 from multiprocessing import Value, Array
-counter = Value('i', 0)
-shared_array = Array('i', 10)
+
+# Value: chia sẻ 1 giá trị đơn
+counter = Value('i', 0)                     # 'i' = integer, initial = 0
+
+# Array: chia sẻ mảng
+shared_array = Array('i', 10)              # 10 integers
+
+# === Real-world: xử lý ảnh song song ===
+from concurrent.futures import ProcessPoolExecutor
+
+def process_image(image_path):
+    """Xử lý 1 ảnh (CPU-bound)."""
+    # Giả lập xử lý ảnh nặng
+    import time
+    time.sleep(0.1)
+    return f"Processed: {image_path}"
+
+if __name__ == '__main__':
+    image_paths = [f"image_{i}.jpg" for i in range(10)]
+
+    with ProcessPoolExecutor(max_workers=4) as executor:
+        results = list(executor.map(process_image, image_paths))
+        print(f"Processed {len(results)} images")
+
+# === Threading vs Multiprocessing ===
+# Threading:
+#   ✅ Nhẹ, ít overhead
+#   ✅ Chia sẻ memory dễ dàng
+#   ❌ GIL giới hạn CPU-bound tasks
+#   → Dùng cho: I/O-bound (network, file, DB)
+#
+# Multiprocessing:
+#   ✅ Không bị GIL, thực sự song song
+#   ❌ Overhead cao (tạo process, copy memory)
+#   ❌ Khó chia sẻ data
+#   → Dùng cho: CPU-bound (tính toán, xử lý ảnh, ML)
 ```
 
 #### Async/Await (Python 3.5+)
@@ -4475,28 +5637,89 @@ shared_array = Array('i', 10)
 ```python
 import asyncio
 
-async def fetch_data():
-    print("Fetching data...")
-    await asyncio.sleep(2)  # Simulate I/O
-    return {"data": "result"}
+# === Async/Await - Cooperative multitasking ===
+# Coroutine: function với async def, có thể bị tạm dừng tại await
+# Event loop: quản lý và chạy các coroutines
+# Tốt cho I/O-bound tasks với nhiều concurrent operations
+
+async def fetch_data(name: str, delay: float):
+    """Coroutine giả lập fetch data từ API."""
+    print(f"[{name}] Fetching data...")    # Bắt đầu fetch
+    await asyncio.sleep(delay)             # Tạm dừng, nhường CPU cho coroutine khác
+    print(f"[{name}] Done!")               # Hoàn thành
+    return {"name": name, "data": "result"}
 
 async def main():
-    # Single task
-    result = await fetch_data()
-    print(result)
+    # === Single task ===
+    result = await fetch_data("Task-1", 1)  # Đợi coroutine hoàn thành
+    print(result)                           # Output: {'name': 'Task-1', 'data': 'result'}
 
-    # Multiple tasks
-    tasks = [fetch_data() for _ in range(3)]
-    results = await asyncio.gather(*tasks)
+    # === Multiple tasks song song với gather() ===
+    # gather() chạy tất cả coroutines ĐỒNG THỜI, đợi tất cả hoàn thành
+    results = await asyncio.gather(
+        fetch_data("A", 1),
+        fetch_data("B", 2),
+        fetch_data("C", 0.5),
+    )
+    # Tổng thời gian ≈ 2s (max), không phải 3.5s (sum)
+    print(f"Got {len(results)} results")    # Output: Got 3 results
 
-    # With timeout
+    # === Timeout ===
     try:
-        async with asyncio.timeout(3):
-            await fetch_data()
+        async with asyncio.timeout(1.5):    # Python 3.11+
+            await fetch_data("Slow", 3)     # Sẽ timeout sau 1.5s
+    except asyncio.TimeoutError:
+        print("Timed out!")                 # Output: Timed out!
+
+    # === asyncio.wait_for() cho Python < 3.11 ===
+    try:
+        result = await asyncio.wait_for(fetch_data("Slow", 3), timeout=1.5)
     except asyncio.TimeoutError:
         print("Timed out!")
 
+# Chạy event loop
 asyncio.run(main())
+
+# === Real-world: Async web scraper ===
+import asyncio
+
+async def scrape_page(url: str) -> dict:
+    """Scrape một trang web."""
+    print(f"Scraping {url}...")
+    await asyncio.sleep(0.5)               # Simulate network request
+    return {"url": url, "status": 200, "content": "..."}
+
+async def scrape_all(urls: list[str]) -> list[dict]:
+    """Scrape nhiều trang song song."""
+    tasks = [scrape_page(url) for url in urls]
+    return await asyncio.gather(*tasks)    # Chạy tất cả song song
+
+async def main_scraper():
+    urls = [f"https://example.com/page/{i}" for i in range(10)]
+    results = await scrape_all(urls)
+    print(f"Scraped {len(results)} pages")  # Output: Scraped 10 pages
+
+asyncio.run(main_scraper())
+
+# === ⚠️ Edge cases ===
+# 1. Không thể await trong non-async function
+# def sync_func():
+#     await asyncio.sleep(1)  # ❌ SyntaxError
+
+# 2. asyncio.run() không thể gọi trong event loop đang chạy
+# asyncio.run(main())  # ❌ RuntimeError nếu đang trong event loop (Jupyter)
+# Dùng: await main()  # ✅ Trong Jupyter
+
+# 3. CPU-bound tasks vẫn block event loop
+async def cpu_heavy():
+    result = sum(range(10_000_000))  # ❌ Block event loop!
+    return result
+
+# ✅ Giải pháp: chạy trong thread pool
+async def cpu_heavy_safe():
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(None, lambda: sum(range(10_000_000)))
+    return result
 ```
 
 #### Async HTTP Request
@@ -5310,38 +6533,113 @@ except ZeroDivisionError:
 #### Import
 
 ```python
-# Import module
-import math
-math.sqrt(16)  # 4.0
+# === Import module - nạp module vào namespace hiện tại ===
+import math                        # Import toàn bộ module math
+print(math.sqrt(16))               # Output: 4.0 (truy cập qua tên module)
+print(math.pi)                     # Output: 3.141592653589793
 
-# Import với alias
-import numpy as np
-import pandas as pd
+# Import với alias - đặt tên ngắn hơn
+import numpy as np                 # Convention: numpy → np
+import pandas as pd                # Convention: pandas → pd
+# np.array([1, 2, 3])             # Dùng alias thay vì numpy.array
 
-# Import specific
-from math import sqrt, pi
-from collections import defaultdict as dd
+# Import specific names - chỉ import những gì cần
+from math import sqrt, pi          # Import sqrt và pi vào namespace hiện tại
+print(sqrt(25))                    # Output: 5.0 (không cần math.sqrt)
+print(pi)                          # Output: 3.141592653589793
 
-# Import all (không nên)
-from math import *  # Bad practice
+from collections import defaultdict as dd  # Import với alias
+
+# ⚠️ Import all - KHÔNG nên dùng
+# from math import *               # ❌ Ô nhiễm namespace, khó debug
+# sqrt(16)                         # Không rõ sqrt từ đâu
+
+# === Thứ tự import (PEP 8) ===
+# 1. Standard library
+import os
+import sys
+from pathlib import Path
+
+# 2. Third-party packages
+# import requests
+# import numpy as np
+
+# 3. Local modules
+# from myapp import utils
+
+# === Conditional import ===
+try:
+    import ujson as json            # Thử import ujson (nhanh hơn)
+except ImportError:
+    import json                     # Fallback về json chuẩn
+
+# === Lazy import (chỉ import khi cần) ===
+def process_image(path):
+    """Import PIL chỉ khi function được gọi."""
+    from PIL import Image           # Import trong function
+    img = Image.open(path)
+    return img
+
+# === Real-world: kiểm tra package có sẵn không ===
+def check_optional_dependency(package_name: str) -> bool:
+    """Kiểm tra package có được cài không."""
+    import importlib.util
+    spec = importlib.util.find_spec(package_name)
+    return spec is not None
+
+print(check_optional_dependency("json"))     # Output: True (stdlib)
+print(check_optional_dependency("numpy"))    # Output: True/False (tùy cài đặt)
 ```
 
 #### Module
 
 ```python
+# === Module - file .py chứa code Python ===
+# Mỗi file .py là 1 module, có thể import từ module khác
+
 # mymodule.py
-def greet(name):
+def greet(name: str) -> str:
+    """Trả về lời chào."""
     return f"Hello, {name}"
 
 class Calculator:
     @staticmethod
-    def add(a, b):
+    def add(a: float, b: float) -> float:
         return a + b
 
-# __name__ check
+# === __name__ check - phân biệt chạy trực tiếp vs import ===
+# Khi chạy trực tiếp: __name__ == "__main__"
+# Khi import từ module khác: __name__ == "mymodule"
 if __name__ == "__main__":
-    # Code chạy khi file được chạy trực tiếp
-    print(greet("World"))
+    # Code này CHỈ chạy khi file được chạy trực tiếp
+    # Không chạy khi file được import
+    print(greet("World"))          # Output: Hello, World
+    calc = Calculator()
+    print(calc.add(1, 2))          # Output: 3
+
+# === Module attributes ===
+# __name__: tên module
+# __file__: đường dẫn file
+# __doc__: docstring của module
+# __all__: danh sách public API
+
+# === Real-world: module với __all__ ===
+# utils.py
+__all__ = ["public_func", "PublicClass"]  # Chỉ export những gì trong __all__
+
+def public_func():
+    """Hàm public - có trong __all__."""
+    return "public"
+
+def _private_func():
+    """Hàm private - không có trong __all__, convention dùng _ prefix."""
+    return "private"
+
+class PublicClass:
+    pass
+
+class _PrivateClass:
+    pass
 ```
 
 #### Namespace
@@ -5590,29 +6888,99 @@ response = urllib.request.urlopen(req)
 ```python
 import requests
 
-# GET
-response = requests.get("https://api.example.com/users")
-response.json()  # Parse JSON
-response.status_code  # 200
-response.headers  # Headers dict
+# === requests - HTTP library phổ biến nhất cho Python ===
+# pip install requests
 
-# POST
-response = requests.post(
+# === GET request ===
+response = requests.get("https://api.example.com/users")
+print(response.status_code)       # Output: 200 (HTTP status code)
+print(response.json())            # Output: {...} (parse JSON response)
+print(response.text)              # Output: '{"users": [...]}' (raw text)
+print(response.headers)           # Output: {'Content-Type': 'application/json', ...}
+
+# GET với query parameters
+response = requests.get(
     "https://api.example.com/users",
-    json={"name": "John", "email": "john@example.com"}
+    params={"page": 1, "limit": 10, "sort": "name"}
+    # URL: https://api.example.com/users?page=1&limit=10&sort=name
 )
 
-# With headers
-headers = {"Authorization": "Bearer token"}
-response = requests.get("https://api.example.com", headers=headers)
+# === POST request ===
+response = requests.post(
+    "https://api.example.com/users",
+    json={"name": "John", "email": "john@example.com"}  # Tự set Content-Type: application/json
+)
+print(response.status_code)       # Output: 201 (Created)
+print(response.json())            # Output: {'id': 1, 'name': 'John', ...}
 
-# Error handling
-response.raise_for_status()
+# POST với form data
+response = requests.post(
+    "https://api.example.com/login",
+    data={"username": "john", "password": "secret"}  # form-urlencoded
+)
 
-# Session
+# === Headers ===
+headers = {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9...",
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+response = requests.get("https://api.example.com/profile", headers=headers)
+
+# === Error handling ===
+try:
+    response = requests.get("https://api.example.com/users", timeout=10)
+    response.raise_for_status()   # Raise HTTPError nếu status >= 400
+    data = response.json()
+except requests.exceptions.Timeout:
+    print("Request timed out")
+except requests.exceptions.HTTPError as e:
+    print(f"HTTP error: {e.response.status_code}")
+except requests.exceptions.ConnectionError:
+    print("Connection failed")
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")
+
+# === Session - tái sử dụng connection, headers ===
+# Session tự động giữ cookies, headers, auth giữa các requests
 session = requests.Session()
-session.headers.update({"Authorization": "Bearer token"})
-response = session.get("https://api.example.com")
+session.headers.update({
+    "Authorization": "Bearer token",
+    "User-Agent": "MyApp/1.0"
+})
+
+# Tất cả requests qua session đều có headers trên
+response1 = session.get("https://api.example.com/users")
+response2 = session.get("https://api.example.com/posts")
+
+# === Real-world: API client class ===
+class APIClient:
+    """Wrapper cho requests với retry và error handling."""
+
+    def __init__(self, base_url: str, api_key: str):
+        self.base_url = base_url
+        self.session = requests.Session()
+        self.session.headers.update({
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        })
+
+    def get(self, endpoint: str, **kwargs) -> dict:
+        url = f"{self.base_url}/{endpoint}"
+        response = self.session.get(url, timeout=30, **kwargs)
+        response.raise_for_status()
+        return response.json()
+
+    def post(self, endpoint: str, data: dict) -> dict:
+        url = f"{self.base_url}/{endpoint}"
+        response = self.session.post(url, json=data, timeout=30)
+        response.raise_for_status()
+        return response.json()
+
+# Sử dụng
+# client = APIClient("https://api.example.com", "my-api-key")
+# users = client.get("users", params={"page": 1})
+# new_user = client.post("users", {"name": "John"})
 ```
 
 #### aiohttp (Async)
@@ -5762,20 +7130,30 @@ asyncio.run(read_file())
 #### Read File
 
 ```python
-# Read all
+# === Đọc file với context manager (tự động đóng) ===
+# ⚠️ LUÔN dùng with để đảm bảo file được đóng
+
+# Đọc toàn bộ file vào memory
 with open("file.txt", "r", encoding="utf-8") as f:
     content = f.read()
+print(content)
 
-# Read line by line
+# Đọc từng dòng - tốt cho file lớn (không load hết vào memory)
 with open("file.txt", "r") as f:
-    for line in f:
-        print(line, end="")
+    for line in f:            # File object là iterator
+        print(line, end="")   # end="" tránh dòng trống thừa (line đã có \n)
 
-# Read as list
+# Đọc thành list các dòng
 with open("file.txt", "r") as f:
-    lines = f.readlines()
+    lines = f.readlines()    # List[str] - mỗi dòng là 1 phần tử
 
-# Read with encoding
+# Đọc N ký tự
+with open("file.txt", "r") as f:
+    first_100 = f.read(100)  # Đọc 100 ký tự đầu tiên
+
+# ⚠️ Encoding: LUÔN chỉ định encoding
+# Windows default: 'utf-8' hoặc 'cp1252'
+# Linux/Mac default: 'utf-8'
 with open("file.txt", "r", encoding="utf-8") as f:
     content = f.read()
 ```
@@ -5783,18 +7161,37 @@ with open("file.txt", "r", encoding="utf-8") as f:
 #### Write File
 
 ```python
-# Write
+# === Ghi file ===
+# 'w' - ghi đè (xóa file cũ nếu có)
 with open("output.txt", "w", encoding="utf-8") as f:
-    f.write("Hello World")
+    f.write("Hello World\n")  # Viết chuỗi vào file
+    f.write("Line 2\n")
 
-# Append
+# 'a' - append (thêm vào cuối file)
 with open("log.txt", "a") as f:
     f.write("New log entry\n")
 
-# Multiple lines
-lines = ["Line 1\n", "Line 2\n"]
+# 'x' - tạo mới, lỗi nếu file đã tồn tại
+try:
+    with open("new.txt", "x") as f:
+        f.write("New file\n")
+except FileExistsError:
+    print("File đã tồn tại!")
+
+# Ghi nhiều dòng
+lines = ["Line 1\n", "Line 2\n", "Line 3\n"]
 with open("output.txt", "w") as f:
-    f.writelines(lines)
+    f.writelines(lines)  # Ghi list các chuỗi
+
+# ⚠️ File modes:
+# 'r'  - đọc (mặc định)
+# 'w'  - ghi đè
+# 'a'  - append
+# 'x'  - tạo mới
+# 'r+' - đọc + ghi
+# 'w+' - đọc + ghi (đè)
+# 'a+' - đọc + append
+# Thêm 'b' cho binary: 'rb', 'wb', 'ab'
 ```
 
 #### Path (Python 3.4+)
@@ -5802,23 +7199,73 @@ with open("output.txt", "w") as f:
 ```python
 from pathlib import Path
 
+# === pathlib - OOP cho đường dẫn (khuyến khích) ===
 p = Path("file.txt")
 
-# Check existence
-p.exists()
-p.is_file()
-p.is_dir()
+# Kiểm tra
+print(p.exists())          # Output: True/False (file có tồn tại không)
+print(p.is_file())         # Output: True/False (có phải file không)
+print(p.is_dir())          # Output: True/False (có phải directory không)
+print(p.is_symlink())      # Output: True/False (có phải symlink không)
 
-# Read/Write
-content = p.read_text()
-p.write_text("Hello")
+# Đọc/Ghi (tiện hơn open)
+content = p.read_text(encoding="utf-8")  # Đọc text
+p.write_text("Hello", encoding="utf-8") # Ghi text
+bytes_data = p.read_bytes()              # Đọc binary
 
-# Glob
-for file in Path(".").glob("*.py"):
+# Thông tin
+print(p.name)         # Output: file.txt (tên file)
+print(p.stem)        # Output: file (không có extension)
+print(p.suffix)      # Output: .txt (extension)
+print(p.parent)      # Output: Path(/home/user) (thư mục cha)
+print(p.parts)       # Output: ('/home', 'user', 'file.txt')
+
+# Glob - tìm files theo pattern
+for file in Path(".").glob("*.py"):         # Tìm .py files
     print(file)
 
-# Resolve path
-p.resolve()
+for file in Path(".").glob("**/*.py"):      # Recursive search
+    print(file)
+
+# Walk - duyệt cây thư mục
+for item in Path(".").rglob("*"):          # Recursive glob
+    if item.is_file():
+        print(f"File: {item}")
+
+# Resolve - lấy đường dẫn tuyệt đối
+abs_path = p.resolve()
+print(abs_path)  # Output: /home/user/project/file.txt
+
+# Tạo directory
+Path("new_dir").mkdir(exist_ok=True)           # Tạo 1 directory
+Path("a/b/c").mkdir(parents=True, exist_ok=True) # Tạo cả cây
+
+# === Real-world: đọc file lớn line-by-line ===
+def process_large_file(filepath: str):
+    """Đọc và xử lý file lớn mà không load hết vào memory."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line_num, line in enumerate(f, 1):  # enumerate với start=1
+            line = line.strip()                  # Xóa \n và whitespace
+            if not line or line.startswith("#"): # Bỏ dòng trống và comment
+                continue
+            # Xử lý từng dòng...
+            print(f"Line {line_num}: {line}")
+
+# === Real-world: safe file write ===
+import tempfile
+import shutil
+
+def safe_write(filepath: str, content: str):
+    """Ghi file an toàn - không làm mất file cũ nếu lỗi."""
+    filepath = Path(filepath)
+    tmp = filepath.with_suffix('.tmp')
+
+    try:
+        tmp.write_text(content, encoding='utf-8')
+        tmp.replace(filepath)  # Atomic trên POSIX
+    except Exception:
+        tmp.unlink(missing_ok=True)  # Xóa temp file nếu lỗi
+        raise
 ```
 
 #### JSON
@@ -5944,22 +7391,167 @@ Xem section [Async File I/O](#async-file-io) ở trên.
 ```python
 import json
 
-# Serialize
-data = {"name": "John", "age": 30, "active": True}
-json_str = json.dumps(data)
-json_str = json.dumps(data, indent=2)
+# === Serialize Python dict → JSON string ===
+data = {"name": "John", "age": 30, "active": True}  # Python dict với các key-value
+json_str = json.dumps(data)                          # Serialize thành chuỗi JSON compact
+print(json_str)                                      # Output: {"name": "John", "age": 30, "active": true}
 
-# Deserialize
-data = json.loads(json_str)
+# ⚠️ Lưu ý: Boolean trong Python (True/False) → JSON (true/false) lowercase
+# ⚠️ None trong Python → JSON null
 
-# Custom encoder
+# === Serialize với indent (định dạng đẹp) ===
+json_str = json.dumps(data, indent=2)  # Thêm indent 2 spaces cho dễ đọc
+print(json_str)                         # Output:
+# {
+#   "name": "John",
+#   "age": 30,
+#   "active": true
+# }
+
+# === Deserialize: JSON string → Python dict ===
+data = json.loads(json_str)  # Parse JSON string thành Python object
+print(data["name"])          # Output: John
+print(type(data["active"]))  # Output: <class 'bool'> - boolean được convert về Python bool
+
+# === Serialize ra file ===
+# with open("data.json", "w") as f:
+#     json.dump(data, f, indent=2)  # Ghi trực tiếp vào file object
+
+# === Deserialize từ file ===
+# with open("data.json", "r") as f:
+#     data = json.load(f)  # Đọc trực tiếp từ file object
+
+# === Custom Encoder cho kiểu dữ liệu không có sẵn trong JSON ===
+from datetime import datetime, date  # Import datetime để test
+
 class CustomEncoder(json.JSONEncoder):
+    """Custom JSONEncoder để handle các kiểu đặc biệt"""
     def default(self, obj):
+        # Xử lý datetime → ISO format string
         if isinstance(obj, datetime):
-            return obj.isoformat()
+            return obj.isoformat()  # "2024-01-15T10:30:00"
+        # Xử lý date → ISO format string
+        if isinstance(obj, date):
+            return obj.isoformat()  # "2024-01-15"
+        # Gọi default cho các kiểu không support
         return super().default(obj)
 
-json.dumps(data, cls=CustomEncoder)
+# Tạo data với datetime
+data_with_date = {
+    "event": "meeting",
+    "timestamp": datetime(2024, 1, 15, 10, 30, 0),  # Python datetime object
+    "created": date(2024, 1, 15)                      # Python date object
+}
+
+# Serialize với custom encoder
+json_str = json.dumps(data_with_date, cls=CustomEncoder)
+print(json_str)  # Output: {"event": "meeting", "timestamp": "2024-01-15T10:30:00", "created": "2024-01-15"}
+
+# === Custom Decoder (JSON string → Python object) ===
+def custom_decoder(dct):
+    """Custom object_hook để convert ngược từ JSON"""
+    # Parse ISO date string thành date object
+    if "created" in dct and isinstance(dct["created"], str):
+        dct["created"] = date.fromisoformat(dct["created"])
+    return dct
+
+data = json.loads(json_str, object_hook=custom_decoder)
+print(type(data["created"]))  # Output: <class 'datetime.date'>
+
+# === JSON với ensure_ascii ===
+emoji_data = {"message": "Xin chào 👋", "emoji": "🎉"}
+json_str = json.dumps(emoji_data)  # Mặc định escape Unicode
+print(json_str)                     # Output: {"message": "Xin ch\u00e0o 👋", "emoji": "🎉"}
+
+json_str = json.dumps(emoji_data, ensure_ascii=False)  # Giữ nguyên Unicode
+print(json_str)  # Output: {"message": "Xin chào 👋", "emoji": "🎉"}
+
+# === JSON với sort_keys ===
+unsorted = {"z": 1, "a": 2, "m": 3}
+json_str = json.dumps(unsorted)             # Không sort
+print(json_str)                              # Output: {"z": 1, "a": 2, "m": 3}
+json_str_sorted = json.dumps(unsorted, sort_keys=True)  # Sort theo key
+print(json_str_sorted)                       # Output: {"a": 2, "m": 3, "z": 1}
+
+# ⚠️ Edge case: JSON float precision
+float_data = {"price": 123456789.123456789}
+json_str = json.dumps(float_data)
+print(json_str)  # Output: {"price": 123456789.12345679}
+# ⚠️ Lưu ý: JavaScript JSON parse có thể mất precision với số > 2^53
+
+# === Real-world: API Response Caching ===
+import hashlib
+from functools import lru_cache
+
+def cache_json_response(func):
+    """Decorator cache JSON response vào memory"""
+    cache = {}
+    def wrapper(*args, **kwargs):
+        # Tạo cache key từ arguments
+        cache_key = hashlib.md5(
+            f"{args}{sorted(kwargs.items())}".encode()
+        ).hexdigest()
+        if cache_key not in cache:
+            # Gọi API và serialize kết quả
+            result = func(*args, **kwargs)
+            cache[cache_key] = json.dumps(result)
+        return json.loads(cache[cache_key])
+    return wrapper
+
+# @cache_json_response
+# def fetch_user(user_id):
+#     return {"id": user_id, "name": "John", "email": f"user{user_id}@example.com"}
+
+# === Real-world: Configuration File ===
+# JSON config file (nhưng thường dùng YAML/TOML sẽ tốt hơn cho config)
+config = {
+    "app_name": "MyApp",
+    "version": "1.0.0",
+    "debug": True,
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "mydb"
+    },
+    "features": ["auth", "api", "dashboard"]
+}
+
+# Lưu config
+# with open("config.json", "w") as f:
+#     json.dump(config, f, indent=2)
+
+# Đọc config
+# with open("config.json", "r") as f:
+#     loaded_config = json.load(f)
+
+# === Edge cases: JSON parsing errors ===
+# Invalid JSON sẽ raise JSONDecodeError
+try:
+    json.loads('{"invalid": json}')
+except json.JSONDecodeError as e:
+    print(f"JSON Error: {e}")  # Output: Expecting property name enclosed in double quotes...
+
+# === Real-world: Safe JSON parsing với fallback ===
+def safe_json_loads(json_str, default=None):
+    """Parse JSON với fallback value nếu lỗi"""
+    try:
+        return json.loads(json_str)
+    except (json.JSONDecodeError, TypeError):
+        return default if default is not None else {}
+
+data = safe_json_loads('{"valid": true}', {"fallback": True})
+print(data)  # Output: {'valid': True}
+
+data = safe_json_loads('invalid json', {"fallback": True})
+print(data)  # Output: {'fallback': True}
+
+# === Real-world: Merge JSON configs ===
+base_config = {"app": "web", "debug": False, "timeout": 30}
+override_config = {"debug": True, "port": 8080}
+
+# Merge: override ghi đè base
+merged = {**base_config, **override_config}
+print(merged)  # Output: {'app': 'web', 'debug': True, 'timeout': 30, 'port': 8080}
 ```
 
 #### Pickle
@@ -5967,19 +7559,96 @@ json.dumps(data, cls=CustomEncoder)
 ```python
 import pickle
 
-# Serialize (Python only, not secure)
-data = {"name": "John", "func": lambda x: x * 2}
-pickled = pickle.dumps(data)
+# ⚠️ CẢNH BÁO BẢO MẬT: Không bao giờ unpickle dữ liệu từ nguồn không tin cậy!
+# pickle có thể execute arbitrary code khi unpickling
 
-# Deserialize
-unpickled = pickle.loads(pickled)
+# === Serialize Python object → bytes (Python only, không human-readable) ===
+data = {"name": "John", "func": lambda x: x * 2}  # Bao gồm cả function/lambda!
+pickled = pickle.dumps(data)                       # Serialize thành bytes
+print(type(pickled))                                # Output: <class 'bytes'>
+print(len(pickled))                                # Output: ~50 (tùy nội dung)
 
-# File
-with open("data.pkl", "wb") as f:
-    pickle.dump(data, f)
+# === Deserialize: bytes → Python object ===
+unpickled = pickle.loads(pickled)  # Deserialize ngược lại
+print(unpickled["name"])           # Output: John
 
-with open("data.pkl", "rb") as f:
-    data = pickle.load(f)
+# === Serialize ra file (binary mode bắt buộc!) ===
+with open("data.pkl", "wb") as f:  # "wb" = write binary
+    pickle.dump(data, f)           # Ghi pickle vào file
+
+# === Deserialize từ file (binary mode bắt buộc!) ===
+with open("data.pkl", "rb") as f:  # "rb" = read binary
+    data = pickle.load(f)          # Đọc pickle từ file
+print(data["name"])               # Output: John
+
+# ⚠️ Edge case: pickle protocol version
+# pickle.HIGHEST_PROTOCOL = 5 (Python 3.8+), dùng cho performance tốt hơn
+pickled_v5 = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
+print(f"Protocol: {pickle.HIGHEST_PROTOCOL}")  # Output: 5
+
+# === Real-world: Cache Python objects ===
+import pickle
+import hashlib
+from pathlib import Path
+
+class ObjectCache:
+    """Cache Python objects vào disk bằng pickle"""
+    def __init__(self, cache_dir=".cache"):
+        self.cache_dir = Path(cache_dir)
+        self.cache_dir.mkdir(exist_ok=True)
+
+    def _get_cache_path(self, key):
+        """Tạo cache file path từ key"""
+        cache_key = hashlib.md5(key.encode()).hexdigest()
+        return self.cache_dir / f"{cache_key}.pkl"
+
+    def get(self, key):
+        """Lấy object từ cache"""
+        cache_path = self._get_cache_path(key)
+        if cache_path.exists():
+            with open(cache_path, "rb") as f:
+                return pickle.load(f)
+        return None
+
+    def set(self, key, value):
+        """Lưu object vào cache"""
+        cache_path = self._get_cache_path(key)
+        with open(cache_path, "wb") as f:
+            pickle.dump(value, f)
+
+# Sử dụng:
+# cache = ObjectCache()
+# cache.set("user_123", {"name": "John", "age": 30})
+# user = cache.get("user_123")
+
+# ⚠️ Edge case: Class định nghĩa sau khi unpickle
+# Nếu class definition thay đổi giữa pickle và unpickle, có thể lỗi
+# Giải pháp: Dùng __reduce__ hoặc __getstate__/__setstate__
+
+# === Real-world: Deep copy với pickle ===
+import copy
+
+original = {"list": [1, 2, 3], "dict": {"nested": True}}
+deep_copy = pickle.loads(pickle.dumps(original))  # Copy phức tạp hơn copy.deepcopy
+shallow_copy = original.copy()                    # Chỉ copy 1 level
+
+# Test sự khác biệt:
+original["list"].append(4)
+print(original["list"])      # Output: [1, 2, 3, 4]
+print(deep_copy["list"])     # Output: [1, 2, 3] - không bị ảnh hưởng
+print(shallow_copy["list"])  # Output: [1, 2, 3, 4] - bị ảnh hưởng (shallow)
+
+# === Pickle vs JSON comparison ===
+"""
+| Feature          | JSON                    | Pickle                  |
+|------------------|-------------------------|-------------------------|
+| Human readable   | ✅ Yes                  | ❌ No (binary)          |
+| Cross-language   | ✅ Yes (JS, Java...)   | ❌ Python only          |
+| Security         | ✅ Safe                | ⚠️ Dangerous            |
+| Speed            | ⚠️ Slower              | ✅ Faster               |
+| All Python types | ❌ Limited             | ✅ Almost all           |
+| Functions/classes| ❌ No                  | ✅ Yes (with limits)    |
+"""
 ```
 
 ---
@@ -5991,67 +7660,244 @@ with open("data.pkl", "rb") as f:
 ```python
 from datetime import datetime, date, time, timedelta
 
-# Current datetime
-now = datetime.now()
-today = date.today()
+# === Lấy thời gian hiện tại ===
+now = datetime.now()    # Datetime hiện tại theo local timezone (naive - không có tz info)
+today = date.today()    # Chỉ ngày hôm nay (không có giờ)
+print(now)              # Output: 2024-01-15 10:30:00.123456 (tùy thời điểm chạy)
+print(today)            # Output: 2024-01-15
 
-# Create datetime
-dt = datetime(2024, 1, 15, 10, 30, 0)
-d = date(2024, 1, 15)
-t = time(10, 30, 0)
+# ⚠️ datetime.now() trả về naive datetime (không có timezone info)
+# Dùng datetime.now(timezone.utc) để có timezone-aware datetime
 
-# Format
-dt.strftime("%Y-%m-%d %H:%M:%S")  # "2024-01-15 10:30:00"
-datetime.strptime("2024-01-15", "%Y-%m-%d")
+# === Tạo datetime cụ thể ===
+dt = datetime(2024, 1, 15, 10, 30, 0)  # year, month, day, hour, minute, second
+d = date(2024, 1, 15)                   # Chỉ ngày
+t = time(10, 30, 0)                     # Chỉ giờ
+print(dt)  # Output: 2024-01-15 10:30:00
+print(d)   # Output: 2024-01-15
+print(t)   # Output: 10:30:00
 
-# Arithmetic
-tomorrow = now + timedelta(days=1)
-last_week = now - timedelta(weeks=1)
+# === Format datetime → string ===
+formatted = dt.strftime("%Y-%m-%d %H:%M:%S")  # Format theo pattern
+print(formatted)                               # Output: 2024-01-15 10:30:00
 
-# Compare
-dt1 = datetime(2024, 1, 1)
-dt2 = datetime(2024, 1, 15)
-(dt2 - dt1).days  # 14
+# Các format codes phổ biến:
+# %Y = năm 4 chữ số (2024), %m = tháng (01-12), %d = ngày (01-31)
+# %H = giờ 24h (00-23), %M = phút (00-59), %S = giây (00-59)
+# %A = tên ngày (Monday), %B = tên tháng (January)
+# %I = giờ 12h (01-12), %p = AM/PM
 
-# Unix timestamp
-timestamp = dt.timestamp()
-datetime.fromtimestamp(timestamp)
+# === Parse string → datetime ===
+parsed = datetime.strptime("2024-01-15", "%Y-%m-%d")  # Parse theo pattern
+print(parsed)  # Output: 2024-01-15 00:00:00
+
+# === ISO format (khuyến nghị cho API/JSON) ===
+iso_str = dt.isoformat()                    # Serialize thành ISO 8601
+print(iso_str)                              # Output: 2024-01-15T10:30:00
+parsed_iso = datetime.fromisoformat(iso_str)  # Parse ISO 8601 (Python 3.7+)
+print(parsed_iso)                           # Output: 2024-01-15 10:30:00
+
+# === Arithmetic với timedelta ===
+tomorrow = now + timedelta(days=1)          # Cộng 1 ngày
+last_week = now - timedelta(weeks=1)        # Trừ 1 tuần
+in_2_hours = now + timedelta(hours=2)       # Cộng 2 giờ
+print(tomorrow.date())                      # Output: 2024-01-16 (ngày mai)
+
+# timedelta components:
+delta = timedelta(days=1, hours=2, minutes=30, seconds=15)
+print(delta.total_seconds())  # Output: 95415.0 (tổng số giây)
+print(delta.days)             # Output: 1 (chỉ phần ngày)
+
+# === So sánh datetime ===
+dt1 = datetime(2024, 1, 1)   # Ngày 1/1/2024
+dt2 = datetime(2024, 1, 15)  # Ngày 15/1/2024
+diff = dt2 - dt1              # Hiệu 2 datetime → timedelta
+print(diff.days)              # Output: 14 (cách nhau 14 ngày)
+print(dt1 < dt2)              # Output: True (dt1 trước dt2)
+print(dt1 == dt2)             # Output: False
+
+# ⚠️ Edge case: So sánh naive và aware datetime sẽ raise TypeError
+# datetime.now() vs datetime.now(timezone.utc) → TypeError: can't compare offset-naive and offset-aware datetimes
+
+# === Unix timestamp ===
+timestamp = dt.timestamp()                  # datetime → Unix timestamp (float)
+print(timestamp)                            # Output: 1705312200.0 (seconds since epoch)
+dt_back = datetime.fromtimestamp(timestamp) # Unix timestamp → datetime (local tz)
+print(dt_back)                              # Output: 2024-01-15 10:30:00
+
+# ⚠️ Edge case: datetime.fromtimestamp() dùng local timezone
+# Dùng datetime.utcfromtimestamp() để lấy UTC (nhưng vẫn naive!)
+# Tốt nhất: datetime.fromtimestamp(ts, tz=timezone.utc) để có aware datetime
+
+# === Real-world: Tính tuổi từ ngày sinh ===
+def calculate_age(birth_date: date) -> int:
+    """Tính tuổi chính xác từ ngày sinh"""
+    today = date.today()
+    # Kiểm tra xem đã qua sinh nhật năm nay chưa
+    birthday_this_year = birth_date.replace(year=today.year)
+    age = today.year - birth_date.year
+    if today < birthday_this_year:
+        age -= 1  # Chưa đến sinh nhật năm nay
+    return age
+
+birth = date(1990, 6, 15)
+print(calculate_age(birth))  # Output: 33 hoặc 34 (tùy ngày chạy)
+
+# === Real-world: Deadline checker ===
+def is_overdue(deadline: datetime) -> bool:
+    """Kiểm tra deadline đã qua chưa"""
+    return datetime.now() > deadline
+
+deadline = datetime(2024, 12, 31, 23, 59, 59)
+print(is_overdue(deadline))  # Output: True/False tùy ngày chạy
+
+# === Real-world: Format thân thiện ===
+def time_ago(dt: datetime) -> str:
+    """Hiển thị thời gian dạng '2 hours ago'"""
+    diff = datetime.now() - dt
+    seconds = diff.total_seconds()
+    if seconds < 60:
+        return f"{int(seconds)} seconds ago"
+    elif seconds < 3600:
+        return f"{int(seconds // 60)} minutes ago"
+    elif seconds < 86400:
+        return f"{int(seconds // 3600)} hours ago"
+    else:
+        return f"{int(seconds // 86400)} days ago"
+
+past = datetime.now() - timedelta(hours=2, minutes=30)
+print(time_ago(past))  # Output: 2 hours ago
 ```
 
 #### timezone
 
 ```python
-from datetime import datetime, timezone
-import pytz  # pip install pytz
+from datetime import datetime, timezone, timedelta
+import zoneinfo  # Python 3.9+ (built-in, không cần pip)
+# import pytz  # Cho Python < 3.9: pip install pytz
 
-# UTC
-utc = timezone.utc
-dt_utc = datetime.now(utc)
+# === UTC timezone (built-in, không cần thư viện) ===
+utc = timezone.utc                    # UTC timezone object
+dt_utc = datetime.now(utc)           # Datetime hiện tại theo UTC (timezone-aware)
+print(dt_utc)                         # Output: 2024-01-15 03:30:00+00:00
 
-# Timezone
-tz = pytz.timezone("America/New_York")
-dt_ny = datetime.now(tz)
+# === Tạo timezone với offset cố định ===
+vn_tz = timezone(timedelta(hours=7))  # Vietnam UTC+7
+dt_vn = datetime.now(vn_tz)          # Datetime hiện tại theo VN timezone
+print(dt_vn)                          # Output: 2024-01-15 10:30:00+07:00
 
-# Convert timezone
-dt_utc = dt_ny.astimezone(timezone.utc)
+# === Dùng zoneinfo (Python 3.9+, khuyến nghị) ===
+from zoneinfo import ZoneInfo
+ny_tz = ZoneInfo("America/New_York")  # New York timezone (tự động DST)
+dt_ny = datetime.now(ny_tz)          # Datetime hiện tại theo New York
+print(dt_ny)                          # Output: 2024-01-14 22:30:00-05:00
+
+# === Convert timezone ===
+dt_utc = datetime.now(timezone.utc)          # Lấy UTC
+dt_vn = dt_utc.astimezone(vn_tz)            # Convert sang VN
+dt_ny = dt_utc.astimezone(ZoneInfo("America/New_York"))  # Convert sang NY
+print(f"UTC: {dt_utc.strftime('%H:%M')}")   # Output: UTC: 03:30
+print(f"VN:  {dt_vn.strftime('%H:%M')}")    # Output: VN:  10:30
+print(f"NY:  {dt_ny.strftime('%H:%M')}")    # Output: NY:  22:30
+
+# ⚠️ Edge case: Naive datetime không có timezone info
+naive = datetime(2024, 1, 15, 10, 30)  # Không có timezone
+aware = datetime(2024, 1, 15, 10, 30, tzinfo=timezone.utc)  # Có timezone
+
+# Không thể so sánh naive và aware:
+# naive < aware  # ❌ TypeError: can't compare offset-naive and offset-aware datetimes
+
+# === Chuyển naive → aware (localize) ===
+naive = datetime(2024, 1, 15, 10, 30)
+aware = naive.replace(tzinfo=timezone.utc)  # Gán UTC timezone (không convert)
+print(aware)  # Output: 2024-01-15 10:30:00+00:00
+
+# ⚠️ replace(tzinfo=...) KHÔNG convert, chỉ gán timezone label
+# Dùng astimezone() để convert sang timezone khác
+
+# === Real-world: Lưu datetime vào database ===
+# Best practice: Luôn lưu UTC, hiển thị theo local timezone
+def save_event(event_time_local: datetime, user_tz: str) -> datetime:
+    """Convert local time → UTC để lưu vào DB"""
+    tz = ZoneInfo(user_tz)
+    # Gán timezone cho local time
+    local_aware = event_time_local.replace(tzinfo=tz)
+    # Convert sang UTC để lưu
+    utc_time = local_aware.astimezone(timezone.utc)
+    return utc_time
+
+# Người dùng ở VN nhập 10:30 AM
+local_time = datetime(2024, 1, 15, 10, 30)
+utc_time = save_event(local_time, "Asia/Ho_Chi_Minh")
+print(utc_time)  # Output: 2024-01-15 03:30:00+00:00 (UTC)
 ```
 
 #### Timestamp & Calendar
 
 ```python
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import calendar
 
-# Unix timestamp
-timestamp = time.time()  # 1710000000.123
-dt = datetime.fromtimestamp(timestamp)
-dt.timestamp()  # Ngược lại
+# === Unix timestamp (seconds since 1970-01-01 00:00:00 UTC) ===
+timestamp = time.time()                    # Lấy Unix timestamp hiện tại (float)
+print(f"{timestamp:.3f}")                  # Output: 1705312200.123 (tùy thời điểm)
 
-# Calendar
-cal = calendar.month(2024, 1)  # Xem lịch tháng 1/2024
-calendar.isleap(2024)  # True (năm nhuận)
-calendar.monthrange(2024, 2)  # (3, 29) - (weekday đầu tháng, số ngày)
+dt = datetime.fromtimestamp(timestamp)     # Unix timestamp → local datetime (naive)
+print(dt)                                  # Output: 2024-01-15 10:30:00.123000
+
+# Tốt hơn: dùng timezone-aware
+dt_utc = datetime.fromtimestamp(timestamp, tz=timezone.utc)  # → UTC aware datetime
+print(dt_utc)  # Output: 2024-01-15 03:30:00.123000+00:00
+
+# Ngược lại: datetime → Unix timestamp
+ts = dt.timestamp()  # datetime → float timestamp
+print(ts)            # Output: 1705312200.123
+
+# === Performance timing với time.perf_counter() ===
+start = time.perf_counter()  # High-resolution timer (không phải wall clock)
+# ... code cần đo ...
+end = time.perf_counter()
+elapsed = end - start
+print(f"Elapsed: {elapsed:.6f}s")  # Output: Elapsed: 0.000123s
+
+# ⚠️ Dùng time.perf_counter() cho benchmarking, KHÔNG dùng time.time()
+# time.time() có thể bị ảnh hưởng bởi NTP sync, DST changes
+
+# === Calendar ===
+cal = calendar.month(2024, 1)  # Tạo string lịch tháng 1/2024
+print(cal)
+# Output:
+#     January 2024
+# Mo Tu We Th Fr Sa Su
+#  1  2  3  4  5  6  7
+#  8  9 10 11 12 13 14
+# ...
+
+is_leap = calendar.isleap(2024)  # Kiểm tra năm nhuận
+print(is_leap)                    # Output: True (2024 là năm nhuận)
+print(calendar.isleap(2023))      # Output: False
+
+# monthrange trả về (weekday của ngày 1, số ngày trong tháng)
+first_weekday, num_days = calendar.monthrange(2024, 2)
+print(first_weekday)  # Output: 3 (Thursday, 0=Monday)
+print(num_days)       # Output: 29 (2024 là năm nhuận)
+
+# === Real-world: Tính ngày làm việc ===
+def count_business_days(start: datetime, end: datetime) -> int:
+    """Đếm số ngày làm việc (không tính T7, CN) giữa 2 ngày"""
+    count = 0
+    current = start
+    while current <= end:
+        if current.weekday() < 5:  # 0-4 = Mon-Fri, 5=Sat, 6=Sun
+            count += 1
+        current += timedelta(days=1)
+    return count
+
+from datetime import timedelta
+start = datetime(2024, 1, 1)   # Thứ 2
+end = datetime(2024, 1, 14)    # Chủ nhật
+print(count_business_days(start, end))  # Output: 10 (2 tuần = 10 ngày làm việc)
 ```
 
 ---
@@ -6061,105 +7907,476 @@ calendar.monthrange(2024, 2)  # (3, 29) - (weekday đầu tháng, số ngày)
 ```python
 import re
 
-# Match
-text = "My email is john@example.com"
-match = re.search(r'[\w.-]+@[\w.-]+', text)
+# === Tìm kiếm pattern đầu tiên ===
+text = "My email is john@example.com and jane@domain.org"
+match = re.search(r'[\w.-]+@[\w.-]+', text)  # Tìm pattern đầu tiên khớp
 if match:
-    print(match.group())  # "john@example.com"
-    print(match.span())   # (12, 29)
+    print(match.group())  # Output: john@example.com (toàn bộ match)
+    print(match.span())   # Output: (12, 29) (vị trí bắt đầu, kết thúc)
+    print(match.start())  # Output: 12 (vị trí bắt đầu)
+    print(match.end())    # Output: 29 (vị trí kết thúc)
 
-# Find all
-emails = re.findall(r'[\w.-]+@[\w.-]+', text)
+# ⚠️ Lưu ý: re.search() chỉ tìm match đầu tiên, dùng re.findall() để tìm tất cả
 
-# Groups
-pattern = r'(?P<user>[\w.-]+)@(?P<domain>[\w.-]+)'
+# === Tìm tất cả các match ===
+emails = re.findall(r'[\w.-]+@[\w.-]+', text)  # Trả về list các match
+print(emails)  # Output: ['john@example.com', 'jane@domain.org']
+
+# ⚠️ Khi dùng capture groups với findall(), trả về list of tuples
+text_with_groups = "john@example.com, jane@domain.org"
+# Pattern có 2 groups: ([\w.-]+) và ([\w.-]+)
+matches = re.findall(r'([\w.-]+)@([\w.-]+)', text_with_groups)
+print(matches)  # Output: [('john', 'example.com'), ('jane', 'domain.org')]
+
+# === Named groups ===
+pattern = r'(?P<user>[\w.-]+)@(?P<domain>[\w.-]+)'  # (?P<name>pattern) đặt tên group
 match = re.search(pattern, text)
-match.group('user')    # "john"
-match.group('domain') # "example.com"
+if match:
+    print(match.group('user'))     # Output: john (lấy theo tên group)
+    print(match.group('domain'))   # Output: example.com
+    print(match.group(1))          # Output: john (lấy theo index)
+    print(match.group(2))          # Output: example.com
+    print(match.groups())          # Output: ('john', 'example.com')
 
-# Replace
-re.sub(r'\d+', '#', "test 123")  # "test #"
+# === Thay thế (replace/substitute) ===
+result = re.sub(r'\d+', '#', "test 123 and 456")  # Thay thế tất cả số bằng #
+print(result)  # Output: test # and #
 
-# Split
-re.split(r'\s+', "hello world test")  # ["hello", "world", "test"]
+# Thay thế với callback function
+def replace_number(match):
+    num = int(match.group())
+    return "odd" if num % 2 else "even"
 
-# Compile for reuse
-email_pattern = re.compile(r'[\w.-]+@[\w.-]+')
-email_pattern.findall(text)
+result = re.sub(r'\d+', replace_number, "1 2 3 4 5")
+print(result)  # Output: odd even odd even odd
+
+# === Tách (split) ===
+parts = re.split(r'\s+', "hello   world  test")  # Tách theo 1+ whitespace
+print(parts)  # Output: ['hello', 'world', 'test']
+
+# Split với capture group - giữ lại delimiter
+parts_with_sep = re.split(r'(\s+)', "hello world")
+print(parts_with_sep)  # Output: ['hello', ' ', 'world']
+
+# === Compile pattern để tái sử dụng (tốt cho performance) ===
+email_pattern = re.compile(r'[\w.-]+@[\w.-]+')  # Compile 1 lần, dùng nhiều lần
+result = email_pattern.findall(text)  # Dùng pattern đã compile
+print(result)  # Output: ['john@example.com', 'jane@domain.org']
+
+# === Flags điều chỉnh behavior ===
+text_multi = "Hello\nWorld"
+match = re.search(r'hello', text_multi, re.IGNORECASE)  # Không phân biệt hoa thường
+print(match.group() if match else None)  # Output: Hello
+
+match = re.search(r'.+', text_multi)  # Mặc định . không khớp \n
+print(match.group() if match else None)  # Output: Hello (chỉ 1 line)
+
+match = re.search(r'.+', text_multi, re.DOTALL)  # . khớp cả \n
+print(match.group() if match else None)  # Output: Hello\nWorld
+
+# === Real-world: Validation patterns ===
+def validate_email(email: str) -> bool:
+    """Kiểm tra email hợp lệ"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return bool(re.match(pattern, email))
+
+print(validate_email("user@example.com"))     # Output: True
+print(validate_email("invalid@email"))        # Output: False
+print(validate_email("@example.com"))         # Output: False
+print(validate_email("user@.com"))            # Output: False
+
+def validate_phone(phone: str) -> bool:
+    """Kiểm tra số điện thoại VN (10 số, bắt đầu bằng 0)"""
+    pattern = r'^0\d{9}$'  # 0 + 9 chữ số
+    return bool(re.match(pattern, phone))
+
+print(validate_phone("0912345678"))  # Output: True
+print(validate_phone("9123456789"))  # Output: False
+print(validate_phone("091234567"))   # Output: False
+
+def validate_password(password: str) -> tuple[bool, str]:
+    """Kiểm tra password: 8+ ký tự, có chữ hoa, thường, số"""
+    if len(password) < 8:
+        return False, "Ít nhất 8 ký tự"
+    if not re.search(r'[A-Z]', password):
+        return False, "Cần ít nhất 1 chữ hoa"
+    if not re.search(r'[a-z]', password):
+        return False, "Cần ít nhất 1 chữ thường"
+    if not re.search(r'\d', password):
+        return False, "Cần ít nhất 1 số"
+    return True, "Hợp lệ"
+
+print(validate_password("Pass1234"))  # Output: (True, 'Hợp lệ')
+print(validate_password("password"))   # Output: (False, 'Cần ít nhất 1 chữ hoa')
+
+# === Real-world: Data extraction ===
+log = "2024-01-15 10:30:45 ERROR [Auth] Login failed for user john"
+pattern = r'(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) (\w+) \[(\w+)\] (.+)'
+match = re.match(pattern, log)
+if match:
+    date, time, level, module, message = match.groups()
+    print(f"Date: {date}, Time: {time}, Level: {level}, Module: {module}")  # Output: Date: 2024-01-15, Time: 10:30:45, Level: ERROR, Module: Auth
+    print(f"Message: {message}")  # Output: Message: Login failed for user john
+
+# === Real-world: HTML/Sanitization ===
+import html
+
+def sanitize_input(user_input: str) -> str:
+    """Loại bỏ HTML tags từ user input"""
+    # Cách 1: Strip tags
+    clean = re.sub(r'<[^>]+>', '', user_input)
+    # Cách 2: Escape HTML entities
+    escaped = html.escape(user_input)
+    return clean
+
+dirty = "<script>alert('xss')</script>Hello"
+print(sanitize_input(dirty))  # Output: Hello
+
+# === Real-world: Text formatting ===
+def format_phone_numbers(text: str) -> str:
+    """Định dạng lại số điện thoại: 0912345678 → (091) 234-5678"""
+    def format_number(match):
+        num = match.group()
+        return f"({num[:3]}) {num[3:6]}-{num[6:]}"
+    return re.sub(r'\d{10}', format_number, text)
+
+text = "Gọi cho tôi: 0912345678 hoặc 0987654321"
+print(format_phone_numbers(text))  # Output: Gọi cho tôi: (091) 234-5678 hoặc (098) 765-4321
+
+# === Edge cases: Greedy vs Non-greedy ===
+text_html = "<div>content</div>"
+
+# Greedy: .* khớp nhiều nhất có thể
+greedy = re.search(r'<div>.*</div>', text_html)
+print(greedy.group() if greedy else None)  # Output: <div>content</div>
+
+# Non-greedy: .*? khớp ít nhất có thể
+non_greedy = re.search(r'<div>.*?</div>', text_html)
+print(non_greedy.group() if non_greedy else None)  # Output: <div>content</div>
+
+# ⚠️ Với input phức tạp, dùng BeautifulSoup thay vì regex để parse HTML
+
+# === Edge cases: Lookahead/Lookbehind ===
+text_prices = "$100 USD, $50 EUR, £80 GBP"
+
+# Positive lookahead: khớp $ + số nhưng không include "USD"
+prices_usd = re.findall(r'\$\d+(?= USD)', text_prices)
+print(prices_usd)  # Output: ['$100']
+
+# Negative lookahead: khớp $ + số KHÔNG theo sau bởi USD
+prices_other = re.findall(r'\$\d+(?! USD)', text_prices)
+print(prices_other)  # Output: ['$50']
+
+# Positive lookbehind: khớp số theo sau bởi $ (không include $)
+amounts = re.findall(r'(?<=\$)\d+', text_prices)
+print(amounts)  # Output: ['100', '50']
+
+# === Edge cases: Backreference ===
+# Khớp từ có chữ cái lặp lại: "hello", "book" (không khớp "test")
+words_double = re.findall(r'\b(\w)\1\w*\b', "hello book test apple")
+print(words_double)  # Output: ['l', 'o', 'p'] - chữ cái lặp
+
+# Khớp HTML tags đóng mở khớp nhau
+html_content = "<div><span>text</span></div>"
+# ⚠️ Regex không thể handle nested HTML properly - dùng parser
+
+# === Common regex patterns ===
+"""
+| Pattern      | Meaning                           | Example              |
+|--------------|-----------------------------------|----------------------|
+| \d           | Digit (0-9)                      | \d{3} = 3 digits    |
+| \D           | Non-digit                        | \D+ = non-digits     |
+| \w           | Word char (a-z, A-Z, 0-9, _)     | \w+ = word           |
+| \W           | Non-word char                    | \W+ = symbols        |
+| \s           | Whitespace                       | \s+ = whitespace     |
+| \S           | Non-whitespace                   | \S+ = non-space      |
+| .            | Any char (except newline)         | a.c = abc, aXc       |
+| ^            | Start of string/line              | ^Hello               |
+| $            | End of string/line               | world$               |
+| *            | 0 or more (greedy)               | a* = '', 'a', 'aaa'  |
+| +            | 1 or more (greedy)               | a+ = 'a', 'aaa'      |
+| ?            | 0 or 1, or non-greedy            | colou?r = color/r    |
+| {n}          | Exactly n times                  | \d{4} = 4 digits     |
+| {n,}         | n or more times                  | \w{3,} = 3+ chars    |
+| {n,m}        | Between n and m times             | \d{2,4} = 2-4 digits |
+| []           | Character class                  | [aeiou] = vowel      |
+| [^...]       | Negated class                    | [^0-9] = non-digit   |
+| \|           | Alternation (or)                  | cat\|dog = cat/dog   |
+| ()           | Group (capture)                  | (\d+) groups digits  |
+| (?:...)      | Non-capturing group              | (?:ab)+ = abab       |
+| (?P<name>...)| Named group                      | (?P<year>\d{4})      |
+"""
 ```
 
 ### 10.4. XML & CSV Parsing
 
 ```python
-# XML Parsing
+# === XML Parsing với ElementTree (built-in) ===
 import xml.etree.ElementTree as ET
 
 xml_str = '''<users>
-    <user id="1"><name>John</name></user>
-    <user id="2"><name>Jane</name></user>
+    <user id="1"><name>John</name><email>john@example.com</email></user>
+    <user id="2"><name>Jane</name><email>jane@example.com</email></user>
 </users>'''
 
-root = ET.fromstring(xml_str)
-for user in root.findall('user'):
-    uid = user.get('id')
-    name = user.find('name').text
-    print(f"{uid}: {name}")
+root = ET.fromstring(xml_str)  # Parse XML string → Element object
+print(root.tag)                 # Output: users (tên tag gốc)
 
-# CSV Parsing
+# Duyệt qua các phần tử con
+for user in root.findall('user'):  # Tìm tất cả <user> trực tiếp trong root
+    uid = user.get('id')           # Lấy attribute 'id'
+    name = user.find('name').text  # Tìm <name> và lấy text content
+    email = user.find('email').text
+    print(f"{uid}: {name} ({email})")
+# Output:
+# 1: John (john@example.com)
+# 2: Jane (jane@example.com)
+
+# === Tạo XML ===
+root = ET.Element('users')                    # Tạo root element
+user1 = ET.SubElement(root, 'user')           # Thêm child element
+user1.set('id', '1')                          # Set attribute
+name_elem = ET.SubElement(user1, 'name')      # Thêm nested element
+name_elem.text = 'John'                       # Set text content
+
+tree = ET.ElementTree(root)                   # Tạo tree từ root
+ET.indent(tree, space="  ")                   # Thêm indentation (Python 3.9+)
+# tree.write('output.xml', encoding='utf-8', xml_declaration=True)
+
+# In ra string
+import io
+output = io.StringIO()
+tree.write(output, encoding='unicode')
+print(output.getvalue())
+# Output: <users><user id="1"><name>John</name></user></users>
+
+# ⚠️ Lưu ý: ElementTree không hỗ trợ XPath đầy đủ
+# Dùng lxml (pip install lxml) cho XPath phức tạp và namespace
+
+# === CSV Parsing ===
 import csv
+import io
 
-# Read CSV
-with open('data.csv', 'r') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        print(row['name'], row['age'])
+# === Đọc CSV từ string (demo không cần file) ===
+csv_content = """name,age,city
+John,30,Hanoi
+Jane,25,HCMC
+Bob,35,Danang"""
 
-# Write CSV
-with open('output.csv', 'w', newline='') as f:
-    writer = csv.DictWriter(f, fieldnames=['name', 'age'])
-    writer.writeheader()
-    writer.writerow({'name': 'John', 'age': 30})
+reader = csv.DictReader(io.StringIO(csv_content))  # DictReader: mỗi row là dict
+for row in reader:
+    print(f"{row['name']}: {row['age']} tuổi, {row['city']}")
+# Output:
+# John: 30 tuổi, Hanoi
+# Jane: 25 tuổi, HCMC
+# Bob: 35 tuổi, Danang
+
+# === Đọc CSV từ file ===
+# with open('data.csv', 'r', encoding='utf-8', newline='') as f:
+#     reader = csv.DictReader(f)
+#     rows = list(reader)  # Đọc tất cả vào list
+
+# ⚠️ Luôn dùng newline='' khi mở file CSV để tránh lỗi trên Windows
+
+# === Ghi CSV ===
+data = [
+    {'name': 'John', 'age': 30, 'city': 'Hanoi'},
+    {'name': 'Jane', 'age': 25, 'city': 'HCMC'},
+]
+
+output = io.StringIO()
+writer = csv.DictWriter(output, fieldnames=['name', 'age', 'city'])
+writer.writeheader()          # Ghi header row
+writer.writerows(data)        # Ghi tất cả rows
+print(output.getvalue())
+# Output:
+# name,age,city
+# John,30,Hanoi
+# Jane,25,HCMC
+
+# === CSV với delimiter khác ===
+tsv_content = "name\tage\tcity\nJohn\t30\tHanoi"
+reader = csv.DictReader(io.StringIO(tsv_content), delimiter='\t')  # Tab-separated
+for row in reader:
+    print(row)  # Output: {'name': 'John', 'age': '30', 'city': 'Hanoi'}
+
+# ⚠️ Edge case: CSV với dấu phẩy trong giá trị
+csv_with_comma = 'name,address\nJohn,"123 Main St, Apt 4"'
+reader = csv.DictReader(io.StringIO(csv_with_comma))
+for row in reader:
+    print(row['address'])  # Output: 123 Main St, Apt 4 (csv tự handle quotes)
+
+# === Real-world: Đọc CSV lớn theo batch ===
+def read_csv_in_batches(filepath, batch_size=1000):
+    """Đọc CSV lớn theo từng batch để tiết kiệm memory"""
+    with open(filepath, 'r', encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f)
+        batch = []
+        for row in reader:
+            batch.append(row)
+            if len(batch) >= batch_size:
+                yield batch  # Yield batch, không load toàn bộ vào memory
+                batch = []
+        if batch:
+            yield batch  # Yield batch cuối
+
+# for batch in read_csv_in_batches('large_file.csv'):
+#     process_batch(batch)
+
+# === Real-world: CSV → JSON conversion ===
+def csv_to_json(csv_string: str) -> list[dict]:
+    """Convert CSV string thành list of dicts"""
+    reader = csv.DictReader(io.StringIO(csv_string))
+    return [dict(row) for row in reader]
+
+csv_data = "id,name,score\n1,Alice,95\n2,Bob,87"
+json_data = csv_to_json(csv_data)
+print(json_data)  # Output: [{'id': '1', 'name': 'Alice', 'score': '95'}, ...]
+# ⚠️ Lưu ý: CSV không có type info, tất cả đều là string
+# Cần convert thủ công: int(row['id']), float(row['score'])
 ```
 
 ### 10.5. YAML/TOML
 
 ```python
-# YAML - pip install pyyaml
+# === YAML - pip install pyyaml ===
 import yaml
 
-# Read YAML
-with open('config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
-
-# Write YAML
-with open('output.yaml', 'w') as f:
-    yaml.dump(config, f, default_flow_style=False)
-
-# Parse string
+# === Parse YAML string ===
 yaml_str = """
 name: John
 age: 30
+active: true
 skills:
   - Python
   - Django
+  - PostgreSQL
+database:
+  host: localhost
+  port: 5432
+  name: mydb
 """
-data = yaml.safe_load(yaml_str)
 
-# TOML (Python 3.11+ built-in)
-import tomllib  # Python 3.11+
+data = yaml.safe_load(yaml_str)  # safe_load: an toàn, không execute Python code
+print(data['name'])              # Output: John
+print(data['age'])               # Output: 30 (int, không phải string!)
+print(data['active'])            # Output: True (bool)
+print(data['skills'])            # Output: ['Python', 'Django', 'PostgreSQL']
+print(data['database']['host'])  # Output: localhost
 
-with open('config.toml', 'rb') as f:
-    config = tomllib.load(f)
+# ⚠️ CẢNH BÁO: Không dùng yaml.load() (không có Loader) - có thể execute code!
+# ❌ yaml.load(yaml_str)  # Nguy hiểm!
+# ✅ yaml.safe_load(yaml_str)  # An toàn
 
-# Older Python: pip install tomli
-import tomli
-with open('config.toml', 'rb') as f:
-    config = tomli.load(f)
+# === Serialize Python → YAML string ===
+config = {
+    "app": "MyApp",
+    "version": "1.0.0",
+    "debug": False,
+    "features": ["auth", "api"],
+    "database": {"host": "localhost", "port": 5432}
+}
 
-# Write TOML: pip install tomli-w
-import tomli_w
-with open('output.toml', 'wb') as f:
-    tomli_w.dump(config, f)
+yaml_output = yaml.dump(config, default_flow_style=False, allow_unicode=True)
+print(yaml_output)
+# Output:
+# app: MyApp
+# database:
+#   host: localhost
+#   port: 5432
+# debug: false
+# features:
+# - auth
+# - api
+# version: 1.0.0
+
+# ⚠️ Lưu ý: yaml.dump() sort keys theo alphabet mặc định
+yaml_output_unsorted = yaml.dump(config, default_flow_style=False, sort_keys=False)
+
+# === Đọc/Ghi YAML file ===
+# with open('config.yaml', 'r', encoding='utf-8') as f:
+#     config = yaml.safe_load(f)
+
+# with open('output.yaml', 'w', encoding='utf-8') as f:
+#     yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+
+# === YAML multi-document ===
+multi_yaml = """
+---
+name: John
+---
+name: Jane
+"""
+docs = list(yaml.safe_load_all(multi_yaml))  # Load nhiều documents
+print(len(docs))       # Output: 2
+print(docs[0]['name']) # Output: John
+print(docs[1]['name']) # Output: Jane
+
+# === TOML (Python 3.11+ built-in) ===
+import tomllib  # Python 3.11+ built-in (read-only)
+
+toml_str = b"""
+[app]
+name = "MyApp"
+version = "1.0.0"
+debug = false
+
+[database]
+host = "localhost"
+port = 5432
+
+[features]
+enabled = ["auth", "api"]
+"""
+
+# ⚠️ tomllib.loads() nhận bytes, không phải str
+config = tomllib.loads(toml_str.decode())  # Decode bytes → str trước
+print(config['app']['name'])               # Output: MyApp
+print(config['database']['port'])          # Output: 5432 (int)
+print(config['features']['enabled'])       # Output: ['auth', 'api']
+
+# Đọc từ file (phải mở binary mode!)
+# with open('config.toml', 'rb') as f:  # 'rb' bắt buộc!
+#     config = tomllib.load(f)
+
+# === Ghi TOML: pip install tomli-w ===
+# import tomli_w
+# with open('output.toml', 'wb') as f:
+#     tomli_w.dump(config, f)
+
+# === So sánh YAML vs TOML vs JSON ===
+"""
+| Feature          | JSON              | YAML              | TOML              |
+|------------------|-------------------|-------------------|-------------------|
+| Human readable   | ✅ OK             | ✅ Best           | ✅ Good           |
+| Comments         | ❌ No             | ✅ Yes (#)        | ✅ Yes (#)        |
+| Data types       | ✅ Basic          | ✅ Rich           | ✅ Rich           |
+| Multiline string | ❌ Awkward        | ✅ Easy           | ✅ Easy           |
+| Config files     | ⚠️ OK             | ✅ Popular        | ✅ Growing        |
+| Security         | ✅ Safe           | ⚠️ safe_load!     | ✅ Safe           |
+| Python built-in  | ✅ json           | ❌ pip pyyaml     | ✅ tomllib 3.11+  |
+| Use case         | API, data         | Config, k8s       | pyproject.toml    |
+"""
+
+# === Real-world: Config loader với fallback ===
+def load_config(config_path: str) -> dict:
+    """Load config từ YAML/TOML/JSON tùy extension"""
+    from pathlib import Path
+    path = Path(config_path)
+
+    if not path.exists():
+        return {}
+
+    with open(path, 'r', encoding='utf-8') as f:
+        if path.suffix in ('.yaml', '.yml'):
+            return yaml.safe_load(f) or {}
+        elif path.suffix == '.json':
+            import json
+            return json.load(f)
+        else:
+            raise ValueError(f"Unsupported config format: {path.suffix}")
+
+# config = load_config("config.yaml")
 ```
 
 ### 10.6. Binary Serialization (struct)
@@ -6167,23 +8384,94 @@ with open('output.toml', 'wb') as f:
 ```python
 import struct
 
-# Pack (Python -> bytes)
-packed = struct.pack('iif', 1, 2, 3.14)
-# i = int (4 bytes), f = float (4 bytes)
+# === Pack: Python values → bytes (binary format) ===
+# Format string: 'i' = signed int (4 bytes), 'f' = float (4 bytes)
+packed = struct.pack('iif', 1, 2, 3.14)  # Pack 2 ints + 1 float
+print(type(packed))   # Output: <class 'bytes'>
+print(len(packed))    # Output: 12 (4 + 4 + 4 bytes)
 
-# Unpack (bytes -> Python)
-a, b, c = struct.unpack('iif', packed)
-# a=1, b=2, c=3.14
+# === Unpack: bytes → Python values ===
+a, b, c = struct.unpack('iif', packed)  # Unpack theo cùng format
+print(a, b, c)  # Output: 1 2 3.140000104904175 (float precision loss!)
 
-# MessagePack - pip install msgpack
-import msgpack
+# ⚠️ Edge case: float precision loss khi pack/unpack
+# 3.14 → float32 → 3.140000104904175 (không chính xác)
+# Dùng 'd' (double, 8 bytes) thay vì 'f' (float, 4 bytes) cho precision tốt hơn
+packed_d = struct.pack('iid', 1, 2, 3.14)  # 'd' = double (8 bytes)
+a, b, c = struct.unpack('iid', packed_d)
+print(c)  # Output: 3.14 (chính xác hơn)
 
-data = {"name": "John", "age": 30}
-packed = msgpack.packb(data)
-unpacked = msgpack.unpackb(packed)  # {'name': 'John', 'age': 30}
+# === Byte order (endianness) ===
+# '>' = big-endian (network byte order), '<' = little-endian, '=' = native
+packed_be = struct.pack('>i', 256)  # Big-endian
+packed_le = struct.pack('<i', 256)  # Little-endian
+print(packed_be.hex())  # Output: 00000100 (big-endian)
+print(packed_le.hex())  # Output: 00010000 (little-endian)
 
-# Protobuf - pip install protobuf
-# Requires .proto file compilation
+# ⚠️ Quan trọng khi giao tiếp với network protocols hoặc binary file formats
+
+# === calcsize: tính kích thước format ===
+size = struct.calcsize('iif')  # Tính số bytes cần thiết
+print(size)  # Output: 12
+
+# === struct.Struct: compile format để tái sử dụng ===
+fmt = struct.Struct('!HHI')  # '!' = network byte order, H = unsigned short, I = unsigned int
+print(fmt.size)  # Output: 8 (2 + 2 + 4 bytes)
+
+# Pack/unpack với Struct object
+packed = fmt.pack(80, 443, 1234567890)  # port_http, port_https, timestamp
+http_port, https_port, ts = fmt.unpack(packed)
+print(http_port, https_port, ts)  # Output: 80 443 1234567890
+
+# === Real-world: Đọc binary file header ===
+# Ví dụ: BMP file header (14 bytes)
+# struct BitmapFileHeader {
+#     uint16_t bfType;      // 'BM' = 0x4D42
+#     uint32_t bfSize;      // File size
+#     uint16_t bfReserved1; // 0
+#     uint16_t bfReserved2; // 0
+#     uint32_t bfOffBits;   // Offset to pixel data
+# }
+BMP_HEADER_FORMAT = '<HIHHI'  # little-endian: H=uint16, I=uint32
+BMP_HEADER_SIZE = struct.calcsize(BMP_HEADER_FORMAT)
+print(BMP_HEADER_SIZE)  # Output: 14
+
+# def read_bmp_header(filepath):
+#     with open(filepath, 'rb') as f:
+#         header_bytes = f.read(BMP_HEADER_SIZE)
+#         bfType, bfSize, _, _, bfOffBits = struct.unpack(BMP_HEADER_FORMAT, header_bytes)
+#         if bfType != 0x4D42:
+#             raise ValueError("Not a BMP file")
+#         return {"size": bfSize, "data_offset": bfOffBits}
+
+# === MessagePack - pip install msgpack ===
+# MessagePack: binary JSON, nhanh hơn và nhỏ hơn JSON
+# import msgpack
+# data = {"name": "John", "age": 30, "scores": [95, 87, 92]}
+# packed = msgpack.packb(data, use_bin_type=True)  # Serialize
+# print(len(packed))  # Nhỏ hơn JSON
+# unpacked = msgpack.unpackb(packed, raw=False)  # Deserialize
+# print(unpacked)  # Output: {'name': 'John', 'age': 30, 'scores': [95, 87, 92]}
+
+# === Format codes reference ===
+"""
+| Code | Type              | Size  |
+|------|-------------------|-------|
+| b    | signed char       | 1     |
+| B    | unsigned char     | 1     |
+| h    | signed short      | 2     |
+| H    | unsigned short    | 2     |
+| i    | signed int        | 4     |
+| I    | unsigned int      | 4     |
+| l    | signed long       | 4     |
+| L    | unsigned long     | 4     |
+| q    | signed long long  | 8     |
+| Q    | unsigned long long| 8     |
+| f    | float             | 4     |
+| d    | double            | 8     |
+| s    | char[]            | n     |
+| x    | pad byte          | 1     |
+"""
 ```
 
 ---
@@ -6197,89 +8485,295 @@ unpacked = msgpack.unpackb(packed)  # {'name': 'John', 'age': 30}
 ```python
 import unittest
 
+# === Hàm cần test ===
+def add(a, b):
+    return a + b
+
+def divide(a, b):
+    if b == 0:
+        raise ZeroDivisionError("Cannot divide by zero")
+    return a / b
+
+# === Test class kế thừa unittest.TestCase ===
 class TestMath(unittest.TestCase):
-    def test_add(self):
-        self.assertEqual(1 + 1, 2)
-
-    def test_divide(self):
-        with self.assertRaises(ZeroDivisionError):
-            1 / 0
-
+    # setUp chạy TRƯỚC mỗi test method
     def setUp(self):
-        self.data = {"key": "value"}
+        self.data = {"key": "value"}  # Khởi tạo test data
+        self.numbers = [1, 2, 3, 4, 5]
 
+    # tearDown chạy SAU mỗi test method (dù pass hay fail)
     def tearDown(self):
-        pass
+        pass  # Cleanup resources (close DB, delete temp files...)
 
+    # Test method phải bắt đầu bằng 'test_'
+    def test_add_positive(self):
+        result = add(1, 1)
+        self.assertEqual(result, 2)  # Kiểm tra bằng nhau
+
+    def test_add_negative(self):
+        self.assertEqual(add(-1, -1), -2)  # Số âm
+
+    def test_add_zero(self):
+        self.assertEqual(add(0, 5), 5)  # Cộng với 0
+
+    def test_divide_normal(self):
+        self.assertAlmostEqual(divide(10, 3), 3.333, places=3)  # Float comparison
+
+    def test_divide_by_zero(self):
+        # Kiểm tra exception được raise
+        with self.assertRaises(ZeroDivisionError):
+            divide(1, 0)
+
+    def test_divide_by_zero_message(self):
+        # Kiểm tra cả message của exception
+        with self.assertRaises(ZeroDivisionError) as ctx:
+            divide(1, 0)
+        self.assertIn("Cannot divide by zero", str(ctx.exception))
+
+    # === Các assertion methods phổ biến ===
+    def test_assertions(self):
+        self.assertEqual(1, 1)          # a == b
+        self.assertNotEqual(1, 2)       # a != b
+        self.assertTrue(True)           # bool(x) is True
+        self.assertFalse(False)         # bool(x) is False
+        self.assertIsNone(None)         # x is None
+        self.assertIsNotNone(1)         # x is not None
+        self.assertIn(1, [1, 2, 3])     # a in b
+        self.assertNotIn(4, [1, 2, 3])  # a not in b
+        self.assertIsInstance(1, int)   # isinstance(a, b)
+        self.assertGreater(2, 1)        # a > b
+        self.assertLess(1, 2)           # a < b
+
+    # === setUpClass/tearDownClass: chạy 1 lần cho cả class ===
+    @classmethod
+    def setUpClass(cls):
+        # Khởi tạo expensive resources (DB connection, server...)
+        cls.db_connection = None  # Ví dụ: cls.db = create_test_db()
+
+    @classmethod
+    def tearDownClass(cls):
+        # Cleanup expensive resources
+        pass  # Ví dụ: cls.db.close()
+
+# Chạy tests
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)  # verbosity=2 hiển thị tên từng test
 ```
 
 #### pytest
 
 ```python
-# test_math.py
+# test_math.py - pytest không cần class, chỉ cần function bắt đầu bằng test_
+import pytest
 
+# === Hàm cần test ===
+def add(a, b):
+    return a + b
+
+def get_user(user_id):
+    users = {1: {"name": "John", "age": 30}, 2: {"name": "Jane", "age": 25}}
+    if user_id not in users:
+        raise KeyError(f"User {user_id} not found")
+    return users[user_id]
+
+# === Test functions đơn giản ===
 def test_add():
-    assert 1 + 1 == 2
+    assert add(1, 1) == 2  # pytest dùng assert thông thường
+
+def test_add_negative():
+    assert add(-1, -1) == -2
 
 def test_list():
     numbers = [1, 2, 3]
-    assert len(numbers) == 3
-    assert numbers[0] == 1
+    assert len(numbers) == 3  # Kiểm tra độ dài
+    assert numbers[0] == 1    # Kiểm tra phần tử đầu
 
 def test_exception():
-    with pytest.raises(ZeroDivisionError):
+    with pytest.raises(ZeroDivisionError):  # Kiểm tra exception
         1 / 0
 
-# Fixtures
-import pytest
+def test_exception_message():
+    with pytest.raises(KeyError, match="User 99 not found"):  # Kiểm tra message
+        get_user(99)
 
+# === Fixtures: cung cấp test data/resources ===
 @pytest.fixture
 def user():
-    return {"name": "John", "age": 30}
+    """Fixture trả về user data"""
+    return {"name": "John", "age": 30, "email": "john@example.com"}
 
-def test_user(user):
+@pytest.fixture
+def admin_user():
+    """Fixture trả về admin user"""
+    return {"name": "Admin", "age": 35, "role": "admin"}
+
+def test_user_name(user):  # pytest tự inject fixture theo tên parameter
     assert user["name"] == "John"
 
-# Parametrize
-@pytest.mark.parametrize("input,expected", [
-    (1, 2),
-    (2, 4),
-    (3, 6),
+def test_user_age(user):
+    assert user["age"] == 30
+
+def test_admin_role(admin_user):
+    assert admin_user["role"] == "admin"
+
+# === Fixture với scope ===
+@pytest.fixture(scope="module")  # Chạy 1 lần cho cả module (tiết kiệm hơn)
+def db_connection():
+    """Tạo DB connection 1 lần cho cả module"""
+    # conn = create_connection()
+    conn = {"connected": True}  # Mock
+    yield conn  # yield thay vì return để có teardown
+    # Teardown: chạy sau khi tất cả tests trong module xong
+    # conn.close()
+
+# scope options: "function" (default), "class", "module", "session"
+
+# === Parametrize: chạy test với nhiều input ===
+@pytest.mark.parametrize("a,b,expected", [
+    (1, 1, 2),    # Test case 1
+    (2, 3, 5),    # Test case 2
+    (-1, 1, 0),   # Test case 3: số âm
+    (0, 0, 0),    # Test case 4: zero
 ])
-def test_double(input, expected):
-    assert input * 2 == expected
+def test_add_parametrize(a, b, expected):
+    assert add(a, b) == expected  # Chạy 4 lần với 4 bộ input
+
+# === Marks: đánh dấu tests ===
+@pytest.mark.slow  # Custom mark
+def test_slow_operation():
+    pass  # Chạy với: pytest -m slow
+
+@pytest.mark.skip(reason="Not implemented yet")
+def test_future_feature():
+    pass  # Bỏ qua test này
+
+@pytest.mark.skipif(True, reason="Skip on CI")
+def test_local_only():
+    pass
+
+# === conftest.py: shared fixtures ===
+# Tạo file conftest.py trong thư mục test để share fixtures giữa các files
+# conftest.py:
+# @pytest.fixture(scope="session")
+# def app():
+#     return create_app(testing=True)
 ```
 
 #### Mocking
 
 ```python
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch, MagicMock, call
 
-# Mock function
-mock = Mock(return_value=42)
-mock()  # 42
+# === Mock cơ bản ===
+mock = Mock(return_value=42)  # Tạo mock object trả về 42
+result = mock()               # Gọi mock như function
+print(result)                 # Output: 42
+print(mock.called)            # Output: True (đã được gọi)
+print(mock.call_count)        # Output: 1 (gọi 1 lần)
 
-# Mock object
-class API:
-    def fetch(self):
-        return "real data"
+# === Mock với side_effect ===
+mock_error = Mock(side_effect=ValueError("Invalid input"))
+try:
+    mock_error()
+except ValueError as e:
+    print(e)  # Output: Invalid input
 
-api = Mock(spec=API)
-api.fetch.return_value = "mocked data"
-api.fetch()  # "mocked data"
+# side_effect với list: trả về lần lượt
+mock_sequence = Mock(side_effect=[1, 2, 3])
+print(mock_sequence())  # Output: 1
+print(mock_sequence())  # Output: 2
+print(mock_sequence())  # Output: 3
 
-# Patch
-@patch('module.function')
-def test_with_patch(mock_func):
-    mock_func.return_value = 42
-    # ...
+# === Mock object với spec ===
+class UserService:
+    def get_user(self, user_id: int) -> dict:
+        return {"id": user_id, "name": "John"}
 
-# Spy
-with patch('module.function', wraps=module.function) as spy:
-    module.function()
-    spy.assert_called_once()
+    def create_user(self, name: str) -> dict:
+        return {"id": 1, "name": name}
+
+# spec=UserService: mock chỉ có các methods của UserService
+mock_service = Mock(spec=UserService)
+mock_service.get_user.return_value = {"id": 1, "name": "Mocked John"}
+
+result = mock_service.get_user(1)
+print(result)  # Output: {'id': 1, 'name': 'Mocked John'}
+
+# ⚠️ Với spec, gọi method không tồn tại sẽ raise AttributeError
+# mock_service.nonexistent()  # ❌ AttributeError
+
+# === patch: thay thế object trong module ===
+# Giả sử có module: myapp.services.user_service
+# Trong test, ta muốn mock requests.get
+
+import requests  # Thư viện thực
+
+def fetch_user_from_api(user_id: int) -> dict:
+    """Hàm gọi API thực"""
+    response = requests.get(f"https://api.example.com/users/{user_id}")
+    return response.json()
+
+# Test với patch decorator
+@patch('requests.get')  # Patch requests.get trong scope của test
+def test_fetch_user(mock_get):
+    # Cấu hình mock response
+    mock_response = Mock()
+    mock_response.json.return_value = {"id": 1, "name": "John"}
+    mock_response.status_code = 200
+    mock_get.return_value = mock_response
+
+    # Gọi hàm cần test
+    result = fetch_user_from_api(1)
+
+    # Kiểm tra kết quả
+    assert result == {"id": 1, "name": "John"}
+
+    # Kiểm tra mock được gọi đúng cách
+    mock_get.assert_called_once_with("https://api.example.com/users/1")
+
+# === patch như context manager ===
+def test_fetch_user_context():
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.json.return_value = {"id": 1, "name": "Jane"}
+        result = fetch_user_from_api(1)
+        assert result["name"] == "Jane"
+
+# === MagicMock: Mock với magic methods ===
+magic = MagicMock()
+magic.__len__.return_value = 5  # Mock __len__
+print(len(magic))               # Output: 5
+
+magic.__str__.return_value = "mocked string"
+print(str(magic))               # Output: mocked string
+
+# === assert_called methods ===
+mock = Mock()
+mock(1, 2, key="value")
+
+mock.assert_called()                          # Đã được gọi ít nhất 1 lần
+mock.assert_called_once()                     # Đã được gọi đúng 1 lần
+mock.assert_called_with(1, 2, key="value")    # Gọi với args này
+mock.assert_called_once_with(1, 2, key="value")  # Gọi đúng 1 lần với args này
+
+# === Real-world: Test với database mock ===
+class UserRepository:
+    def __init__(self, db):
+        self.db = db
+
+    def find_by_id(self, user_id: int) -> dict | None:
+        return self.db.query(f"SELECT * FROM users WHERE id = {user_id}")
+
+def test_user_repository():
+    # Mock database
+    mock_db = Mock()
+    mock_db.query.return_value = {"id": 1, "name": "John"}
+
+    # Test
+    repo = UserRepository(mock_db)
+    user = repo.find_by_id(1)
+
+    assert user["name"] == "John"
+    mock_db.query.assert_called_once_with("SELECT * FROM users WHERE id = 1")
 ```
 
 ---
@@ -6289,26 +8783,146 @@ with patch('module.function', wraps=module.function) as spy:
 ```python
 import logging
 
-# Basic config
+# === Cấu hình cơ bản ===
 logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.DEBUG,                          # Level thấp nhất: DEBUG < INFO < WARNING < ERROR < CRITICAL
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # __name__ = module path, ví dụ: "myapp.views"
 
-logger.debug("Debug message")
-logger.info("Info message")
-logger.warning("Warning message")
-logger.error("Error message")
-logger.critical("Critical message")
+# Các level log:
+logger.debug("Debug message")     # Output: DEBUG - Chi tiết cho debugging
+logger.info("Info message")       # Output: INFO  - Xác nhận mọi thứ hoạt động tốt
+logger.warning("Warning message") # Output: WARNING - Cảnh báo, có vấn đề nhưng không nghiêm trọng
+logger.error("Error message")     # Output: ERROR - Lỗi nghiêm trọng, chức năng không hoạt động
+logger.critical("Critical")       # Output: CRITICAL - Lỗi rất nghiêm trọng, chương trình có thể dừng
 
-# Logger với handler
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler('app.log')
-handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+# === Format placeholders ===
+# %(name)s         - Tên logger (module name)
+# %(levelname)s    - DEBUG, INFO, WARNING, ERROR, CRITICAL
+# %(asctime)s      - Thời gian
+# %(filename)s     - Tên file
+# %(lineno)d       - Số dòng
+# %(funcName)s     - Tên function
+# %(message)s      - Nội dung log
+
+# === Logger với FileHandler ===
+logger = logging.getLogger("myapp")
+logger.setLevel(logging.DEBUG)  # Set level cho logger (độc lập với handlers)
+
+# Console handler
+console_handler = logging.StreamHandler()  # Log ra console
+console_handler.setLevel(logging.INFO)
+
+# File handler
+file_handler = logging.FileHandler('app.log', encoding='utf-8')  # Log ra file
+file_handler.setLevel(logging.DEBUG)
+
+# Formatter
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)-8s | %(name)s:%(lineno)d | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+# Add handlers
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
+logger.info("Application started")  # Log ra cả console và file
+
+# ⚠️ Lưu ý: Set level cho cả logger VÀ handler
+# Handler level quyết định messages nào được ghi
+# Logger level quyết định messages nào được truyền đến handlers
+
+# === Real-world: Logger config với dict ===
+logging_config = {
+    'version': 1,                    # Config version (luôn là 1)
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+        'detailed': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(funcName)s() - %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
+            'formatter': 'standard',
+            'stream': 'ext://sys.stdout'
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'formatter': 'detailed',
+            'filename': 'app.log',
+            'maxBytes': 10485760,  # 10MB
+            'backupCount': 5       # Giữ 5 file backup
+        }
+    },
+    'loggers': {
+        'myapp': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file'],
+            'propagate': False    # Không propagate lên parent logger
+        }
+    },
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['console']
+    }
+}
+
+# logging.config.dictConfig(logging_config)  # Apply config
+# logger = logging.getLogger("myapp")
+
+# === Real-world: Logger per module ===
+# myapp/__init__.py
+# logger = logging.getLogger("myapp")  # Parent logger
+
+# myapp/database.py
+# db_logger = logging.getLogger("myapp.database")  # Con của myapp
+# db_logger.info("Database query executed")
+
+# myapp/api.py
+# api_logger = logging.getLogger("myapp.api")
+
+# === Structured logging (JSON) ===
+import json
+import logging
+
+class JSONFormatter(logging.Formatter):
+    """Format log thành JSON cho logging system dễ parse"""
+    def format(self, record):
+        log_data = {
+            "timestamp": self.formatTime(record),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "module": record.module,
+            "function": record.funcName,
+            "line": record.lineno
+        }
+        if record.exc_info:
+            log_data["exception"] = self.formatException(record.exc_info)
+        return json.dumps(log_data)
+
+# json_handler = logging.StreamHandler()
+# json_handler.setFormatter(JSONFormatter())
+# logger.addHandler(json_handler)
+
+# === Best practices ===
+# 1. Dùng __name__ để logger có tên module rõ ràng
+# 2. Set level phù hợp: DEBUG cho dev, INFO cho production
+# 3. KHÔNG log sensitive data (passwords, tokens)
+# 4. Dùng structured logging cho production (JSON)
+# 5. Rotate log files để tránh full disk
 ```
 
 ---
@@ -6449,38 +9063,114 @@ print(user_service.get_user(1))  # Output: {'id': 1, 'name': 'Bob'}
 ```python
 import os
 
-# Read
-db_host = os.getenv("DB_HOST", "localhost")
-db_port = os.getenv("DB_PORT", "5432")
+# === Đọc environment variables ===
+db_host = os.getenv("DB_HOST", "localhost")  # Trả về default nếu không có
+db_port = os.getenv("DB_PORT", "5432")       # Luôn trả về string!
+debug = os.getenv("DEBUG", "false")
 
-# Set
-os.environ["DEBUG"] = "true"
+# ⚠️ os.getenv() luôn trả về string, cần convert thủ công
+db_port_int = int(db_port)                   # "5432" → 5432
+is_debug = debug.lower() == "true"           # "true" → True
 
-# .env file với python-dotenv
+# ⚠️ Khác với os.environ[key]: raise KeyError nếu không có
+# os.environ["MISSING_KEY"]  # ❌ KeyError
+# os.getenv("MISSING_KEY")   # ✅ None
+
+# === Set environment variable ===
+os.environ["DEBUG"] = "true"  # Set trong process hiện tại (không persist)
+
+# === .env file với python-dotenv ===
 # pip install python-dotenv
+# .env file:
+# DB_HOST=localhost
+# DB_PORT=5432
+# SECRET_KEY=my-secret-key
+# DEBUG=true
+
 from dotenv import load_dotenv
 
-load_dotenv()  # Load .env file
+load_dotenv()  # Load .env file từ thư mục hiện tại
+# load_dotenv(".env.production")  # Load file cụ thể
+
+db_host = os.getenv("DB_HOST")  # Đọc sau khi load_dotenv()
+print(db_host)  # Output: localhost (từ .env file)
+
+# ⚠️ Không commit .env file vào git! Thêm vào .gitignore
+# ⚠️ Dùng .env.example để document các biến cần thiết
+
+# === Real-world: Type-safe config với pydantic ===
+# pip install pydantic-settings
+# from pydantic_settings import BaseSettings
+# class Settings(BaseSettings):
+#     db_host: str = "localhost"
+#     db_port: int = 5432
+#     debug: bool = False
+#     secret_key: str
+#
+#     class Config:
+#         env_file = ".env"
+#
+# settings = Settings()  # Tự động đọc từ env vars và .env file
+# print(settings.db_port)  # int, không phải string!
 ```
 
 #### Config File
 
 ```python
-# config.py
+import os
+
+# === Pattern: Config class với inheritance ===
 class Config:
-    DEBUG = False
-    DATABASE_URL = "postgresql://localhost/mydb"
+    """Base config - shared settings"""
+    DEBUG = False                                    # Mặc định tắt debug
+    TESTING = False                                  # Mặc định không phải test
+    DATABASE_URL = "postgresql://localhost/mydb"     # Default DB
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-key") # Từ env var
+    LOG_LEVEL = "INFO"
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    """Config cho môi trường development"""
+    DEBUG = True                                     # Bật debug
+    DATABASE_URL = "postgresql://localhost/mydb_dev" # DB riêng cho dev
+    LOG_LEVEL = "DEBUG"                              # Log nhiều hơn
+
+class TestingConfig(Config):
+    """Config cho testing"""
+    TESTING = True                                   # Bật testing mode
+    DATABASE_URL = "sqlite:///:memory:"              # In-memory DB cho test
+    LOG_LEVEL = "WARNING"                            # Ít log hơn
 
 class ProductionConfig(Config):
-    DATABASE_URL = os.getenv("DATABASE_URL")
+    """Config cho production"""
+    DATABASE_URL = os.getenv("DATABASE_URL")         # Bắt buộc từ env var
+    SECRET_KEY = os.getenv("SECRET_KEY")             # Bắt buộc từ env var
+    LOG_LEVEL = "ERROR"                              # Chỉ log errors
 
-# config.json
-import json
-with open("config.json") as f:
-    config = json.load(f)
+# Mapping tên → class
+config_map = {
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    "production": ProductionConfig,
+}
+
+# Chọn config theo env var
+env = os.getenv("APP_ENV", "development")
+config = config_map[env]()  # Tạo instance
+print(config.DEBUG)         # Output: True (nếu APP_ENV=development)
+
+# === Real-world: Validate config khi startup ===
+def validate_config(config):
+    """Kiểm tra config hợp lệ trước khi start app"""
+    errors = []
+    if not config.SECRET_KEY:
+        errors.append("SECRET_KEY is required")
+    if not config.DATABASE_URL:
+        errors.append("DATABASE_URL is required")
+    if errors:
+        raise ValueError(f"Invalid config: {', '.join(errors)}")
+    return True
+
+# validate_config(config)  # Raise ValueError nếu thiếu config
 ```
 
 ---
@@ -6490,45 +9180,133 @@ with open("config.json") as f:
 #### pip
 
 ```bash
-# Install
-pip install package
-pip install package==1.0.0
-pip install "package>=1.0.0"
+# === Cài đặt packages ===
+pip install package               # Cài mới nhất
+pip install package==1.0.0        # Cài version cụ thể
+pip install "package>=1.0.0"     # Cài version thỏa mãn điều kiện
+pip install -U package           # Upgrade lên version mới nhất
 
-# Requirements file
-pip install -r requirements.txt
+# === Requirements files ===
+# requirements.txt chứa danh sách packages cần cài
+# Ví dụ:
+# requests>=2.28.0
+# flask>=2.0.0,<3.0.0
+# numpy==1.24.0
 
-# Virtual environment
-python -m venv venv
-source v  # Linux/Menv/bin/activateac
-venv\Scripts\activate     # Windows
+pip install -r requirements.txt  # Cài tất cả từ file
+pip install -r requirements-dev.txt  # Cài dev dependencies
 
-# Freeze
-pip freeze > requirements.txt
+# === Virtual Environment ===
+# Tạo virtual environment để cô lập dependencies
+python -m venv venv              # Tạo thư mục venv/
+# Hoặc: python3 -m venv venv
+
+# Activate (Linux/Mac):
+source venv/bin/activate         # Kích hoạt virtual environment
+# activate → thấy (venv) ở đầu dòng lệnh
+
+# Activate (Windows):
+venv\Scripts\activate            # Kích hoạt trên Windows
+
+# Sau khi activate, pip sẽ cài vào venv, không ảnh hưởng global Python
+
+# Deactivate khi xong:
+deactivate                      # Thoát khỏi virtual environment
+
+# === pip freeze ===
+pip freeze                      # Liệt kê tất cả packages đã cài
+pip freeze > requirements.txt   # Lưu vào file (dùng cho production)
+pip freeze > requirements-dev.txt  # Cho development
+
+# ⚠️ pip freeze không phân biệt direct deps vs transitive deps
+# Dùng pip-tools để quản lý tốt hơn:
+# pip install pip-tools
+# pip-compile requirements.in  # Tạo requirements.txt với pinned versions
+
+# === pipx - cài tool global mà không pollute system ===
+# pipx install black   # Cài black như command line tool global
+# pipx install httpie  # Cài httpie
+
+# === poetry - alternative package manager ===
+# pip install poetry
+# poetry new mypackage           # Tạo project mới
+# poetry add requests           # Thêm dependency
+# poetry add --group dev pytest # Thêm dev dependency
+# poetry install                # Cài tất cả
+# poetry build                  # Build package
 ```
 
 #### pyproject.toml / setup.py
 
 ```toml
-# pyproject.toml (PEP 517/518)
+# === pyproject.toml (PEP 517/518) - KHUYẾN NGHỊ ===
+# Đây là cách chuẩn để định nghĩa package Python
+
 [build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]  # Build tools cần thiết
+build-backend = "setuptools.build_meta"  # Backend dùng để build
 
 [project]
-name = "mypackage"
-version = "1.0.0"
-description = "My package"
-requires-python = ">=3.8"
-dependencies = [
-    "requests>=2.28",
+name = "mypackage"                        # Tên package (unique trên PyPI)
+version = "1.0.0"                        # Version (dùng semver)
+description = "My awesome Python package" # Mô tả ngắn
+readme = "README.md"                      # File README
+license = {text = "MIT"}                  # License
+authors = [
+    {name = "Your Name", email = "you@example.com"}
+]
+requires-python = ">=3.8"                # Python version tối thiểu
+classifiers = [                           # Phân loại (giúp người tìm thấy)
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
 ]
 
+# === Dependencies ===
+# Main dependencies (cài khi pip install mypackage)
+dependencies = [
+    "requests>=2.28.0",
+    "flask>=2.0.0",
+    "django>=4.0.0,<5.0.0",  # Pin version
+]
+
+# Optional dependencies (cài với: pip install mypackage[extra])
 [project.optional-dependencies]
-dev = ["pytest", "black"]
+dev = ["pytest", "pytest-cov", "black", "ruff"]
+test = ["pytest", "pytest-asyncio", "httpx"]
+docs = ["sphinx", "myst-parser"]
+
+# === Entry points - command line tools ===
+[project.scripts]
+mytool = "mypackage.cli:main"  # Tạo command: mytool
+
+# === Package metadata ===
+keywords = ["python", "utility", "tool"]
+homepage = "https://github.com/username/mypackage"
+repository = "https://github.com/username/mypackage"
+
+# === Tool configurations ===
+[tool.setuptools.packages.find]
+where = ["src"]  # Package ở thư mục src/
 
 [tool.black]
+line-length = 88           # Black format (PEP 8 style)
+target-version = ['py38']  # Target Python 3.8+
+
+[tool.ruff]
 line-length = 88
+target-version = "py38"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+
+# === Cài đặt package từ source ===
+# pip install -e .           # Editable mode (development)
+# pip install .              # Regular install
+# pip install .[dev]        # Với dev dependencies
+# pip install -e ".[dev]"   # Editable + dev
 ```
 
 ---
@@ -6538,43 +9316,156 @@ line-length = 88
 #### Docstring
 
 ```python
-"""Module docstring."""
+"""Module docstring - mô tả ngắn gọn về module này.
 
-class MyClass:
-    """Class docstring.
+Mô tả chi tiết hơn về module, giải thích purpose, usage...
+"""
+
+# === Class docstring ===
+class UserService:
+    """Service quản lý users.
+
+    Xử lý các operations liên quan đến users như create, update, delete.
+    Dùng kết hợp với UserRepository để persist data.
 
     Attributes:
-        name: Description of name attribute
+        repository: UserRepository instance để truy xuất database
+        logger: Logger instance để ghi log
+
+    Raises:
+        ValueError: Khi user data không hợp lệ
+        PermissionError: Khi user không có quyền thực hiện operation
 
     Example:
-        >>> obj = MyClass("test")
-        >>> obj.name
-        'test'
+        >>> service = UserService(repository)
+        >>> user = service.get_user(1)
+        >>> print(user.name)
+        'John'
     """
 
-    def method(self, param: str) -> str:
-        """Method docstring.
+    def __init__(self, repository, logger=None):
+        """Khởi tạo UserService.
 
         Args:
-            param: Description of param
+            repository: UserRepository instance (required)
+            logger: Optional logger, mặc định None
+        """
+        self.repository = repository
+        self.logger = logger
+
+    def get_user(self, user_id: int) -> dict | None:
+        """Lấy user theo ID.
+
+        Args:
+            user_id: ID của user cần lấy
 
         Returns:
-            Description of return value
+            User dict hoặc None nếu không tìm thấy
 
-        Raises:
-            ValueError: When param is invalid
+        Example:
+            >>> service.get_user(1)
+            {'id': 1, 'name': 'John'}
         """
-        return param
+        return self.repository.find(user_id)
+```
+
+#### Docstring Formats
+
+```python
+# === Google Style (phổ biến nhất) ===
+def func_google(arg1, arg2):
+    """Mô tả ngắn gọn.
+
+    Mô tả chi tiết hơn về function.
+
+    Args:
+        arg1: Mô tả arg1
+        arg2: Mô tả arg2
+
+    Returns:
+        Mô tả giá trị trả về
+
+    Raises:
+        ValueError: Khi arg không hợp lệ
+
+    Example:
+        >>> func_google(1, 2)
+        3
+    """
+    return arg1 + arg2
+
+# === NumPy Style (phổ biến trong scientific Python) ===
+def func_numpy(arg1, arg2):
+    """
+    Mô tả ngắn gọn.
+
+    Parameters
+    ----------
+    arg1 : int
+        Mô tả arg1
+    arg2 : int
+        Mô tả arg2
+
+    Returns
+    -------
+    int
+        Mô tả giá trị trả về
+    """
+    return arg1 + arg2
+
+# === reStructuredText (dùng với Sphinx) ===
+def func_rst(arg1, arg2):
+    """
+    Mô tả ngắn gọn.
+
+    :param arg1: Mô tả arg1
+    :type arg1: int
+    :param arg2: Mô tả arg2
+    :type arg2: int
+    :returns: Mô tả giá trị trả về
+    :rtype: int
+    """
+    return arg1 + arg2
+
+# === Tools hỗ trợ generate doc ===
+# pip install pdoc          # Tạo documentation từ docstrings
+# pdoc module.py            # Generate HTML docs
+
+# pip install sphinx        # Documentation generator chuyên nghiệp
+# sphinx-quickstart        # Tạo sphinx project
+# sphinx-apidoc -o docs/ mypackage/  # Auto-generate API docs
 ```
 
 #### Comments
 
 ```python
-# Single line comment
+# === Single line comment ===
+# Comment giải thích code phía dưới
 
-# Multi-line comment
-# can span
-# multiple lines
+# === Inline comment ===
+x = 1  # Gán giá trị cho x
+
+# === Multi-line comment (docstring cũng là comment) ===
+# Comment có thể viết trên nhiều dòng
+# để giải thích logic phức tạp
+# hoặc tắt code tạm thời
+
+# === TODO comments ===
+# TODO(username): Fix this later
+# FIXME(username): This is broken
+# NOTE(username): Consider this approach
+# XXX: This code is wrong
+
+# === Block comment cho function ===
+# Calculate factorial with memoization
+# Uses dynamic programming to optimize performance
+def factorial(n, memo={}):
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return 1
+    memo[n] = n * factorial(n - 1, memo)
+    return memo[n]
 ```
 
 ---
@@ -6582,76 +9473,194 @@ class MyClass:
 ### 11.8. Design Patterns
 
 ```python
-# Observer Pattern
+# === Observer Pattern ===
+# Subject thông báo cho các Observers khi có thay đổi
+# Dùng trong: event handling, MVC, pub/sub
+
 class EventEmitter:
+    """Subject: quản lý và thông báo events cho observers"""
     def __init__(self):
-        self._listeners = {}
+        self._listeners = {}  # event_name -> list of callbacks
 
     def on(self, event, callback):
+        """Đăng ký observer cho event"""
         self._listeners.setdefault(event, []).append(callback)
 
+    def off(self, event, callback):
+        """Hủy đăng ký observer"""
+        if event in self._listeners:
+            self._listeners[event].remove(callback)
+
     def emit(self, event, *args):
+        """Thông báo cho tất cả observers của event"""
         for callback in self._listeners.get(event, []):
             callback(*args)
 
+# Sử dụng
 emitter = EventEmitter()
-emitter.on("user_created", lambda name: print(f"Welcome {name}!"))
-emitter.emit("user_created", "John")  # "Welcome John!"
 
-# Strategy Pattern
+# Đăng ký observer (callback function)
+emitter.on("user_created", lambda name: print(f"Welcome {name}!"))
+emitter.on("user_created", lambda name: print(f"User {name} added to DB"))
+
+# Emit event → tất cả observers được gọi
+emitter.emit("user_created", "John")
+# Output:
+# Welcome John!
+# User John added to DB
+
+# === Strategy Pattern ===
+# Đóng gói thuật toán, cho phép thay đổi thuật toán runtime
+# Dùng trong: sorting, payment processing, validation
+
 from abc import ABC, abstractmethod
 
 class SortStrategy(ABC):
+    """Abstract base class cho các strategies"""
     @abstractmethod
     def sort(self, data: list) -> list:
+        """Sort data và return sorted result"""
         pass
 
 class BubbleSort(SortStrategy):
+    """Implementation Bubble Sort (chỉ để demo, dùng sorted() thực tế)"""
     def sort(self, data):
-        return sorted(data)  # simplified
+        sorted_data = data.copy()
+        n = len(sorted_data)
+        for i in range(n):
+            for j in range(0, n-i-1):
+                if sorted_data[j] > sorted_data[j+1]:
+                    sorted_data[j], sorted_data[j+1] = sorted_data[j+1], sorted_data[j]
+        return sorted_data
 
 class QuickSort(SortStrategy):
+    """Implementation Quick Sort"""
     def sort(self, data):
-        return sorted(data)  # simplified
+        if len(data) <= 1:
+            return data
+        pivot = data[len(data) // 2]
+        left = [x for x in data if x < pivot]
+        middle = [x for x in data if x == pivot]
+        right = [x for x in data if x > pivot]
+        return self.sort(left) + middle + self.sort(right)
 
 class Sorter:
+    """Context: sử dụng strategy được inject"""
     def __init__(self, strategy: SortStrategy):
         self._strategy = strategy
 
     def sort(self, data):
         return self._strategy.sort(data)
 
-# Repository Pattern
+# Sử dụng
+data = [64, 34, 25, 12, 22, 11, 90]
+
+sorter = Sorter(BubbleSort())
+print(sorter.sort(data))  # Output: [11, 12, 22, 25, 34, 64, 90]
+
+sorter = Sorter(QuickSort())
+print(sorter.sort(data))  # Output: [11, 12, 22, 25, 34, 64, 90]
+
+# === Repository Pattern ===
+# Tách logic truy xuất data khỏi business logic
+# Dùng trong: data access layer, ORM
+
 class UserRepository:
+    """Repository: đóng gói data access logic"""
     def __init__(self):
-        self._users = {}
+        self._users = {}  # In-memory storage
 
     def save(self, user):
+        """Lưu user vào storage"""
         self._users[user['id']] = user
 
     def find_by_id(self, id):
+        """Tìm user theo ID"""
         return self._users.get(id)
 
     def find_all(self):
+        """Lấy tất cả users"""
         return list(self._users.values())
 
-# Decorator Pattern (Python built-in!)
+    def delete(self, id):
+        """Xóa user"""
+        if id in self._users:
+            del self._users[id]
+
+# Sử dụng
+repo = UserRepository()
+repo.save({"id": 1, "name": "John"})
+repo.save({"id": 2, "name": "Jane"})
+
+print(repo.find_by_id(1))  # Output: {'id': 1, 'name': 'John'}
+print(repo.find_all())     # Output: [{'id': 1, 'name': 'John'}, {'id': 2, 'name': 'Jane'}]
+
+# === Decorator Pattern ===
+# Thêm behavior cho object/function mà không modify class
+# Python hỗ trợ native với @decorator syntax
+
 import functools
 
 def cache(func):
-    memo = {}
-    @functools.wraps(func)
+    """Decorator: cache kết quả của function (memoization)"""
+    memo = {}  # Cache storage
+
+    @functools.wraps(func)  # Giữ nguyên func metadata
     def wrapper(*args):
         if args not in memo:
             memo[args] = func(*args)
         return memo[args]
+
     return wrapper
 
 @cache
 def fibonacci(n):
+    """Tính Fibonacci với memoization"""
     if n < 2:
         return n
     return fibonacci(n-1) + fibonacci(n-2)
+
+# Không có cache: O(2^n), có cache: O(n)
+print(fibonacci(100))  # Output: 354224848179261915075 (tính nhanh!)
+
+# === Singleton Pattern (nhiều cách) ===
+# Cách 1: Module-level singleton (đơn giản nhất trong Python)
+# mysingleton.py
+# class _Singleton:
+#     def foo(self): pass
+# singleton = _Singleton()  # Tạo 1 lần, import nhiều lần
+
+# Cách 2: Class-based
+class Singleton:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+s1 = Singleton()
+s2 = Singleton()
+print(s1 is s2)  # Output: True (cùng 1 instance)
+
+# === Factory Pattern ===
+# Tạo object mà không specify exact class
+class Car:
+    def drive(self): print("Driving")
+
+class Truck:
+    def drive(self): print("Hauling")
+
+def vehicle_factory(vehicle_type: str):
+    """Factory: tạo vehicle theo type"""
+    vehicles = {
+        "car": Car,
+        "truck": Truck,
+    }
+    return vehicles[vehicle_type]()
+
+v = vehicle_factory("car")
+v.drive()  # Output: Driving
 ```
 
 ---
@@ -7649,23 +10658,93 @@ print(pq.qsize())                # Output: 2
 ```python
 import itertools
 
-# Infinite iterators
-count(10)       # 10, 11, 12, ...
-cycle([1,2,3]) # 1, 2, 3, 1, 2, 3, ...
-repeat(5)      # 5, 5, 5, ...
+# === Infinite iterators ===
+# count(start, step): đếm vô hạn từ start
+counter = itertools.count(10)       # 10, 11, 12, ...
+print(next(counter))                # Output: 10
+print(next(counter))                # Output: 11
 
-# Combinatoric
-product([1,2], [3,4])   # (1,3), (1,4), (2,3), (2,4)
-permutations("ABC")    # All orderings
-combinations("ABC", 2) # All pairs
+# cycle(iterable): lặp vô hạn qua iterable
+cycler = itertools.cycle([1, 2, 3]) # 1, 2, 3, 1, 2, 3, ...
+print([next(cycler) for _ in range(6)])  # Output: [1, 2, 3, 1, 2, 3]
 
-# Chain
-chain([1,2], [3,4])    # 1, 2, 3, 4
-chain.from_iterable([[1,2], [3,4]])  # 1, 2, 3, 4
+# repeat(value, times): lặp value n lần (hoặc vô hạn nếu không có times)
+repeated = list(itertools.repeat(5, 3))  # Lặp 5 ba lần
+print(repeated)  # Output: [5, 5, 5]
 
-# Filter/transform
-filterfalse(lambda x: x%2, range(10))  # 0, 2, 4, 6, 8
-islice(range(10), 0, 10, 2)           # 0, 2, 4, 6, 8
+# === Combinatoric iterators ===
+# product: tích Cartesian (nested loops)
+pairs = list(itertools.product([1, 2], [3, 4]))
+print(pairs)  # Output: [(1, 3), (1, 4), (2, 3), (2, 4)]
+
+# permutations: tất cả hoán vị
+perms = list(itertools.permutations("ABC"))
+print(len(perms))  # Output: 6 (3! = 6)
+print(perms[:3])   # Output: [('A', 'B', 'C'), ('A', 'C', 'B'), ('B', 'A', 'C')]
+
+# combinations: tổ hợp (không lặp, không quan tâm thứ tự)
+combs = list(itertools.combinations("ABC", 2))
+print(combs)  # Output: [('A', 'B'), ('A', 'C'), ('B', 'C')]
+
+# combinations_with_replacement: tổ hợp có lặp
+combs_r = list(itertools.combinations_with_replacement("AB", 2))
+print(combs_r)  # Output: [('A', 'A'), ('A', 'B'), ('B', 'B')]
+
+# === Chain: nối nhiều iterables ===
+chained = list(itertools.chain([1, 2], [3, 4], [5]))
+print(chained)  # Output: [1, 2, 3, 4, 5]
+
+# chain.from_iterable: nối từ iterable of iterables
+nested = [[1, 2], [3, 4], [5, 6]]
+flat = list(itertools.chain.from_iterable(nested))
+print(flat)  # Output: [1, 2, 3, 4, 5, 6]
+
+# === Filter/transform ===
+# filterfalse: lọc phần tử mà predicate trả về False
+evens = list(itertools.filterfalse(lambda x: x % 2, range(10)))
+print(evens)  # Output: [0, 2, 4, 6, 8]
+
+# islice: slice iterator (không load toàn bộ vào memory)
+sliced = list(itertools.islice(range(100), 0, 10, 2))  # start=0, stop=10, step=2
+print(sliced)  # Output: [0, 2, 4, 6, 8]
+
+# takewhile: lấy phần tử khi điều kiện đúng
+taken = list(itertools.takewhile(lambda x: x < 5, [1, 2, 3, 4, 5, 6]))
+print(taken)  # Output: [1, 2, 3, 4]
+
+# dropwhile: bỏ phần tử khi điều kiện đúng, lấy phần còn lại
+dropped = list(itertools.dropwhile(lambda x: x < 5, [1, 2, 3, 4, 5, 6]))
+print(dropped)  # Output: [5, 6]
+
+# groupby: nhóm phần tử liên tiếp theo key
+data = [("a", 1), ("a", 2), ("b", 3), ("b", 4), ("c", 5)]
+for key, group in itertools.groupby(data, key=lambda x: x[0]):
+    print(f"{key}: {list(group)}")
+# Output:
+# a: [('a', 1), ('a', 2)]
+# b: [('b', 3), ('b', 4)]
+# c: [('c', 5)]
+
+# ⚠️ groupby chỉ nhóm phần tử LIÊN TIẾP - cần sort trước nếu muốn nhóm tất cả
+
+# === Real-world: Batch processing ===
+def batched(iterable, n):
+    """Chia iterable thành batches kích thước n"""
+    it = iter(iterable)
+    while True:
+        batch = list(itertools.islice(it, n))
+        if not batch:
+            break
+        yield batch
+
+data = range(10)
+for batch in batched(data, 3):
+    print(batch)
+# Output:
+# [0, 1, 2]
+# [3, 4, 5]
+# [6, 7, 8]
+# [9]
 ```
 
 #### functools
@@ -7673,80 +10752,177 @@ islice(range(10), 0, 10, 2)           # 0, 2, 4, 6, 8
 ```python
 import functools
 
-# lru_cache - memoization
-@functools.lru_cache(maxsize=128)
+# === lru_cache - memoization (cache kết quả function) ===
+@functools.lru_cache(maxsize=128)  # Cache tối đa 128 kết quả
 def fib(n):
+    """Fibonacci với memoization - O(n) thay vì O(2^n)"""
     if n < 2:
         return n
     return fib(n-1) + fib(n-2)
 
-# partial
-from functools import partial
+print(fib(10))   # Output: 55
+print(fib(100))  # Output: 354224848179261915075 (nhanh!)
+print(fib.cache_info())  # Output: CacheInfo(hits=..., misses=..., maxsize=128, currsize=...)
+
+# Python 3.9+: @functools.cache (unlimited cache)
+@functools.cache
+def factorial(n):
+    return 1 if n <= 1 else n * factorial(n - 1)
+
+# === partial - tạo function với args được fix sẵn ===
 def power(base, exp):
     return base ** exp
 
-square = partial(power, exp=2)
-square(5)  # 25
+square = functools.partial(power, exp=2)   # Fix exp=2
+cube = functools.partial(power, exp=3)     # Fix exp=3
 
-# reduce
+print(square(5))  # Output: 25 (5^2)
+print(cube(3))    # Output: 27 (3^3)
+
+# Dùng partial với sorted
+from functools import partial
+users = [{"name": "Charlie", "age": 30}, {"name": "Alice", "age": 25}, {"name": "Bob", "age": 35}]
+sort_by_name = partial(sorted, key=lambda u: u["name"])
+print([u["name"] for u in sort_by_name(users)])  # Output: ['Alice', 'Bob', 'Charlie']
+
+# === reduce - fold/accumulate ===
 from functools import reduce
-reduce(lambda a, b: a + b, [1, 2, 3, 4])  # 10
 
-# singledispatch - function overloading
+total = reduce(lambda a, b: a + b, [1, 2, 3, 4])  # ((1+2)+3)+4
+print(total)  # Output: 10
+
+product = reduce(lambda a, b: a * b, [1, 2, 3, 4])  # ((1*2)*3)*4
+print(product)  # Output: 24
+
+# reduce với initial value
+total_with_init = reduce(lambda a, b: a + b, [1, 2, 3], 100)  # 100+1+2+3
+print(total_with_init)  # Output: 106
+
+# === singledispatch - function overloading theo type ===
 @functools.singledispatch
 def process(arg):
+    """Default handler"""
     print(f"Default: {arg}")
 
 @process.register(int)
 def process_int(arg):
-    print(f"Integer: {arg}")
+    print(f"Integer: {arg * 2}")
 
 @process.register(str)
 def process_str(arg):
-    print(f"String: {arg}")
+    print(f"String: {arg.upper()}")
+
+@process.register(list)
+def process_list(arg):
+    print(f"List with {len(arg)} items")
+
+process(42)          # Output: Integer: 84
+process("hello")     # Output: String: HELLO
+process([1, 2, 3])   # Output: List with 3 items
+process(3.14)        # Output: Default: 3.14
+
+# === wraps - preserve function metadata ===
+def my_decorator(func):
+    @functools.wraps(func)  # Giữ nguyên __name__, __doc__, __annotations__
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+@my_decorator
+def my_function():
+    """My function docstring"""
+    pass
+
+print(my_function.__name__)  # Output: my_function (không phải 'wrapper')
+print(my_function.__doc__)   # Output: My function docstring
 ```
 
 ### 18.3. I/O & System
 
 ```python
-# File operations
+# === File operations với os.path ===
 import os
-os.path.exists("file.txt")
-os.path.isfile("file.txt")
-os.path.isdir("folder")
-os.listdir(".")
-os.walk(".")
 
-# Path (Python 3.4+)
+print(os.path.exists("file.txt"))   # Output: True/False - kiểm tra tồn tại
+print(os.path.isfile("file.txt"))   # Output: True/False - kiểm tra là file
+print(os.path.isdir("folder"))      # Output: True/False - kiểm tra là directory
+print(os.listdir("."))              # Output: ['file1.py', 'folder1', ...] - liệt kê thư mục
+
+# os.walk: duyệt đệ quy qua thư mục
+for root, dirs, files in os.walk("."):
+    for file in files:
+        filepath = os.path.join(root, file)  # Tạo full path
+        print(filepath)  # Output: ./subdir/file.py
+
+# === Path (Python 3.4+) - khuyến nghị hơn os.path ===
 from pathlib import Path
+
 p = Path(".")
-list(p.glob("*.py"))
+py_files = list(p.glob("*.py"))  # Tìm tất cả .py files trong thư mục hiện tại
+print(py_files)  # Output: [PosixPath('script.py'), ...]
 
-# Environment
+all_py = list(p.rglob("*.py"))  # Tìm đệ quy
+print(len(all_py))  # Output: số lượng .py files
+
+# === Environment variables ===
 import os
-os.environ.get("PATH")
-os.getcwd()
 
-# Command line
+path = os.environ.get("PATH")  # Lấy PATH env var
+print(os.getcwd())             # Output: /home/user/project (thư mục hiện tại)
+print(os.getenv("HOME"))       # Output: /home/user
+
+# === Command line arguments ===
 import sys
-sys.argv  # [script.py, arg1, arg2]
 
-# argparse
+print(sys.argv)  # Output: ['script.py', 'arg1', 'arg2'] (khi chạy: python script.py arg1 arg2)
+print(sys.argv[0])  # Output: script.py (tên script)
+
+# === argparse - parse command line arguments ===
 import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("-n", "--name")
-parser.add_argument("-v", "--verbose", action="store_true")
-args = parser.parse_args()
 
-# subprocess
+parser = argparse.ArgumentParser(description="My CLI tool")
+parser.add_argument("-n", "--name", help="Your name", required=True)
+parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+parser.add_argument("--count", type=int, default=1, help="Number of times")
+
+# args = parser.parse_args()  # Parse từ sys.argv
+# Khi chạy: python script.py --name John --verbose --count 3
+# args.name = "John", args.verbose = True, args.count = 3
+
+# === subprocess - chạy external commands ===
 import subprocess
-subprocess.run(["ls", "-la"])
-subprocess.run(["ls"], capture_output=True, text=True)
 
-# Process info
-import os, psutil
-os.getpid()
-psutil.Process().memory_info()
+# Chạy command đơn giản
+result = subprocess.run(["ls", "-la"], capture_output=True, text=True)
+print(result.returncode)  # Output: 0 (success)
+print(result.stdout)      # Output: nội dung ls -la
+print(result.stderr)      # Output: "" (không có error)
+
+# Chạy với shell=True (cẩn thận với user input - command injection!)
+result = subprocess.run("echo hello", shell=True, capture_output=True, text=True)
+print(result.stdout)  # Output: hello\n
+
+# ⚠️ Không dùng shell=True với user input - nguy cơ command injection!
+# ❌ subprocess.run(f"ls {user_input}", shell=True)  # Nguy hiểm!
+# ✅ subprocess.run(["ls", user_input])              # An toàn
+
+# Kiểm tra exit code
+try:
+    subprocess.run(["false"], check=True)  # Raise nếu exit code != 0
+except subprocess.CalledProcessError as e:
+    print(f"Command failed: {e.returncode}")  # Output: Command failed: 1
+
+# === Process info ===
+import os
+
+print(os.getpid())   # Output: 12345 (process ID hiện tại)
+print(os.getppid())  # Output: 12344 (parent process ID)
+
+# psutil (pip install psutil) cho thông tin chi tiết hơn
+# import psutil
+# proc = psutil.Process()
+# print(proc.memory_info().rss)  # Resident Set Size (bytes)
+# print(proc.cpu_percent())      # CPU usage %
 ```
 
 ---
@@ -7758,27 +10934,70 @@ import math
 import decimal
 import random
 
-# Math functions
-math.sqrt(16)      # 4.0
-math.pow(2, 10)    # 1024.0
-math.abs(-5)       # Lỗi, dùng abs(-5)
-math.ceil(3.2)     # 4
-math.floor(3.8)    # 3
-math.pi            # 3.14159...
-math.sin(math.pi/2)  # 1.0
-math.log(100, 10)  # 2.0
+# === Math functions ===
+print(math.sqrt(16))          # Output: 4.0 (căn bậc 2)
+print(math.pow(2, 10))       # Output: 1024.0 (2^10, luôn trả về float)
+print(pow(2, 10))           # Output: 1024 (built-in, trả về int nếu có thể)
 
-# BigDecimal - số chính xác
+print(abs(-5))               # Output: 5 (giá trị tuyệt đối - built-in)
+print(math.ceil(3.2))        # Output: 4 (làm tròn lên)
+print(math.floor(3.8))       # Output: 3 (làm tròn xuống)
+print(round(3.7))           # Output: 4 (làm tròn theo standard)
+print(round(3.5))           # Output: 4 (làm tròn chẵn cho .5 - banker's rounding)
+print(round(2.5))           # Output: 2 (làm tròn chẵn)
+
+print(math.pi)               # Output: 3.141592653589793 (hằng số Pi)
+print(math.e)                # Output: 2.718281828459045 (hằng số e)
+print(math.sin(math.pi/2))   # Output: 1.0 (sin 90 độ)
+print(math.log(100, 10))    # Output: 2.0 (log base 10 của 100)
+print(math.log10(100))       # Output: 2.0 (log10)
+
+# === Decimal - số thập phân chính xác ===
+# Dùng khi cần precision cao (tài chính, tính toán chính xác)
 from decimal import Decimal
-a = Decimal('0.1') + Decimal('0.2')  # Decimal('0.3') (chính xác!)
-0.1 + 0.2  # 0.30000000000000004 (float không chính xác)
 
-# Random
-random.random()           # 0.0 - 1.0
-random.randint(1, 100)    # 1 - 100
-random.choice([1, 2, 3])  # Chọn ngẫu nhiên
-random.shuffle([1, 2, 3]) # Xáo trộn in-place
-random.sample(range(100), 5)  # Chọn 5 số không trùng
+a = Decimal('0.1')
+b = Decimal('0.2')
+result = a + b
+print(result)               # Output: 0.3 (chính xác!)
+
+# ⚠️ Float không chính xác cho số thập phân
+print(0.1 + 0.2)           # Output: 0.30000000000000004 (floating point error)
+
+# Decimal với getcontext để set precision
+from decimal import getcontext, ROUND_HALF_UP
+getcontext().prec = 50  # 50 chữ số precision
+
+# === Random ===
+print(random.random())           # Output: 0.123456789 (float ngẫu nhiên 0.0-1.0)
+print(random.randint(1, 100))   # Output: 42 (int ngẫu nhiên 1-100, inclusive)
+print(random.randrange(1, 100)) # Output: 42 (int ngẫu nhiên 1-99, exclusive end)
+
+print(random.choice([1, 2, 3])) # Output: 2 (chọn 1 phần tử ngẫu nhiên)
+
+lst = [1, 2, 3, 4, 5]
+random.shuffle(lst)            # Shuffle in-place
+print(lst)                     # Output: [3, 1, 5, 2, 4] (ngẫu nhiên)
+
+# Chọn n phần tử không trùng
+samples = random.sample(range(100), 5)
+print(samples)                  # Output: [23, 45, 67, 12, 89]
+
+# Random với seed (để reproduce)
+random.seed(42)
+print(random.random())         # Output: 0.639426798... (luôn giống nhau với cùng seed)
+random.seed(42)
+print(random.random())         # Output: 0.639426798... (lặp lại)
+
+# === Statistics (Python 3.4+) ===
+import statistics
+
+data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(statistics.mean(data))    # Output: 5.5 (trung bình)
+print(statistics.median(data)) # Output: 5.5 (trung vị)
+print(statistics.stdev(data))  # Output: 3.02765 (standard deviation)
+print(statistics.variance(data))  # Output: 9.16666... (variance)
+print(statistics.mode([1, 2, 2, 3, 3, 3]))  # Output: 3 (mode - giá trị xuất hiện nhiều nhất)
 ```
 
 ### 18.7. Encoding
@@ -7788,24 +11007,68 @@ import base64
 import urllib.parse
 import codecs
 
-# Base64
-encoded = base64.b64encode(b"Hello World")  # b'SGVsbG8gV29ybGQ='
-decoded = base64.b64decode(encoded)          # b'Hello World'
+# === Base64 - encode/decode binary to ASCII ===
+# Dùng cho: embed binary trong JSON/XML, email attachments, URL-safe encoding
 
-# URL Encoding
-urllib.parse.quote("hello world")      # "hello%20world"
-urllib.parse.unquote("hello%20world")  # "hello world"
-urllib.parse.urlencode({"name": "John", "age": 30})  # "name=John&age=30"
+encoded = base64.b64encode(b"Hello World")
+print(encoded)                 # Output: b'SGVsbG8gV29ybGQ=' (ASCII text)
 
-# Unicode / UTF-8
-text = "你好"
-encoded = text.encode('utf-8')    # b'\xe4\xbd\xa0\xe5\xa5\xbd'
-decoded = encoded.decode('utf-8') # '你好'
+decoded = base64.b64decode(encoded)
+print(decoded)                 # Output: b'Hello World'
 
-# Hex encoding
+# URL-safe Base64 (thay +/ bằng -_)
+encoded_url = base64.urlsafe_b64encode(b"Hello World")
+print(encoded_url)            # Output: b'SGVsbG8gV29ybGQ='
+
+# === URL Encoding/Decoding ===
+# Encode special characters cho URL
+encoded = urllib.parse.quote("hello world")
+print(encoded)                 # Output: hello%20world (space → %20)
+
+encoded = urllib.parse.quote("user@email.com")
+print(encoded)                # Output: user%40email.com (@ → %40)
+
+# Decode ngược lại
+decoded = urllib.parse.unquote("hello%20world")
+print(decoded)                # Output: hello world
+
+# Encode query parameters
+query = urllib.parse.urlencode({"name": "John Doe", "age": 30})
+print(query)                  # Output: name=John+Doe&age=30 (space → +)
+# ⚠️ Dùng quote_plus cho thay thế space bằng +
+
+# Parse query string
+parsed = urllib.parse.parse_qs(query)
+print(parsed)                 # Output: {'name': ['John Doe'], 'age': ['30']}
+
+# === Unicode / UTF-8 Encoding ===
+text = "Xin chào"  # Unicode string
+print(text)                  # Output: Xin chào
+
+# Encode to bytes
+encoded = text.encode('utf-8')
+print(encoded)               # Output: b'Xin ch\xc3\xa0o' (UTF-8 bytes)
+print(len(encoded))          # Output: 11 (bytes)
+
+# Decode back to string
+decoded = encoded.decode('utf-8')
+print(decoded)               # Output: Xin chào
+
+# === Hex encoding ===
 data = b"Hello"
-hex_str = data.hex()                    # '48656c6c6f'
-bytes.fromhex('48656c6c6f')            # b'Hello'
+hex_str = data.hex()                    # Bytes → hex string
+print(hex_str)                          # Output: 48656c6c6f
+
+recovered = bytes.fromhex(hex_str)      # Hex string → bytes
+print(recovered)                        # Output: b'Hello'
+
+# === HTML encoding ===
+import html
+escaped = html.escape("<script>alert('xss')</script>")
+print(escaped)                          # Output: &lt;script&gt;...
+
+unescaped = html.unescape(escaped)
+print(unescaped)                        # Output: <script>alert('xss')</script>
 ```
 
 ---
@@ -7817,92 +11080,185 @@ bytes.fromhex('48656c6c6f')            # b'Hello'
 #### Django
 
 ```python
-# Full-featured framework
+# === Django - Full-featured framework (batteries included) ===
 # pip install django
+# Tạo project: django-admin startproject myproject
+# Tạo app: python manage.py startapp myapp
 
-# django-admin startproject myproject
-# django-admin startapp myapp
-
-# urls.py
-from django.urls import path
+# === urls.py - URL routing ===
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', views.user_list),
+    path('admin/', admin.site.urls),          # Admin panel
+    path('users/', views.user_list),           # GET /users/
+    path('users/<int:pk>/', views.user_detail), # GET /users/1/
+    path('api/', include('api.urls')),         # Include từ api/urls.py
 ]
 
-# views.py
+# === views.py - Request handlers ===
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 
+@require_http_methods(["GET"])  # Chỉ cho phép GET
 def user_list(request):
-    return JsonResponse({"users": []})
+    """Trả về danh sách users"""
+    users = [{"id": 1, "name": "John"}]
+    return JsonResponse({"users": users})  # Tự động serialize thành JSON
 
-# models.py
+# Class-based view
+from django.views import View
+class UserView(View):
+    def get(self, request, pk):
+        return JsonResponse({"id": pk, "name": "John"})
+
+    def post(self, request):
+        import json
+        data = json.loads(request.body)
+        return JsonResponse({"id": 1, **data}, status=201)
+
+# === models.py - Database models ===
 from django.db import models
 
 class User(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
+    name = models.CharField(max_length=100)   # VARCHAR(100)
+    email = models.EmailField(unique=True)    # VARCHAR với email validation
+    age = models.IntegerField(null=True, blank=True)  # Nullable int
+    created_at = models.DateTimeField(auto_now_add=True)  # Tự set khi tạo
+    updated_at = models.DateTimeField(auto_now=True)      # Tự update khi save
 
     class Meta:
-        db_table = 'users'
+        db_table = 'users'          # Tên bảng trong DB
+        ordering = ['-created_at']  # Default ordering
+
+    def __str__(self):
+        return f"{self.name} ({self.email})"
+
+# === Migrations ===
+# python manage.py makemigrations  # Tạo migration files
+# python manage.py migrate         # Apply migrations
+
+# === ORM queries ===
+# User.objects.all()                    # SELECT * FROM users
+# User.objects.filter(name="John")      # WHERE name = 'John'
+# User.objects.get(pk=1)               # WHERE id = 1 (raise nếu không tìm thấy)
+# User.objects.create(name="Jane")     # INSERT INTO users
+# User.objects.filter(age__gt=18)      # WHERE age > 18
 ```
 
 #### Flask
 
 ```python
-# Microframework
+# === Flask - Microframework (minimal, flexible) ===
 # pip install flask
+from flask import Flask, request, jsonify, abort
 
-from flask import Flask, request, jsonify
+app = Flask(__name__)  # Tạo Flask app, __name__ = module name
 
-app = Flask(__name__)
-
-@app.route('/users', methods=['GET'])
+# === Route handlers ===
+@app.route('/users', methods=['GET'])  # Chỉ cho phép GET
 def get_users():
-    return jsonify({"users": []})
+    """Trả về danh sách users"""
+    users = [{"id": 1, "name": "John"}]
+    return jsonify({"users": users})  # Serialize dict thành JSON response
 
-@app.route('/users', methods=['POST'])
+@app.route('/users/<int:user_id>', methods=['GET'])  # URL parameter
+def get_user(user_id):
+    """Lấy user theo ID"""
+    if user_id != 1:
+        abort(404)  # Trả về 404 Not Found
+    return jsonify({"id": user_id, "name": "John"})
+
+@app.route('/users', methods=['POST'])  # POST request
 def create_user():
-    data = request.get_json()
-    return jsonify({"id": 1, **data}), 201
+    """Tạo user mới"""
+    data = request.get_json()  # Parse JSON request body
+    if not data or 'name' not in data:
+        abort(400)  # Bad Request
+    return jsonify({"id": 1, **data}), 201  # 201 Created
 
-# With database
+# === Error handlers ===
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found"}), 404
+
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({"error": "Bad request"}), 400
+
+# === Flask với SQLAlchemy ===
 from flask_sqlalchemy import SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-db = SQLAlchemy(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  # DB connection string
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Tắt warning
+db = SQLAlchemy(app)  # Khởi tạo SQLAlchemy
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    id = db.Column(db.Integer, primary_key=True)  # Auto-increment PK
+    name = db.Column(db.String(100), nullable=False)  # NOT NULL
+    email = db.Column(db.String(120), unique=True)    # UNIQUE
+
+# Chạy: flask run --debug
+# Hoặc: python -m flask run
 ```
 
 #### FastAPI
 
 ```python
-# Modern async framework
+# === FastAPI - Modern async framework với auto-docs ===
 # pip install fastapi uvicorn
+from fastapi import FastAPI, HTTPException, Depends
+from pydantic import BaseModel, EmailStr
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+app = FastAPI(title="My API", version="1.0.0")  # Tạo app với metadata
 
-app = FastAPI()
+# === Pydantic models - request/response validation ===
+class UserCreate(BaseModel):
+    name: str                    # Required string
+    email: str                   # Required string
+    age: int | None = None       # Optional int, default None
 
-class User(BaseModel):
+class UserResponse(BaseModel):
+    id: int
     name: str
     email: str
-    age: int | None = None
 
-@app.get("/users")
+# === Route handlers ===
+@app.get("/users", response_model=list[UserResponse])  # Validate response
 async def get_users():
-    return [{"name": "John"}]
+    """Trả về danh sách users"""
+    return [{"id": 1, "name": "John", "email": "john@example.com"}]
 
-@app.post("/users")
-async def create_user(user: User):
+@app.get("/users/{user_id}", response_model=UserResponse)
+async def get_user(user_id: int):  # Path parameter với type annotation
+    """Lấy user theo ID"""
+    if user_id != 1:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"id": user_id, "name": "John", "email": "john@example.com"}
+
+@app.post("/users", response_model=UserResponse, status_code=201)
+async def create_user(user: UserCreate):  # Request body validation
+    """Tạo user mới"""
     return {"id": 1, **user.dict()}
 
-# Run: uvicorn main:app --reload
+# === Dependency Injection ===
+def get_db():
+    """Dependency: tạo DB session"""
+    db = {"connected": True}  # Giả lập DB
+    try:
+        yield db
+    finally:
+        pass  # db.close()
+
+@app.get("/users/{user_id}/profile")
+async def get_profile(user_id: int, db=Depends(get_db)):
+    """Sử dụng DB dependency"""
+    return {"user_id": user_id, "db_connected": db["connected"]}
+
+# === Chạy server ===
+# uvicorn main:app --reload --port 8000
+# Docs tự động: http://localhost:8000/docs (Swagger UI)
+# ReDoc: http://localhost:8000/redoc
 ```
 
 ---
@@ -8236,47 +11592,133 @@ profile = "black"
 #### Black (Formatter)
 
 ```bash
+# === Black - opinionated code formatter ===
 # pip install black
-black src/           # Format code
-black --check src/   # Check only
-black --diff src/    # Show diff
+# Chạy format:
+black src/           # Format code trong thư mục src/
+black --check src/   # Chỉ check, không format (dùng trong CI)
+black --diff src/    # Show diff mà không thay đổi file
+black --verbose src/ # Hiển thị chi tiết các files được format
+
+# === Configuration ===
+# Tạo pyproject.toml hoặc black.toml:
+# [tool.black]
+# line-length = 88           # PEP 8 standard
+# target-version = ['py38']  # Target Python 3.8+
+# include = '\.pyi?$'       # File patterns
+# exclude = '''/(\.git|\.venv|build|dist)/'''  # Exclude patterns
+
+# === VS Code integration ===
+# settings.json: "python.formatting.provider": "black"
 ```
 
 #### flake8 (Linter)
 
 ```bash
+# === Flake8 - style checker + linting ===
 # pip install flake8
-flake8 src/          # Check
-flake8 --max-line-length=88 src/
+flake8 src/                   # Check code trong src/
+flake8 --max-line-length=88 src/  # Custom line length
+flake8 --ignore=E501,W503 src/    # Ignore specific rules
+
+# === Configuration ===
+# .flake8 hoặc pyproject.toml:
+# [flake8]
+# max-line-length = 88
+# ignore = E203, E501, W503
+# exclude = .git,__pycache__,build
+
+# === Common error codes ===
+# E501: Line too long
+# W503: Line break before binary operator
+# F401: Module imported but unused
+# F811: Redefinition of unused name
+
+# === Ruff - thay thế nhanh hơn cho flake8 ===
+# pip install ruff
+ruff check src/           # Check như flake8 nhưng nhanh hơn 10-100x
+ruff check --fix src/    # Auto-fix các issues
+ruff format src/          # Format như Black nhưng nhanh hơn
 ```
 
 #### mypy (Type Checker)
 
 ```bash
+# === MyPy - Static type checker ===
 # pip install mypy
-mypy src/           # Type check
-mypy --strict src/  # Strict mode
+mypy src/               # Type check với default settings
+mypy --strict src/      # Strict mode (nghiêm ngặt nhất)
+mypy --ignore-missing-imports src/  # Ignore lỗi import
+mypy --warn-unused-ignores src/     # Warn về ignore không cần thiết
+
+# === Configuration ===
+# mypy.ini hoặc pyproject.toml:
+# [mypy]
+# python_version = 3.8
+# warn_return_any = True
+# warn_unused_configs = True
+# disallow_untyped_defs = False
+# ignore_missing_imports = True
+
+# [tool.mypy]
+# [[tool.mypy.overrides]]
+# module = "numpy.*"
+# ignore_missing_imports = True
+
+# === Common type comments ===
+# x: int = 5  # Inline type annotation
+# def foo(x):
+#     # type: (int) -> str
+#     pass
 ```
 
 #### pre-commit
 
-```yaml
-# .pre-commit-config.yaml
+```bash
+# === Pre-commit - Git hooks tự động ===
+# pip install pre-commit
+
+# === Cài đặt ===
+# Tạo .pre-commit-config.yaml:
+cat > .pre-commit-config.yaml << 'EOF'
 repos:
+  # Format với Black
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 24.3.0
     hooks:
       - id: black
+        args: [--check, --diff]  # Chỉ check trong pre-commit
 
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+  # Lint với Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0
     hooks:
-      - id: flake8
+      - id: ruff
+        args: [--fix]
 
+  # Type check với MyPy
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
+    rev: v1.8.0
     hooks:
       - id: mypy
+        additional_dependencies: [types-all]
+
+  # Check trailing whitespace
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+EOF
+
+# === Sử dụng ===
+pre-commit install                    # Cài đặt git hooks
+pre-commit run                        # Chạy tất cả hooks
+pre-commit run black                  # Chỉ chạy black
+pre-commit autoupdate                  # Update versions
+
+# === Bypass hooks (khi cần) ===
+git commit --no-verify  # Bypass pre-commit hooks
 ```
 
 ---
@@ -8325,89 +11767,276 @@ breakpoint()
 ### 20.4. Profiling & Performance
 
 ```python
-# cProfile - built-in profiler
 import cProfile
-
-def my_function():
-    return sum(range(1000000))
-
-cProfile.run('my_function()')
-
-# Profile to file
-cProfile.run('my_function()', 'output.prof')
-
-# Visualize with snakeviz
-# pip install snakeviz
-# snakeviz output.prof
-
-# timeit - benchmark
 import timeit
 
-timeit.timeit('sum(range(1000))', number=10000)
+# === cProfile - built-in function profiler ===
+def slow_function():
+    """Hàm tốn thời gian để demo"""
+    total = 0
+    for i in range(100000):
+        total += i ** 2  # Square operation
+    return total
 
-# line_profiler - pip install line_profiler
+# Chạy profiler trực tiếp
+result = cProfile.run('slow_function()')
+# Output:
+#    100003 function calls in 0.051 seconds
+#    Ordered by: standard name
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#        1    0.042    0.042    0.051    0.051 <string>:1(<module>)
+#   ...
+
+# Profile và lưu vào file
+cProfile.run('slow_function()', 'output.prof')
+# File output.prof có thể visualize bằng:
+# pip install snakeviz
+# snakeviz output.prof  # Mở web UI
+
+# Hoặc dùng pstats để phân tích
+import pstats
+p = pstats.Stats('output.prof')
+p.sort_stats('cumulative').print_stats(10)  # Top 10 functions by cumulative time
+# Output:
+#    Ordered by: cumulative time
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#        1    0.042    0.042    0.051    0.051 <string>:1(<module>)
+
+# === timeit - precise benchmarking ===
+# Đo thời gian thực thi với nhiều lần lặp
+
+# Benchmark sum(range(1000))
+result = timeit.timeit('sum(range(1000))', number=10000)
+print(f"Time: {result:.4f}s")  # Output: Time: 0.2341s (tùy machine)
+
+# Benchmark với setup code
+result = timeit.timeit(
+    'sorted(data)',
+    setup='import random; data = [random.random() for _ in range(1000)]',
+    number=1000
+)
+print(f"Time: {result:.4f}s")  # Output: Time: 0.1234s
+
+# Benchmark nhiều approaches
+results = {
+    "list_comprehension": timeit.timeit('[x**2 for x in range(1000)]', number=1000),
+    "for_loop": timeit.timeit('result=[]\nfor x in range(1000): result.append(x**2)', number=1000),
+    "map": timeit.timeit('list(map(lambda x: x**2, range(1000)))', number=1000),
+}
+for method, time in results.items():
+    print(f"{method}: {time:.4f}s")
+
+# === line_profiler - line-by-line profiling ===
+# pip install line_profiler
+# Thêm @profile decorator vào function cần profile
+
 # @profile
-# def my_function():
-#     ...
-# kernprof -l -v script.py
+# def slow_function():
+#     total = 0
+#     for i in range(100000):
+#         total += i ** 2
+#     return total
+#
+# Chạy: kernprof -l -v script.py
+# Output:
+# Wrote profile results to script.py.lprof
+# Timer unit: 1e-07 s
+# File: script.py
+# Function: slow_function at line 2
+# Line #      Hits         Time  Per Hit   % Time  Line Contents
+# ==============================================================
+#      2                                           def slow_function():
+#      3         1         500.0    500.0     1.0      total = 0
+#      4    100000    45000.0      0.5    90.0      for i in range(100000):
+#      5    100000     5000.0      0.0     9.0          total += i ** 2
 
-# memory_profiler - pip install memory_profiler
-from memory_profiler import profile
+# === memory_profiler - memory usage profiling ===
+# pip install memory-profiler
+# Thêm @profile decorator
 
-@profile
-def memory_heavy():
-    return [i for i in range(1000000)]
+# @profile
+# def memory_heavy():
+#     data = [i for i in range(1000000)]  # Tạo list lớn
+#     return sum(data)
+#
+# Chạy: python -m memory_profiler script.py
+# Output:
+# Line #  Mem usage  Increment  Line Contents
+# ===========================================
+#      3   45.2 MiB   45.2 MiB   data = [i for i in range(1000000)]
 
-# tracemalloc (built-in)
+# === tracemalloc - built-in memory tracer ===
 import tracemalloc
 
-tracemalloc.start()
-# ... code ...
-snapshot = tracemalloc.take_snapshot()
-top = snapshot.statistics('lineno')
-for stat in top[:5]:
+tracemalloc.start()  # Bắt đầu trace
+
+# ... code cần đo ...
+data = [i ** 2 for i in range(100000)]
+snapshot = tracemalloc.take_snapshot()  # Chụp snapshot
+
+# Top 5 lines consuming most memory
+top_stats = snapshot.statistics('lineno')
+print("Top 5 memory allocations:")
+for stat in top_stats[:5]:
     print(stat)
+# Output:
+# .../script.py:6: size=5.7 MiB, count=100000
+
+# Compare snapshots
+snapshot1 = tracemalloc.take_snapshot()
+data2 = [i ** 3 for i in range(100000)]
+snapshot2 = tracemalloc.take_snapshot()
+
+top_diff = snapshot2.compare_to(snapshot1, 'lineno')
+for stat in top_diff[:3]:
+    print(stat)
+# Output:
+# .../script.py:7: +3.8 MiB (size increase)
 ```
 
 ### 20.5. Documentation & Publishing
 
 ```python
-# Sphinx - sinh tài liệu
-# pip install sphinx
-# sphinx-quickstart docs/
-# sphinx-build docs/ docs/_build/
+# === Sphinx - Professional documentation generator ===
+# pip install sphinx sphinx-rtd-theme
 
-# mkdocs - pip install mkdocs
+# Tạo project:
+# sphinx-quickstart docs/  # Tạo cấu trúc docs
+#   - Project name: My Package
+#   - Author: Your Name
+#   - Release: 1.0.0
+
+# Cấu trúc:
+# docs/
+# ├── Makefile
+# ├── conf.py          # Configuration
+# ├── index.rst        # Main page
+# ├── api.rst          # API docs
+# └── _build/          # Generated HTML
+
+# conf.py configuration:
+# import os
+# import sphinx_rtd_theme
+# extensions = [
+#     'sphinx.ext.autodoc',    # Auto-generate from docstrings
+#     'sphinx.ext.napoleon',   # Google/NumPy docstring support
+#     'sphinx.ext.viewcode',   # Show source code links
+# ]
+# html_theme = 'sphinx_rtd_theme'
+
+# Build:
+# cd docs && make html
+# Kết quả trong docs/_build/html/
+
+# === MkDocs - Simple documentation site ===
+# pip install mkdocs mkdocs-material
+
+# Tạo project:
 # mkdocs new myproject
-# mkdocs serve
-# mkdocs build
+# cd myproject
 
-# pdoc - simple doc generation
+# mkdocs.yml:
+# site_name: My Package
+# theme:
+#   name: material
+# nav:
+#   - Home: index.md
+#   - API: api.md
+
+# Chạy:
+# mkdocs serve       # Development server
+# mkdocs build       # Build to site/
+
+# === pdoc - Simple doc generator ===
 # pip install pdoc
-# pdoc mymodule --output-dir docs/
 
-# PyPI publishing
-# pip install twine build
+# Generate docs:
+# pdoc mymodule --output-dir docs/
+# Output: docs/mymodule.html
+
+# Serve:
+# pdoc --port 8000 mymodule
+
+# === PyPI Publishing ===
+# pip install build twine
+
+# 1. Build package:
 # python -m build
+# Output: dist/mypackage-1.0.0.tar.gz, dist/mypackage-1.0.0-*.whl
+
+# 2. Upload to PyPI:
 # twine upload dist/*
+# Hoặc test PyPI:
+# twine upload --repository testpypi dist/*
+
+# === Version management với setuptools-scm ===
+# pip install setuptools-scm
+# Thêm vào setup.py:
+# setup(
+#     use_scm_version=True,
+#     setup_requires=['setuptools-scm'],
+# )
 ```
 
 ### 20.6. Runtime & Environment
 
 ```bash
-# pyenv - quản lý phiên bản Python
-pyenv install 3.11.0
-pyenv global 3.11.0
-pyenv local 3.11.0
+# === pyenv - Quản lý nhiều phiên bản Python ===
+# macOS: brew install pyenv
+# Linux: curl https://pyenv.run | bash
 
-# Implementations
-# CPython - default, reference implementation
-# PyPy - JIT compiler, faster for some workloads
+# Cài Python mới:
+pyenv install 3.11.0   # Cài Python 3.11.0
+pyenv install 3.12.0   # Cài Python 3.12.0
+
+# Chọn phiên bản:
+pyenv global 3.11.0     # Global (tất cả projects)
+pyenv local 3.11.0     # Local (project hiện tại, tạo .python-version)
+pyenv shell 3.11.0     # Shell (session hiện tại)
+
+# Kiểm tra:
+python --version        # Output: Python 3.11.0
+pyenv versions         # List tất cả phiên bản đã cài
+
+# === Python Implementations ===
+# CPython - Reference implementation (mặc định)
+# PyPy - JIT compiler, nhanh hơn cho một số workloads
+# Jython - Chạy trên JVM
+# IronPython - Chạy trên .NET
+# MicroPython - Cho embedded systems
+
+# === Docker ===
+# python:3.11-slim - Image nhẹ
+# python:3.11-alpine - Image nhẹ nhất (nhưng cần compiler)
+
+# Dockerfile example:
+# FROM python:3.11-slim
+# WORKDIR /app
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+# COPY . .
+# CMD ["python", "main.py"]
+
+# === pipenv - Dependency management ===
+# pip install pipenv
+pipenv install requests    # Cài package vào Pipfile
+pipenv install --dev pytest  # Dev dependency
+pipenv shell               # Activate virtualenv
+pipenv run python main.py  # Chạy command trong env
+
+# === conda - Scientific Python distribution ===
+# conda install numpy pandas scikit-learn
+# conda create -n myenv python=3.11
+# conda activate myenv
+
+# === Python Implementations (continued) ===
+# PyPy - JIT compiler, nhanh hơn cho một số workloads
 # Jython - Python on JVM
 # IronPython - Python on .NET
+# MicroPython - Cho embedded devices
 
-# REPL
-python -i           # Interactive mode
+# === REPL ===
+python -i           # Interactive mode - chạy Python interactive
 ipython              # Enhanced REPL (pip install ipython)
 jupyter notebook     # Jupyter (pip install jupyter)
 ```

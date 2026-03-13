@@ -19,6 +19,11 @@ OUTPUT_DIR = os.path.join(PROJECT_ROOT, "Notebooks")
 LANGUAGE_CONFIG = {
     "Python": {
         "code_langs": ["python"],
+        "magic_langs": {
+            "bash": "!",
+            "sh": "!",
+            "pip": "!",
+        },
         "kernelspec": {
             "display_name": "Python 3",
             "language": "python",
@@ -155,11 +160,11 @@ def get_language_config(filename: str) -> dict | None:
 
 
 def md_to_notebook(md_path: str, ipynb_path: str, code_langs: list[str],
-                   kernelspec: dict, language_info: dict):
+                   kernelspec: dict, language_info: dict, magic_langs: dict | None = None):
     with open(md_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    cells = []
+    cells: list[dict] = []
 
     # Split content into blocks: markdown text and code blocks
     parts = re.split(r"(```\w*\n.*?\n```)", content, flags=re.DOTALL)
@@ -172,7 +177,7 @@ def md_to_notebook(md_path: str, ipynb_path: str, code_langs: list[str],
         code_match = re.match(r"^```(\w*)\n(.*)\n```$", part, flags=re.DOTALL)
 
         if code_match:
-            language = code_match.group(1)
+            language = code_match.group(1).lower()
             code = code_match.group(2)
 
             if language in code_langs:
@@ -186,8 +191,31 @@ def md_to_notebook(md_path: str, ipynb_path: str, code_langs: list[str],
                         "source": code.splitlines(keepends=True),
                     }
                 )
+            elif magic_langs and language in magic_langs:
+                # Language that can be run with ! prefix -> code cell
+                magic = magic_langs[language]
+                lines = code.splitlines(keepends=True)
+                source = []
+
+                for line in lines:
+                    stripped = line.strip()
+                    # Add ! prefix to non-empty, non-comment lines
+                    if stripped and not stripped.startswith("#"):
+                        source.append(magic + line)
+                    else:
+                        source.append(line)
+
+                cells.append(
+                    {
+                        "cell_type": "code",
+                        "execution_count": None,
+                        "metadata": {},
+                        "outputs": [],
+                        "source": source,
+                    }
+                )
             else:
-                # Other language (bash, toml, yaml, json, etc.) -> markdown cell
+                # Other language (toml, yaml, json, etc.) -> markdown cell
                 md_content = f"```{language}\n{code}\n```"
                 cells.append(
                     {
@@ -274,6 +302,7 @@ if __name__ == "__main__":
             code_langs=config["code_langs"],
             kernelspec=config["kernelspec"],
             language_info=config["language_info"],
+            magic_langs=config.get("magic_langs")
         )
         converted += 1
         print()
