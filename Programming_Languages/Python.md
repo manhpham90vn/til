@@ -2586,14 +2586,33 @@ process_animals(dogs)            # ✅ OK vì Sequence là covariant
 ```python
 numbers = [1, 2, 3, 4, 5]
 
-# map()
+# === map() - áp dụng function lên mỗi phần tử ===
 squared = list(map(lambda x: x ** 2, numbers))
+print(squared)                   # Output: [1, 4, 9, 16, 25]
 
-# List comprehension (preferred)
+# map() trả về iterator (lazy) → cần list() để xem
+doubled = map(lambda x: x * 2, numbers)
+print(type(doubled))             # Output: <class 'map'> (iterator, chưa tính)
+print(list(doubled))             # Output: [2, 4, 6, 8, 10]
+
+# === List comprehension (Pythonic hơn map) ===
 squared = [x ** 2 for x in numbers]
+print(squared)                   # Output: [1, 4, 9, 16, 25]
 
-# enumerate transform
-indexed = [(i, v) for i, v in enumerate(numbers)]
+# map() với function có sẵn
+names = ["alice", "bob", "charlie"]
+upper_names = list(map(str.upper, names))
+print(upper_names)               # Output: ['ALICE', 'BOB', 'CHARLIE']
+
+# map() với nhiều iterables
+a = [1, 2, 3]
+b = [10, 20, 30]
+sums = list(map(lambda x, y: x + y, a, b))
+print(sums)                      # Output: [11, 22, 33]
+
+# enumerate transform - thêm index
+indexed = [(i, v) for i, v in enumerate(numbers, start=1)]
+print(indexed)                   # Output: [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
 ```
 
 #### Filter
@@ -2601,11 +2620,24 @@ indexed = [(i, v) for i, v in enumerate(numbers)]
 ```python
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# filter()
+# === filter() - giữ phần tử thỏa điều kiện ===
 evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)                     # Output: [2, 4, 6, 8, 10]
 
-# List comprehension (preferred)
+# filter() cũng trả về iterator (lazy)
+# Dùng None để loại bỏ falsy values
+mixed = [0, 1, "", "hello", None, False, True, [], [1]]
+truthy = list(filter(None, mixed))
+print(truthy)                    # Output: [1, 'hello', True, [1]]
+
+# === List comprehension (Pythonic hơn filter) ===
 evens = [x for x in numbers if x % 2 == 0]
+print(evens)                     # Output: [2, 4, 6, 8, 10]
+
+# Kết hợp filter + map
+result = [x ** 2 for x in numbers if x % 2 == 0]
+print(result)                    # Output: [4, 16, 36, 64, 100]
+# Tương đương: list(map(lambda x: x**2, filter(lambda x: x%2==0, numbers)))
 ```
 
 #### Reduce/Fold
@@ -2615,26 +2647,63 @@ from functools import reduce
 
 numbers = [1, 2, 3, 4, 5]
 
-# reduce()
-total = reduce(lambda acc, x: acc + x, numbers, 0)  # 15
-product = reduce(lambda acc, x: acc * x, numbers, 1)  # 120
+# === reduce() - gộp tất cả phần tử thành 1 giá trị ===
+# reduce(func, iterable, initial)
+# Hoạt động: acc = initial; for x in iterable: acc = func(acc, x)
+total = reduce(lambda acc, x: acc + x, numbers, 0)
+print(total)                     # Output: 15 (0+1+2+3+4+5)
 
-# sum() - thường dùng hơn
-total = sum(numbers)  # 15
+product = reduce(lambda acc, x: acc * x, numbers, 1)
+print(product)                   # Output: 120 (1*1*2*3*4*5)
+
+# Tìm max (không dùng max())
+largest = reduce(lambda a, b: a if a > b else b, numbers)
+print(largest)                   # Output: 5
+
+# === Built-in thay thế reduce (Pythonic hơn) ===
+print(sum(numbers))              # Output: 15 (thay reduce +)
+print(max(numbers))              # Output: 5
+print(min(numbers))              # Output: 1
+
+# math.prod() (Python 3.8+) - thay reduce *
+import math
+print(math.prod(numbers))        # Output: 120
+
+# Real-world: flatten nested dicts
+configs = [{"a": 1}, {"b": 2}, {"c": 3}]
+merged = reduce(lambda acc, d: {**acc, **d}, configs, {})
+print(merged)                    # Output: {'a': 1, 'b': 2, 'c': 3}
 ```
 
 #### FlatMap
 
 ```python
-# flatten nested lists
+# === Flatten nested lists ===
 nested = [[1, 2], [3, 4], [5, 6]]
 flattened = [x for sublist in nested for x in sublist]
-# [1, 2, 3, 4, 5, 6]
+print(flattened)                 # Output: [1, 2, 3, 4, 5, 6]
+# Đọc: "for sublist in nested → for x in sublist → thêm x"
 
-# map + flatten
+# Tương đương dùng itertools.chain
+from itertools import chain
+flattened = list(chain.from_iterable(nested))
+print(flattened)                 # Output: [1, 2, 3, 4, 5, 6]
+
+# === Map + Flatten (FlatMap) ===
 words = ["hello", "world"]
 chars = [ch for word in words for ch in word]
-# ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
+print(chars)                     # Output: ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
+
+# Real-world: lấy tất cả tags từ list bài viết
+posts = [
+    {"title": "Post 1", "tags": ["python", "coding"]},
+    {"title": "Post 2", "tags": ["python", "web"]},
+    {"title": "Post 3", "tags": ["coding", "tips"]},
+]
+all_tags = [tag for post in posts for tag in post["tags"]]
+print(all_tags)                  # Output: ['python', 'coding', 'python', 'web', 'coding', 'tips']
+unique_tags = list(set(all_tags))
+print(sorted(unique_tags))       # Output: ['coding', 'python', 'tips', 'web']
 ```
 
 #### Sort
@@ -2642,36 +2711,81 @@ chars = [ch for word in words for ch in word]
 ```python
 numbers = [3, 1, 4, 1, 5, 9, 2, 6]
 
-# sorted() - trả về list mới
-sorted_nums = sorted(numbers)           # Tăng dần
-sorted_nums_desc = sorted(numbers, reverse=True)
+# === sorted() - trả về list MỚI (không thay đổi gốc) ===
+sorted_nums = sorted(numbers)
+print(sorted_nums)               # Output: [1, 1, 2, 3, 4, 5, 6, 9]
+print(numbers)                   # Output: [3, 1, 4, 1, 5, 9, 2, 6] (không đổi!)
 
-# list.sort() - sắp xếp in-place
+sorted_desc = sorted(numbers, reverse=True)
+print(sorted_desc)               # Output: [9, 6, 5, 4, 3, 2, 1, 1]
+
+# === list.sort() - sắp xếp IN-PLACE (thay đổi list gốc) ===
 numbers.sort()
+print(numbers)                   # Output: [1, 1, 2, 3, 4, 5, 6, 9] (đã thay đổi!)
 
-# Sort với key
-words = ["banana", "apple", "cherry"]
-sorted_words = sorted(words, key=len)  # ['apple', 'banana', 'cherry']
+# === Sort với key function ===
+words = ["banana", "apple", "cherry", "date"]
+print(sorted(words))             # Output: ['apple', 'banana', 'cherry', 'date'] (alphabetical)
+print(sorted(words, key=len))    # Output: ['date', 'apple', 'banana', 'cherry'] (theo độ dài)
 
-# Sort dict
-users = [{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]
-sorted_users = sorted(users, key=lambda x: x["age"])
+# Sort objects / dict
+users = [
+    {"name": "Charlie", "age": 35},
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 30},
+]
+by_age = sorted(users, key=lambda u: u["age"])
+print([u["name"] for u in by_age])  # Output: ['Alice', 'Bob', 'Charlie']
+
+# Sort với nhiều tiêu chí (ưu tiên: age tăng, name giảm)
+from operator import itemgetter
+students = [("Alice", 85), ("Bob", 90), ("Charlie", 85)]
+result = sorted(students, key=lambda s: (-s[1], s[0]))
+print(result)                    # Output: [('Bob', 90), ('Alice', 85), ('Charlie', 85)]
+
+# === Stable sort ===
+# Python dùng Timsort - STABLE (phần tử bằng nhau giữ thứ tự gốc)
 ```
 
 #### Find/First/Last
 
 ```python
-numbers = [1, 2, 3, 4, 5]
+numbers = [1, 2, 3, 4, 5, 6, 7, 8]
 
-# Find first match
-result = next((x for x in numbers if x > 3), None)  # 4
+# === Find first match ===
+# next() + generator expression → O(n) nhưng dừng sớm khi tìm thấy
+result = next((x for x in numbers if x > 5), None)
+print(result)                    # Output: 6 (phần tử đầu tiên > 5)
 
-# Index
-index = numbers.index(3)  # 2 (ValueError if not found)
-index = next((i for i, x in enumerate(numbers) if x > 3), None)
+result = next((x for x in numbers if x > 100), None)
+print(result)                    # Output: None (không tìm thấy → default)
 
-# Last
-numbers[-1]  # 5
+# next() không có default → StopIteration nếu không tìm thấy
+# next(x for x in numbers if x > 100)  # ❌ StopIteration
+
+# === Find index ===
+print(numbers.index(3))          # Output: 2 (index đầu tiên của giá trị 3)
+# numbers.index(99)              # ❌ ValueError: 99 is not in list
+
+# Safe find index
+idx = next((i for i, x in enumerate(numbers) if x > 5), -1)
+print(idx)                       # Output: 5 (index của 6)
+
+# === First / Last ===
+print(numbers[0])                # Output: 1 (phần tử đầu)
+print(numbers[-1])               # Output: 8 (phần tử cuối)
+
+# First/Last N phần tử
+print(numbers[:3])               # Output: [1, 2, 3] (3 phần tử đầu)
+print(numbers[-3:])              # Output: [6, 7, 8] (3 phần tử cuối)
+
+# === in - kiểm tra tồn tại ===
+print(3 in numbers)              # Output: True  (O(n) cho list)
+print(99 in numbers)             # Output: False
+
+# ⚠️ Dùng set cho lookup nhanh O(1)
+number_set = set(numbers)
+print(3 in number_set)           # Output: True  (O(1))
 ```
 
 #### Any/All/None
@@ -2679,13 +2793,34 @@ numbers[-1]  # 5
 ```python
 numbers = [1, 2, 3, 4, 5]
 
-any(n > 3 for n in numbers)  # True (có ít nhất 1)
-all(n > 0 for n in numbers)  # True (tất cả đều > 0)
-all(n > 10 for n in numbers)  # False
+# === any() - True nếu CÓ ÍT NHẤT 1 phần tử True ===
+print(any(n > 3 for n in numbers))   # Output: True (4, 5 > 3)
+print(any(n > 10 for n in numbers))  # Output: False (không có)
+print(any([]))                       # Output: False (list rỗng)
 
-# None check
-all(x is not None for x in numbers)
-any(x is None for x in numbers)
+# === all() - True nếu TẤT CẢ phần tử đều True ===
+print(all(n > 0 for n in numbers))   # Output: True (tất cả > 0)
+print(all(n > 3 for n in numbers))   # Output: False (1, 2, 3 ≤ 3)
+print(all([]))                       # Output: True (⚠️ vacuous truth!)
+
+# === Short-circuit: any/all dừng sớm ===
+# any() dừng ngay khi tìm thấy True
+# all() dừng ngay khi tìm thấy False
+# → Hiệu quả cho list lớn
+
+# === Kiểm tra None ===
+data = [1, "hello", None, 3.14]
+has_none = any(x is None for x in data)
+print(has_none)                  # Output: True
+
+all_valid = all(x is not None for x in data)
+print(all_valid)                 # Output: False
+
+# === Real-world: validate form data ===
+form = {"name": "John", "email": "john@email.com", "age": "30"}
+required_fields = ["name", "email", "age"]
+all_filled = all(form.get(f) for f in required_fields)
+print(all_filled)                # Output: True
 ```
 
 #### GroupBy
@@ -2693,18 +2828,40 @@ any(x is None for x in numbers)
 ```python
 from itertools import groupby
 
-data = [("a", 1), ("a", 2), ("b", 3), ("b", 4)]
+# === itertools.groupby() - nhóm phần tử liên tiếp có cùng key ===
+# ⚠️ DATA PHẢI ĐƯỢC SORT THEO KEY TRƯỚC KHI groupby!
+data = [("a", 1), ("a", 2), ("b", 3), ("b", 4), ("a", 5)]
 
-# Group by key
-data.sort(key=lambda x: x[0])
+# Sai nếu không sort trước (phần tử "a" cuối không gộp!)
+data.sort(key=lambda x: x[0])   # Sort theo key trước
 for key, group in groupby(data, key=lambda x: x[0]):
-    print(key, list(group))
+    items = list(group)          # group là iterator - chỉ dùng 1 lần!
+    print(f"{key}: {items}")
+# Output:
+#   a: [('a', 1), ('a', 2), ('a', 5)]
+#   b: [('b', 3), ('b', 4)]
 
-# Với dict
+# === defaultdict - cách Pythonic hơn (không cần sort) ===
 from collections import defaultdict
+
+data = [("a", 1), ("b", 3), ("a", 2), ("b", 4), ("a", 5)]
 grouped = defaultdict(list)
 for key, value in data:
     grouped[key].append(value)
+print(dict(grouped))             # Output: {'a': [1, 2, 5], 'b': [3, 4]}
+
+# Real-world: nhóm users theo department
+employees = [
+    {"name": "Alice", "dept": "Engineering"},
+    {"name": "Bob", "dept": "Marketing"},
+    {"name": "Charlie", "dept": "Engineering"},
+    {"name": "Diana", "dept": "Marketing"},
+]
+by_dept = defaultdict(list)
+for emp in employees:
+    by_dept[emp["dept"]].append(emp["name"])
+print(dict(by_dept))
+# Output: {'Engineering': ['Alice', 'Charlie'], 'Marketing': ['Bob', 'Diana']}
 ```
 
 #### Chunk
@@ -2712,14 +2869,35 @@ for key, value in data:
 ```python
 from itertools import islice
 
+# === Chia list thành các nhóm nhỏ (chunks) ===
 def chunk(lst, size):
+    """Chia iterable thành chunks có kích thước size."""
     it = iter(lst)
-    while chunk := list(islice(it, size)):
-        yield chunk
+    while batch := list(islice(it, size)):  # Walrus operator
+        yield batch
 
-# Usage
 numbers = [1, 2, 3, 4, 5, 6, 7]
-list(chunk(numbers, 3))  # [[1,2,3], [4,5,6], [7]]
+result = list(chunk(numbers, 3))
+print(result)                    # Output: [[1, 2, 3], [4, 5, 6], [7]]
+
+# Python 3.12+: itertools.batched()
+# from itertools import batched
+# list(batched(numbers, 3))      # [((1, 2, 3), (4, 5, 6), (7,)]
+
+# Cách khác dùng range
+def chunk_v2(lst, size):
+    return [lst[i:i + size] for i in range(0, len(lst), size)]
+
+print(chunk_v2(numbers, 3))      # Output: [[1, 2, 3], [4, 5, 6], [7]]
+
+# Real-world: batch processing
+def process_in_batches(items, batch_size=100):
+    for batch in chunk(items, batch_size):
+        print(f"  Processing batch of {len(batch)} items")
+        # db.bulk_insert(batch)
+
+process_in_batches(list(range(250)), 100)
+# Output: Processing batch of 100 items (x2) → Processing batch of 50 items
 ```
 
 #### Take/Skip
@@ -2729,21 +2907,32 @@ from itertools import islice, dropwhile, takewhile
 
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# Take (lấy n phần tử đầu)
-list(islice(numbers, 5))  # [1, 2, 3, 4, 5]
+# === Take (lấy n phần tử đầu) ===
+print(list(islice(numbers, 5)))  # Output: [1, 2, 3, 4, 5]
+print(numbers[:5])               # Output: [1, 2, 3, 4, 5] (cách đơn giản hơn)
 
-# Skip (bỏ n phần tử đầu)
-list(islice(numbers, 3, None))  # [4, 5, 6, 7, 8, 9, 10]
+# === Skip (bỏ n phần tử đầu) ===
+print(list(islice(numbers, 3, None)))  # Output: [4, 5, 6, 7, 8, 9, 10]
+print(numbers[3:])               # Output: [4, 5, 6, 7, 8, 9, 10] (cách đơn giản hơn)
 
-# Take while (lấy khi điều kiện đúng)
-list(takewhile(lambda x: x < 5, numbers))  # [1, 2, 3, 4]
+# === takewhile - lấy LIÊN TỤC khi điều kiện đúng ===
+# Dừng ngay khi gặp phần tử KHÔNG thỏa
+result = list(takewhile(lambda x: x < 5, numbers))
+print(result)                    # Output: [1, 2, 3, 4]
 
-# Drop while / Skip while (bỏ khi điều kiện đúng)
-list(dropwhile(lambda x: x < 5, numbers))  # [5, 6, 7, 8, 9, 10]
+# === dropwhile - bỏ LIÊN TỤC khi điều kiện đúng ===
+# Bắt đầu lấy khi gặp phần tử KHÔNG thỏa
+result = list(dropwhile(lambda x: x < 5, numbers))
+print(result)                    # Output: [5, 6, 7, 8, 9, 10]
 
-# Slice
-numbers[2:5]    # [3, 4, 5] (take 3 from index 2)
-numbers[::2]    # [1, 3, 5, 7, 9] (every 2nd)
+# === Slice nâng cao ===
+print(numbers[2:7])              # Output: [3, 4, 5, 6, 7] (index 2 đến 6)
+print(numbers[::2])              # Output: [1, 3, 5, 7, 9] (every 2nd, step=2)
+print(numbers[1::2])             # Output: [2, 4, 6, 8, 10] (mỗi 2 từ index 1)
+print(numbers[::-1])             # Output: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] (đảo ngược)
+
+# ⚠️ islice() hoạt động với BẤT KỲ iterator (file, generator)
+# Slice [:] chỉ hoạt động với sequence (list, tuple, str)
 ```
 
 #### Zip
@@ -2751,17 +2940,43 @@ numbers[::2]    # [1, 3, 5, 7, 9] (every 2nd)
 ```python
 names = ["Alice", "Bob", "Charlie"]
 ages = [25, 30, 35]
+cities = ["NYC", "LA", "Chicago"]
 
-# Zip
+# === zip() - ghép cặp từ nhiều iterables ===
 combined = list(zip(names, ages))
-# [('Alice', 25), ('Bob', 30), ('Charlie', 35)]
+print(combined)                  # Output: [('Alice', 25), ('Bob', 30), ('Charlie', 35)]
 
-# Unzip
-names2, ages2 = zip(*combined)
+# Zip 3+ iterables
+profiles = list(zip(names, ages, cities))
+print(profiles)
+# Output: [('Alice', 25, 'NYC'), ('Bob', 30, 'LA'), ('Charlie', 35, 'Chicago')]
 
-# Enumerate (index + value)
-for i, name in enumerate(names):
-    print(f"{i}: {name}")
+# ⚠️ zip() dừng ở iterable NGẮN NHẤT
+short = [1, 2]
+long = [10, 20, 30, 40]
+print(list(zip(short, long)))    # Output: [(1, 10), (2, 20)] (bỏ 30, 40)
+
+# zip_longest() - pad với fillvalue
+from itertools import zip_longest
+print(list(zip_longest(short, long, fillvalue=0)))
+# Output: [(1, 10), (2, 20), (0, 30), (0, 40)]
+
+# === Unzip - tách zip ===
+pairs = [('Alice', 25), ('Bob', 30), ('Charlie', 35)]
+names_out, ages_out = zip(*pairs)  # * unpacks list of tuples
+print(names_out)                 # Output: ('Alice', 'Bob', 'Charlie')
+print(ages_out)                  # Output: (25, 30, 35)
+
+# === enumerate = zip(range(n), iterable) ===
+for i, name in enumerate(names, start=1):  # start=1: bắt đầu từ 1
+    print(f"{i}. {name}")
+# Output: 1. Alice / 2. Bob / 3. Charlie
+
+# === Real-world: tạo dict từ 2 lists ===
+keys = ["name", "age", "city"]
+values = ["John", 30, "NYC"]
+user_dict = dict(zip(keys, values))
+print(user_dict)                 # Output: {'name': 'John', 'age': 30, 'city': 'NYC'}
 ```
 
 ---
@@ -2771,33 +2986,68 @@ for i, name in enumerate(names):
 #### Concatenation
 
 ```python
-# Dùng +
-"Hello " + "World"  # "Hello World"
+# === Nối chuỗi ===
 
-# Dùng join
-parts = ["Hello", "World"]
-" ".join(parts)  # "Hello World"
+# + operator (tạo string mới mỗi lần → chậm trong vòng lặp)
+greeting = "Hello " + "World"
+print(greeting)                  # Output: Hello World
 
-# f-string (Python 3.6+)
+# join() - hiệu quả nhất cho nối nhiều strings
+parts = ["Hello", "World", "Python"]
+print(" ".join(parts))           # Output: Hello World Python
+print("-".join(parts))           # Output: Hello-World-Python
+print("".join(parts))            # Output: HelloWorldPython
+
+# f-string (Python 3.6+) - rõ ràng nhất
 name = "Python"
-f"Hello {name}"  # "Hello Python"
+version = 3.12
+print(f"Hello {name} {version}") # Output: Hello Python 3.12
+
+# ⚠️ KHÔNG nên nối string bằng + trong vòng lặp
+# result = ""
+# for i in range(10000):
+#     result += str(i)           # ❌ Chậm - tạo string mới mỗi lần
+# ✅ Dùng: "".join(str(i) for i in range(10000))
 ```
 
 #### Interpolation
 
 ```python
-# f-string
 name = "Python"
-version = 3.11
-f"{name} {version}"  # "Python 3.11"
+version = 3.12
+pi = 3.14159265
 
-# Format
-"Hello {}".format(name)  # "Hello Python"
-"Hello {0} {1}".format(name, version)
-"Hello {name} {version}".format(name="Python", version=3.11)
+# === f-string (Python 3.6+) - KHUYẾN KHÍCH ===
+print(f"{name} {version}")       # Output: Python 3.12
 
-# % formatting (cũ)
-"Hello %s" % name  # "Hello Python"
+# f-string formatting
+print(f"{pi:.2f}")               # Output: 3.14 (2 decimal places)
+print(f"{1234567:,}")            # Output: 1,234,567 (thousands separator)
+print(f"{0.85:.1%}")             # Output: 85.0% (percentage)
+print(f"{42:08d}")               # Output: 00000042 (zero-padded 8 chars)
+print(f"{42:#x}")                # Output: 0x2a (hex)
+print(f"{42:#b}")                # Output: 0b101010 (binary)
+print(f"{'hello':>15}")          # Output: '          hello' (right-aligned 15 chars)
+print(f"{'hello':^15}")          # Output: '     hello     ' (center-aligned)
+print(f"{'hello':<15}")          # Output: 'hello          ' (left-aligned)
+
+# f-string expressions
+items = [1, 2, 3]
+print(f"Count: {len(items)}")    # Output: Count: 3
+print(f"{'even' if 4 % 2 == 0 else 'odd'}")  # Output: even
+
+# Python 3.12+: f-string có thể chứa multiline expressions
+# f"result = {
+#     some_long_function_call()
+# }"
+
+# === str.format() - cú pháp cũ hơn ===
+print("Hello {}".format(name))   # Output: Hello Python
+print("Hello {0} {1}".format(name, version))  # Output: Hello Python 3.12
+print("Hello {name}".format(name="World"))    # Output: Hello World
+
+# === % formatting - cũ nhất (tránh dùng) ===
+print("Hello %s, version %.1f" % (name, version))  # Output: Hello Python, version 3.1
 ```
 
 #### Template String
@@ -2805,11 +3055,20 @@ f"{name} {version}"  # "Python 3.11"
 ```python
 from string import Template
 
-template = Template("Hello $name!")
-template.substitute(name="Python")  # "Hello Python!"
+# === Template - an toàn cho user input (tránh injection) ===
+template = Template("Hello $name! You have $count messages.")
+result = template.substitute(name="John", count=5)
+print(result)                    # Output: Hello John! You have 5 messages.
 
-# With safe substitution
-template.safe_substitute(name="Python", missing="$undefined")
+# safe_substitute() - không lỗi khi thiếu biến
+result = template.safe_substitute(name="John")
+print(result)                    # Output: Hello John! You have $count messages.
+# (giữ nguyên $count thay vì raise KeyError)
+
+# ⚠️ Khi nào dùng Template:
+# ✅ Khi string đến từ user input (tránh injection)
+# ✅ Khi template nằm trong config file
+# ❌ Cho code thường → dùng f-string
 ```
 
 #### Split & Join
@@ -2817,13 +3076,32 @@ template.safe_substitute(name="Python", missing="$undefined")
 ```python
 text = "hello world python"
 
-# Split
-text.split()           # ['hello', 'world', 'python']
-text.split('o')        # ['hell', ' w', 'rld pyth', '']
+# === split() - tách string thành list ===
+print(text.split())              # Output: ['hello', 'world', 'python'] (tách theo whitespace)
+print(text.split('o'))           # Output: ['hell', ' w', 'rld pyth', 'n']
 
-# Join
-words = ['hello', 'world']
-"-".join(words)        # "hello-world"
+# split(maxsplit) - giới hạn số lần tách
+print("a.b.c.d".split(".", 2))   # Output: ['a', 'b', 'c.d'] (chỉ tách 2 lần)
+
+# rsplit() - tách từ phải sang
+print("a.b.c.d".rsplit(".", 1))  # Output: ['a.b.c', 'd']
+
+# splitlines() - tách theo dòng
+multi = "line1\nline2\nline3"
+print(multi.splitlines())        # Output: ['line1', 'line2', 'line3']
+
+# partition() - tách thành 3 phần (trước, sep, sau)
+print("user@domain.com".partition("@"))
+# Output: ('user', '@', 'domain.com')
+
+# === join() - nối list thành string ===
+words = ["hello", "world"]
+print("-".join(words))           # Output: hello-world
+print(", ".join(words))          # Output: hello, world
+
+# ⚠️ join() chỉ hoạt động với list of STRINGS
+# "-".join([1, 2, 3])           # ❌ TypeError
+print("-".join(map(str, [1, 2, 3])))  # Output: 1-2-3
 ```
 
 #### Replace
@@ -2831,12 +3109,25 @@ words = ['hello', 'world']
 ```python
 text = "Hello World World"
 
-text.replace("World", "Python")      # "Hello Python Python"
-text.replace("World", "Python", 1)  # "Hello Python World"
+# === str.replace(old, new, count) ===
+print(text.replace("World", "Python"))      # Output: Hello Python Python (thay TẤT CẢ)
+print(text.replace("World", "Python", 1))   # Output: Hello Python World (chỉ thay 1 lần)
 
-# Regex replace
+# === Regex replace ===
 import re
-re.sub(r'\d+', '#', "test 123 abc 456")  # "test # abc #"
+result = re.sub(r'\d+', '#', "test 123 abc 456")
+print(result)                    # Output: test # abc #
+
+# Replace với function
+def double_number(match):
+    return str(int(match.group()) * 2)
+
+result = re.sub(r'\d+', double_number, "price: 100, tax: 10")
+print(result)                    # Output: price: 200, tax: 20
+
+# translate() - thay thế nhiều ký tự cùng lúc
+table = str.maketrans("aeiou", "12345")
+print("hello world".translate(table))  # Output: h2ll4 w4rld
 ```
 
 #### Regex
@@ -2844,24 +3135,46 @@ re.sub(r'\d+', '#', "test 123 abc 456")  # "test # abc #"
 ```python
 import re
 
-text = "My email is john@example.com"
+text = "My email is john@example.com and phone is 0123-456-789"
 
-# Match
+# === search() - tìm match ĐẦU TIÊN ===
 match = re.search(r'[\w.-]+@[\w.-]+', text)
 if match:
-    print(match.group())  # "john@example.com"
+    print(match.group())         # Output: john@example.com
+    print(match.start(), match.end())  # Output: 12 28 (vị trí)
 
-# Find all
-emails = re.findall(r'[\w.-]+@[\w.-]+', text)
+# === findall() - tìm TẤT CẢ matches ===
+numbers = re.findall(r'\d+', text)
+print(numbers)                   # Output: ['0123', '456', '789']
 
-# Pattern với named groups
+# === Named groups (?P<name>) ===
 pattern = r'(?P<user>[\w.-]+)@(?P<domain>[\w.-]+)'
 match = re.search(pattern, text)
-match.group('user')    # 'john'
-match.group('domain') # 'example.com'
+if match:
+    print(match.group('user'))   # Output: john
+    print(match.group('domain')) # Output: example.com
+    print(match.groupdict())     # Output: {'user': 'john', 'domain': 'example.com'}
 
-# Split
-re.split(r'\s+', text)  # ['My', 'email', 'is', 'john@example.com']
+# === match() vs search() ===
+# match(): kiểm tra TỪ ĐẦU string
+# search(): tìm BẤT KỲ ĐÂU trong string
+print(re.match(r'\d+', "abc 123"))   # Output: None (không match từ đầu)
+print(re.search(r'\d+', "abc 123"))  # Output: <Match '123'>
+
+# === Compile pattern (tối ưu khi dùng nhiều lần) ===
+EMAIL_PATTERN = re.compile(r'[\w.-]+@[\w.-]+\.\w+')
+emails = EMAIL_PATTERN.findall("contact john@a.com or jane@b.org")
+print(emails)                    # Output: ['john@a.com', 'jane@b.org']
+
+# === split() với regex ===
+result = re.split(r'[,;\s]+', "apple, banana; cherry  date")
+print(result)                    # Output: ['apple', 'banana', 'cherry', 'date']
+
+# === Common patterns ===
+# Email:    r'[\w.-]+@[\w.-]+\.\w+'
+# Phone:    r'\d{3,4}[-.]?\d{3,4}[-.]?\d{3,4}'
+# URL:      r'https?://[\w./%-]+'
+# IP:       r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
 ```
 
 #### Substring
@@ -2869,30 +3182,87 @@ re.split(r'\s+', text)  # ['My', 'email', 'is', 'john@example.com']
 ```python
 text = "Hello World"
 
-# Slicing
-text[0:5]    # "Hello"
-text[:5]     # "Hello"
-text[6:]     # "World"
-text[-5:]    # "World"
+# === Slicing ===
+print(text[0:5])                 # Output: Hello
+print(text[:5])                  # Output: Hello (bỏ start = 0)
+print(text[6:])                  # Output: World (bỏ end = cuối)
+print(text[-5:])                 # Output: World (5 ký tự cuối)
+print(text[::2])                 # Output: HloWrd (mỗi 2 ký tự)
 
-# methods
-text.index("World")  # 6
-text.find("World")  # 6 (-1 if not found)
-text.startswith("Hello")  # True
-text.endswith("World")    # True
+# === Tìm kiếm ===
+print(text.index("World"))      # Output: 6 (index đầu tiên)
+print(text.find("World"))       # Output: 6 (index đầu tiên)
+print(text.find("xyz"))         # Output: -1 (không tìm thấy)
+# text.index("xyz")              # ❌ ValueError
+
+print(text.count("l"))          # Output: 3 (đếm số lần xuất hiện)
+
+# === Kiểm tra ===
+print(text.startswith("Hello"))  # Output: True
+print(text.endswith("World"))    # Output: True
+print("hello123".isalnum())      # Output: True (chỉ chữ + số)
+print("hello".isalpha())         # Output: True (chỉ chữ)
+print("123".isdigit())           # Output: True (chỉ số)
+print("  ".isspace())            # Output: True (chỉ whitespace)
+
+# === Case methods ===
+print("hello".upper())          # Output: HELLO
+print("HELLO".lower())          # Output: hello
+print("hello world".title())    # Output: Hello World
+print("hello world".capitalize())  # Output: Hello world
+print("Hello".swapcase())       # Output: hELLO
+
+# === Trim whitespace ===
+text = "  hello  "
+print(text.strip())              # Output: hello (trim cả 2 đầu)
+print(text.lstrip())             # Output: 'hello  ' (trim trái)
+print(text.rstrip())             # Output: '  hello' (trim phải)
+print("...hello...".strip("."))  # Output: hello (trim ký tự cụ thể)
 ```
 
 #### Multi-line String
 
 ```python
-# Triple quotes
+# === Triple quotes - string nhiều dòng ===
 multi = """This is
 a multi-line
 string"""
+print(multi)
+# Output:
+#   This is
+#   a multi-line
+#   string
 
-# Raw string
-raw = r"No escape: \n \t"
+# Dùng \ để tránh newline đầu tiên
+multi = """\
+Line 1
+Line 2"""
+print(multi)                     # Output: Line 1\nLine 2 (không có dòng trống đầu)
+
+# === textwrap.dedent() - bỏ indentation thừa ===
+import textwrap
+def help_text():
+    return textwrap.dedent("""\
+        Usage: command [options]
+        Options:
+            -h  Show help
+            -v  Verbose mode""")
+print(help_text())
+# Output: (không có indentation thừa)
+
+# === Raw string r"..." - không xử lý escape sequences ===
+raw = r"No escape: \n \t \\"
+print(raw)                       # Output: No escape: \n \t \\ (in nguyên văn)
+
 path = r"C:\Users\name\file.txt"
+print(path)                      # Output: C:\Users\name\file.txt
+# Không có r: "C:\Users\name\file.txt" → \n thành newline, \t thành tab
+
+# === Byte string b"..." ===
+data = b"Hello"
+print(type(data))                # Output: <class 'bytes'>
+print(data.decode("utf-8"))      # Output: Hello (bytes → str)
+print("Hello".encode("utf-8"))   # Output: b'Hello' (str → bytes)
 ```
 
 #### String Builder
@@ -2900,26 +3270,45 @@ path = r"C:\Users\name\file.txt"
 ```python
 import io
 
-# Cách 1: join (hiệu quả nhất)
+# === Cách 1: list + join (HIỆU QUẢ NHẤT cho Python) ===
 parts = []
-for i in range(1000):
-    parts.append(f"item {i}")
-result = "\n".join(parts)
+for i in range(5):
+    parts.append(f"item_{i}")
+result = ", ".join(parts)
+print(result)                    # Output: item_0, item_1, item_2, item_3, item_4
 
-# Cách 2: io.StringIO
+# === Cách 2: io.StringIO (cho streaming/write liên tục) ===
 buffer = io.StringIO()
-for i in range(1000):
-    buffer.write(f"item {i}\n")
+for i in range(5):
+    buffer.write(f"line {i}\n")
 result = buffer.getvalue()
 buffer.close()
+print(result)
+# Output: line 0\nline 1\nline 2\nline 3\nline 4\n
 
-# Cách 3: list + join (common pattern)
+# === Cách 3: generator + join (memory-efficient) ===
+result = "\n".join(f"item {i}" for i in range(5))
+print(result)                    # Output: item 0\nitem 1\n...item 4
+
+# === Real-world: build HTML ===
 def build_html(items):
     html = ["<ul>"]
     for item in items:
         html.append(f"  <li>{item}</li>")
     html.append("</ul>")
     return "\n".join(html)
+
+print(build_html(["Apple", "Banana", "Cherry"]))
+# Output:
+#   <ul>
+#     <li>Apple</li>
+#     <li>Banana</li>
+#     <li>Cherry</li>
+#   </ul>
+
+# ⚠️ So sánh hiệu suất:
+# join():     O(n) - tạo string 1 lần
+# += trong loop: O(n²) - tạo string mới mỗi lần
 ```
 
 ---
@@ -2929,40 +3318,94 @@ def build_html(items):
 ```python
 from typing import Union, Optional
 
-# Union type (Python 3.5+)
+# === Union type (Python 3.5+) - giá trị có thể là NHIỀU kiểu ===
 def process(value: Union[str, int]) -> str:
+    """Nhận str hoặc int, trả về str."""
     return str(value)
 
-# Python 3.10+ syntax
-def process(value: str | int) -> str:
+print(process("hello"))          # Output: hello
+print(process(42))               # Output: 42
+
+# === Python 3.10+: dùng toán tử | (ngắn gọn hơn) ===
+def process_v2(value: str | int) -> str:
     return str(value)
 
-# Optional = Union[X, None]
+# === Optional = Union[X, None] ===
 def greet(name: Optional[str] = None) -> str:
     return f"Hello, {name or 'World'}!"
 
-# Type narrowing / Type guard
-def handle(value: str | int):
-    if isinstance(value, str):
-        print(value.upper())  # Type narrowed to str
-    else:
-        print(value + 1)      # Type narrowed to int
+print(greet("John"))             # Output: Hello, John!
+print(greet())                   # Output: Hello, World!
 
-# TypeGuard (Python 3.10+)
+# Python 3.10+:
+def greet_v2(name: str | None = None) -> str:
+    return f"Hello, {name or 'World'}!"
+
+# === Type narrowing - thu hẹp kiểu bằng isinstance ===
+def handle(value: str | int | list) -> str:
+    if isinstance(value, str):
+        return value.upper()     # Type checker biết đây là str
+    elif isinstance(value, int):
+        return str(value * 2)    # Type checker biết đây là int
+    else:
+        return str(len(value))   # Type checker biết đây là list
+
+print(handle("hello"))           # Output: HELLO
+print(handle(21))                # Output: 42
+print(handle([1, 2, 3]))         # Output: 3
+
+# === TypeGuard (Python 3.10+) - custom type narrowing ===
 from typing import TypeGuard
 
 def is_str_list(val: list) -> TypeGuard[list[str]]:
+    """Kiểm tra list chỉ chứa strings."""
     return all(isinstance(x, str) for x in val)
 
-# Type alias
+def process_names(data: list) -> None:
+    if is_str_list(data):
+        # Type checker biết data là list[str] trong block này
+        for name in data:
+            print(name.upper())  # ✅ Gọi .upper() an toàn
+
+process_names(["alice", "bob"])  # Output: ALICE / BOB
+
+# === Type alias - đặt tên cho kiểu phức tạp ===
+# Cú pháp cũ
 UserId = int
 UserName = str
 UserInfo = dict[str, str | int]
+JSON = dict[str, "JSON"] | list["JSON"] | str | int | float | bool | None
 
-# NewType for distinct types
+# Python 3.12+: type statement
+# type UserId = int
+# type JSON = dict[str, JSON] | list[JSON] | str | int | float | bool | None
+
+# === NewType - tạo kiểu RIÊNG BIỆT (type-safe) ===
 from typing import NewType
+
 UserId = NewType('UserId', int)
-user_id = UserId(42)  # Type-safe wrapper
+OrderId = NewType('OrderId', int)
+
+def get_user(user_id: UserId) -> dict:
+    return {"id": user_id, "name": "John"}
+
+uid = UserId(42)
+oid = OrderId(100)
+get_user(uid)                    # ✅ OK
+# get_user(oid)                  # ❌ mypy error: OrderId ≠ UserId
+# get_user(42)                   # ❌ mypy error: int ≠ UserId
+
+# ⚠️ NewType chỉ kiểm tra tại type-check time
+# Runtime: UserId(42) == 42 là True (vẫn là int)
+
+# === Literal type - giới hạn giá trị cụ thể ===
+from typing import Literal
+
+def set_direction(direction: Literal["north", "south", "east", "west"]) -> None:
+    print(f"Moving {direction}")
+
+set_direction("north")           # ✅ OK
+# set_direction("up")            # ❌ mypy error: "up" not in Literal
 ```
 
 ---
@@ -2974,35 +3417,67 @@ user_id = UserId(42)  # Type-safe wrapper
 #### Class Definition
 
 ```python
+# === Class cơ bản ===
 class User:
-    # Class attribute
+    # Class attribute - chia sẻ giữa TẤT CẢ instances
     species = "Human"
+    _count = 0                   # Đếm số instances
 
-    # Instance attribute
     def __init__(self, name: str, age: int):
-        self.name = name    # Public
-        self._age = age     # Protected (convention)
-        self.__email = None # Private (name mangling)
+        """Constructor - gọi khi tạo instance mới."""
+        self.name = name         # Public attribute
+        self._age = age          # Protected (convention: internal use)
+        self.__email = None      # "Private" (name mangling → _User__email)
+        User._count += 1         # Tăng counter
 
-    # Instance method
+    # Instance method - nhận self
     def greet(self) -> str:
-        return f"Hello, I'm {self.name}"
+        return f"Hello, I'm {self.name}, {self._age} years old"
 
-    # Magic methods
-    def __str__(self):
+    # === Magic/Dunder methods ===
+    def __str__(self) -> str:
+        """Gọi bởi str(), print() - dành cho user."""
         return f"User({self.name})"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Gọi bởi repr(), debugger - dành cho developer."""
         return f"User(name={self.name!r}, age={self._age!r})"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
+        """So sánh bằng ==."""
         if not isinstance(other, User):
-            return False
+            return NotImplemented     # ⚠️ Trả NotImplemented, KHÔNG phải False
         return self.name == other.name and self._age == other._age
 
-# Create instance
-user = User("John", 30)
-user.greet()  # "Hello, I'm John"
+    def __hash__(self) -> int:
+        """Cần thiết nếu override __eq__ và muốn dùng trong set/dict."""
+        return hash((self.name, self._age))
+
+    def __len__(self) -> int:
+        """Gọi bởi len()."""
+        return len(self.name)
+
+    @classmethod
+    def get_count(cls) -> int:
+        """Class method - truy cập class attributes."""
+        return cls._count
+
+    @staticmethod
+    def validate_age(age: int) -> bool:
+        """Static method - không cần self hay cls."""
+        return 0 <= age <= 150
+
+# Sử dụng:
+user1 = User("John", 30)
+user2 = User("Jane", 25)
+print(user1.greet())             # Output: Hello, I'm John, 30 years old
+print(user1)                     # Output: User(John) (gọi __str__)
+print(repr(user1))               # Output: User(name='John', age=30) (gọi __repr__)
+print(user1 == User("John", 30)) # Output: True (gọi __eq__)
+print(len(user1))                # Output: 4 (gọi __len__)
+print(User.get_count())          # Output: 2 (class method)
+print(User.validate_age(200))    # Output: False (static method)
+print(User.species)              # Output: Human (class attribute)
 ```
 
 #### Data Class (Python 3.7+)
@@ -3010,111 +3485,201 @@ user.greet()  # "Hello, I'm John"
 ```python
 from dataclasses import dataclass, field
 
+# === @dataclass tự động tạo __init__, __repr__, __eq__ ===
 @dataclass
 class User:
-    name: str
-    age: int
+    name: str                    # Required field
+    age: int                     # Required field
     email: str = "unknown@example.com"  # Default value
-    tags: list = field(default_factory=list)  # Mutable default
+    tags: list = field(default_factory=list)  # ⚠️ Mutable default PHẢI dùng field()
 
     def __post_init__(self):
+        """Chạy SAU __init__ - dùng cho validation/transform."""
         self.email = self.email.lower()
+        if self.age < 0:
+            raise ValueError(f"Age must be >= 0, got {self.age}")
 
-# Usage
 user = User("John", 30)
-user.name  # "John"
+print(user)                      # Output: User(name='John', age=30, email='unknown@example.com', tags=[])
+print(user == User("John", 30))  # Output: True (tự so sánh tất cả fields)
 
-# Immutable dataclass
+# === Frozen dataclass = immutable ===
 @dataclass(frozen=True)
 class Point:
-    x: int
-    y: int
+    x: float
+    y: float
+
+p = Point(3.0, 4.0)
+print(p)                         # Output: Point(x=3.0, y=4.0)
+# p.x = 10                      # ❌ FrozenInstanceError (immutable!)
+
+# frozen=True → tự tạo __hash__ → dùng được trong set/dict
+point_set = {Point(0, 0), Point(1, 1), Point(0, 0)}
+print(len(point_set))            # Output: 2 (Point(0,0) bị deduplicate)
+
+# === Dataclass với slots (Python 3.10+) - tiết kiệm memory ===
+@dataclass(slots=True)
+class LightUser:
+    name: str
+    age: int
+# Dùng __slots__ thay vì __dict__ → nhanh hơn, nhẹ hơn
+
+# === field() options ===
+@dataclass
+class Config:
+    name: str
+    debug: bool = False
+    _internal: str = field(default="", repr=False)     # Ẩn khỏi repr
+    created_at: float = field(default_factory=lambda: __import__('time').time())
 ```
 
 #### Singleton
 
 ```python
+# === Singleton Pattern - chỉ có DUY NHẤT 1 instance ===
+
+# --- Cách 1: __new__ (classic) ---
 class Singleton:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-# Alternative: module singleton
-# singleton.py
-class _Singleton:
-    def foo(self):
-        pass
+    def __init__(self, value=None):
+        self.value = value
 
-singleton = _Singleton()
-# Import singleton elsewhere
+s1 = Singleton("first")
+s2 = Singleton("second")
+print(s1 is s2)                  # Output: True (cùng 1 object!)
+print(s1.value)                  # Output: second (⚠️ __init__ chạy lại!)
+
+# --- Cách 2: Module-level singleton (Pythonic nhất) ---
+# config.py
+class _Config:
+    def __init__(self):
+        self.debug = False
+        self.db_url = "sqlite:///app.db"
+
+config = _Config()               # Tạo 1 lần khi import module
+# Ở module khác: from config import config
+
+# --- Cách 3: functools.lru_cache ---
+from functools import lru_cache
+
+@lru_cache(maxsize=1)
+def get_database():
+    print("Creating database connection...")
+    return {"connection": "active"}
+
+db1 = get_database()             # Output: Creating database connection...
+db2 = get_database()             # (không in gì - cached!)
+print(db1 is db2)                # Output: True
 ```
 
 #### Factory Method
 
 ```python
+# === Factory Method - tạo object qua @classmethod ===
+import json
+
 class User:
-    def __init__(self, name: str):
+    def __init__(self, name: str, age: int, email: str = ""):
         self.name = name
+        self.age = age
+        self.email = email
+
+    def __repr__(self):
+        return f"User({self.name!r}, {self.age}, {self.email!r})"
 
     @classmethod
-    def from_dict(cls, data: dict):
-        return cls(data["name"])
+    def from_dict(cls, data: dict) -> "User":
+        """Tạo User từ dictionary."""
+        return cls(
+            name=data["name"],
+            age=data.get("age", 0),
+            email=data.get("email", ""),
+        )
 
     @classmethod
-    def from_json(cls, json_str: str):
-        import json
+    def from_json(cls, json_str: str) -> "User":
+        """Tạo User từ JSON string."""
         data = json.loads(json_str)
         return cls.from_dict(data)
 
-user = User.from_dict({"name": "John"})
+    @classmethod
+    def from_csv_line(cls, line: str) -> "User":
+        """Tạo User từ CSV line."""
+        parts = line.strip().split(",")
+        return cls(name=parts[0], age=int(parts[1]), email=parts[2])
+
+# Sử dụng:
+u1 = User("John", 30)
+u2 = User.from_dict({"name": "Jane", "age": 25, "email": "jane@a.com"})
+u3 = User.from_json('{"name": "Bob", "age": 35}')
+u4 = User.from_csv_line("Alice,28,alice@b.com")
+
+print(u2)                        # Output: User('Jane', 25, 'jane@a.com')
+print(u3)                        # Output: User('Bob', 35, '')
+print(u4)                        # Output: User('Alice', 28, 'alice@b.com')
 ```
 
 #### Builder Pattern
 
 ```python
-class User:
-    def __init__(self):
-        self.name = None
-        self.email = None
-        self.age = None
+# === Builder - xây dựng object phức tạp từng bước ===
+class QueryBuilder:
+    """SQL Query builder pattern."""
+    def __init__(self, table: str):
+        self._table = table
+        self._columns = ["*"]
+        self._conditions = []
+        self._order_by = None
+        self._limit = None
 
-    def __str__(self):
-        return f"User({self.name}, {self.email}, {self.age})"
+    def select(self, *columns: str) -> "QueryBuilder":
+        self._columns = list(columns)
+        return self                  # Return self cho method chaining
 
-class UserBuilder:
-    def __init__(self):
-        self._user = User()
-
-    def name(self, name: str):
-        self._user.name = name
+    def where(self, condition: str) -> "QueryBuilder":
+        self._conditions.append(condition)
         return self
 
-    def email(self, email: str):
-        self._user.email = email
+    def order_by(self, column: str, desc: bool = False) -> "QueryBuilder":
+        self._order_by = f"{column} {'DESC' if desc else 'ASC'}"
         return self
 
-    def age(self, age: int):
-        self._user.age = age
+    def limit(self, n: int) -> "QueryBuilder":
+        self._limit = n
         return self
 
-    def build(self):
-        return self._user
+    def build(self) -> str:
+        query = f"SELECT {', '.join(self._columns)} FROM {self._table}"
+        if self._conditions:
+            query += f" WHERE {' AND '.join(self._conditions)}"
+        if self._order_by:
+            query += f" ORDER BY {self._order_by}"
+        if self._limit:
+            query += f" LIMIT {self._limit}"
+        return query
 
-# Usage
-user = (UserBuilder()
-    .name("John")
-    .email("john@example.com")
-    .age(30)
+# Method chaining
+query = (QueryBuilder("users")
+    .select("name", "email")
+    .where("age > 18")
+    .where("active = true")
+    .order_by("name")
+    .limit(10)
     .build())
+print(query)
+# Output: SELECT name, email FROM users WHERE age > 18 AND active = true ORDER BY name ASC LIMIT 10
 ```
 
 #### Inner/Nested Class
 
 ```python
-# Nested class (static-like)
+# === Nested class - class bên trong class ===
 class Outer:
     class Inner:
         def greet(self):
@@ -3124,20 +3689,41 @@ class Outer:
         return self.Inner()
 
 inner = Outer.Inner()
-inner.greet()  # "Hello from Inner"
+print(inner.greet())             # Output: Hello from Inner
 
-# Inner class với tham chiếu outer
+# === Real-world: LinkedList với Node bên trong ===
 class LinkedList:
     class Node:
+        """Node nội bộ - chi tiết implementation."""
         def __init__(self, value, next_node=None):
             self.value = value
             self.next = next_node
 
+        def __repr__(self):
+            return f"Node({self.value})"
+
     def __init__(self):
         self.head = None
+        self._size = 0
 
     def add(self, value):
+        """Thêm phần tử vào đầu."""
         self.head = self.Node(value, self.head)
+        self._size += 1
+
+    def __len__(self):
+        return self._size
+
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield node.value
+            node = node.next
+
+ll = LinkedList()
+ll.add(3); ll.add(2); ll.add(1)
+print(list(ll))                  # Output: [1, 2, 3]
+print(len(ll))                   # Output: 3
 ```
 
 ---
@@ -3147,6 +3733,7 @@ class LinkedList:
 #### Inheritance
 
 ```python
+# === Kế thừa cơ bản ===
 class Animal:
     def __init__(self, name: str):
         self.name = name
@@ -3154,121 +3741,168 @@ class Animal:
     def speak(self) -> str:
         return "..."
 
+# Kế thừa từ Animal
 class Dog(Animal):
-    def speak(self) -> str:
+    def speak(self) -> str:            # Override method
         return "Woof!"
 
 class Cat(Animal):
-    def speak(self) -> str:
+    def speak(self) -> str:            # Override method
         return "Meow!"
 
-# Create instances
+# Sử dụng:
 dog = Dog("Buddy")
-dog.speak()  # "Woof!"
+print(dog.name)                  # Output: Buddy (kế thừa từ Animal)
+print(dog.speak())               # Output: Woof!
+
+# type checking:
+print(isinstance(dog, Dog))      # Output: True
+print(isinstance(dog, Animal))   # Output: True
+print(issubclass(Dog, Animal))   # Output: True
 ```
 
 #### Super
 
 ```python
+# === super() - gọi method/constructor của class cha ===
 class Animal:
     def __init__(self, name: str):
         self.name = name
 
 class Dog(Animal):
     def __init__(self, name: str, breed: str):
-        super().__init__(name)  # Gọi parent constructor
+        # ⚠️ BẮT BUỘC gọi super().__init__ nếu override __init__
+        # Nếu không, self.name sẽ không được gán!
+        super().__init__(name)
         self.breed = breed
 
     def speak(self) -> str:
-        return f"{super().speak()} Woof!"  # Gọi parent method
+        # Gọi method của class cha
+        parent_speech = super().speak() if hasattr(super(), 'speak') else "..."
+        return f"{parent_speech} Woof! I am a {self.breed}"
+
+dog = Dog("Max", "Husky")
+print(dog.name)                  # Output: Max (nhờ super().__init__)
+print(dog.breed)                 # Output: Husky
+print(dog.speak())               # Output: ... Woof! I am a Husky
 ```
 
 #### Abstract Class
 
 ```python
+# === Abstract Base Class (ABC) - class không thể khởi tạo ===
 from abc import ABC, abstractmethod
 
-class Animal(ABC):
+class Animal(ABC):               # Kế thừa ABC
     def __init__(self, name: str):
         self.name = name
 
-    @abstractmethod
+    @abstractmethod              # BẮT BUỘC subclass phải implement
     def speak(self) -> str:
         pass
 
-    def describe(self) -> str:
+    def describe(self) -> str:   # Concrete method (đã có code)
         return f"{self.name} says {self.speak()}"
 
 class Dog(Animal):
+    # Phải implement speak(), nếu không sẽ lỗi
     def speak(self) -> str:
         return "Woof!"
 
-# animal = Animal("Test")  # TypeError: Can't instantiate abstract class
-dog = Dog("Buddy")  # OK
+# test_animal = Animal("Test")   # ❌ TypeError: Can't instantiate abstract class
+dog = Dog("Buddy")               # ✅ OK
+print(dog.describe())            # Output: Buddy says Woof!
 ```
 
 #### Polymorphism
 
 ```python
+# === Đa hình (Polymorphism) - cùng 1 hàm xử lý nhiều kiểu dữ liệu ===
+
+# Dù là Dog hay Cat, miễn là kế thừa Animal (và có implement speak)
 def make_speak(animal: Animal) -> str:
     return animal.speak()
 
 animals = [Dog("Buddy"), Cat("Whiskers")]
 for animal in animals:
-    print(animal.speak())  # Polymorphism
+    print(make_speak(animal))    # Tự động gọi đúng method
+# Output:
+#   Woof!
+#   Meow!
+
+# ⚠️ Python là ngôn ngữ Duck Typing:
+# Thật ra không cần kế thừa Animal, chỉ cần class có method speak()
+# là make_speak sẽ chạy được (nếu không khai báo type hint chặt chẽ)
+class Robot:
+    def speak(self): return "Beep boop"
+# mypy sẽ báo lỗi, nhưng runtime Python vẫn chạy OK!
 ```
 
 #### Multiple Inheritance
 
 ```python
+# === Đa kế thừa (Multiple Inheritance) - kế thừa nhiều class cùng lúc ===
 class Flyable:
-    def fly(self):
+    def fly(self) -> str:
         return "Flying!"
 
 class Swimmable:
-    def swim(self):
+    def swim(self) -> str:
         return "Swimming!"
 
+# Duck kế thừa cả 2
 class Duck(Flyable, Swimmable):
-    def quack(self):
+    def quack(self) -> str:
         return "Quack!"
 
 duck = Duck()
-duck.fly()    # "Flying!"
-duck.swim()  # "Swimming!"
+print(duck.fly())                # Output: Flying!
+print(duck.swim())               # Output: Swimming!
+print(duck.quack())              # Output: Quack!
 
-# Method Resolution Order (MRO)
-Duck.__mro__
+# ⚠️ Hạn chế dùng Multiple Inheritance nếu cấu trúc phức tạp
+# Nên ưu tiên Composition hoặc Mixins (trait).
 ```
 
 #### Diamond Problem (MRO)
 
 ```python
-# Python giải quyết diamond problem bằng C3 Linearization (MRO)
+# === Vấn đề kim cương & MRO (Method Resolution Order) ===
+# Cấu trúc: A <- B, A <- C, D(B, C)
 class A:
-    def method(self):
+    def method(self) -> str:
         return "A"
 
 class B(A):
-    def method(self):
+    def method(self) -> str:
         return "B"
 
 class C(A):
-    def method(self):
+    def method(self) -> str:
         return "C"
 
 class D(B, C):
-    pass
+    pass                         # D không override, sẽ dùng method cha
 
 d = D()
-d.method()  # "B" (theo MRO: D -> B -> C -> A)
-print(D.__mro__)  # (D, B, C, A, object)
+# Câu hỏi: D.method() sẽ gọi B.method() hay C.method() hay A.method()?
+print(d.method())                # Output: B
+
+# Python giải quyết bằng MRO (C3 Linearization algorithm)
+# Thứ tự tìm kiếm method của ng từ con → cha, từ trái → phải
+print(D.__mro__)
+# Output: (<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>,
+#          <class '__main__.A'>, <class 'object'>)
 ```
 
 #### Composition (thành phần hơn kế thừa)
 
 ```python
-# Composition over Inheritance
+# === Composition over Inheritance ===
+# Kế thừa (IS-A): Dog "là một" Animal
+# Composition (HAS-A): Car "có một" Engine
+# → Composition linh hoạt hơn, dễ test và thay đổi hơn.
+
 class Engine:
     def start(self):
         return "Engine started"
@@ -3279,70 +3913,91 @@ class Wheels:
 
 class Car:
     def __init__(self):
-        self.engine = Engine()   # Composition
-        self.wheels = Wheels()   # Composition
+        # KHÔNG kế thừa, mà "chứa" các đối tượng bên trong
+        self.engine = Engine()
+        self.wheels = Wheels()
 
-    def drive(self):
+    def drive(self) -> str:
+        # Gọi (delegate) cho từng thành phần xử lý
         return f"{self.engine.start()}, {self.wheels.roll()}"
 
 car = Car()
-car.drive()  # "Engine started, Wheels rolling"
+print(car.drive())               # Output: Engine started, Wheels rolling
+
+# Nếu muốn thay Engine khác (V8, Electric), chỉ cần truyền vào lúc khởi tạo
+# (xem thêm pattern Dependency Injection ở phần 11)
 ```
 
 #### Sealed/Final Class
 
 ```python
-# typing.final decorator (Python 3.8+)
+# === Hạn chế kế thừa / ghi đè (từ Python 3.8+) ===
 from typing import final
 
 @final
 class Singleton:
-    """Cannot be subclassed"""
+    """Class này KHÔNG THỂ bị kế thừa."""
     pass
 
-# class MySingleton(Singleton):  # mypy error: Cannot inherit from final class
+# Lỗi khi check bằng mypy:
+# class MySingleton(Singleton):  # ❌ mypy error: Cannot inherit from final class
+#     pass
 
-# final method
 class Base:
+    def normal_method(self):
+        pass
+
     @final
     def critical_method(self):
+        """Method này KHÔNG THỂ bị override ở subclass."""
         return "Do not override me"
 
-# Lưu ý: @final chỉ enforce tại type checking (mypy), không runtime
+# ⚠️ LƯU Ý QUAN TRỌNG:
+# @final chỉ có tác dụng khi dùng các tool kiểm tra kiểu tĩnh (mypy, pyright).
+# Tại runtime (khi code chạy), Python KHÔNG NGĂN CẢN bạn kế thừa hay override.
 ```
 
 #### Delegation
 
 ```python
-# Python delegation qua __getattr__
+# === Delegation - "ủy quyền" xử lý cho object khác ===
+
+# 1. Ủy quyền tự động (thông qua __getattr__)
 class Printer:
-    def print_document(self, doc):
+    def print_document(self, doc: str) -> str:
         return f"Printing: {doc}"
+
+    def get_ink_level(self) -> int:
+        return 85
 
 class OfficeMachine:
     def __init__(self):
-        self._printer = Printer()
+        self._printer = Printer()  # Thành phần nội bộ
 
-    def __getattr__(self, name):
-        # Delegate missing attributes to printer
+    def __getattr__(self, name: str):
+        # Nếu gọi method mà OfficeMachine không có,
+        # tự động đẩy qua cho _printer thử xử lý!
         return getattr(self._printer, name)
 
 machine = OfficeMachine()
-machine.print_document("Report")  # "Printing: Report"
+# OfficeMachine KHÔNG DẠY print_document, nhưng tự động đẩy qua Printer!
+print(machine.print_document("Report"))  # Output: Printing: Report
+print(machine.get_ink_level())           # Output: 85
 
-# Explicit delegation
+# 2. Ủy quyền minh bạch (Explicit Delegation) - An toàn hơn
 class Stack:
+    """Stack bọc ngoài một List, chỉ cho phép push/pop (không cho index)."""
     def __init__(self):
         self._list = []
 
     def push(self, item):
-        self._list.append(item)
+        self._list.append(item)    # Delegate to list.append
 
     def pop(self):
-        return self._list.pop()
+        return self._list.pop()    # Delegate to list.pop
 
     def __len__(self):
-        return len(self._list)  # Delegate to list
+        return len(self._list)     # Delegate to len(list)
 ```
 
 ---
