@@ -6469,40 +6469,268 @@ def safe_divide(a, b):
 #### Built-in Exceptions
 
 ```python
-# Common exceptions
-SyntaxError    # Syntax error
-IndentationError
-TypeError      # Wrong type operation
-ValueError     # Right type, wrong value
-NameError      # Undefined name
-IndexError     # Index out of range
-KeyError       # Key not found
-AttributeError # Attribute not found
-FileNotFoundError
-IOError
-RuntimeError
-NotImplementedError
-KeyboardInterrupt  # Ctrl+C
+# === Exception Hierarchy (quan trọng nhất) ===
+# BaseException
+# ├── SystemExit          # sys.exit() - KHÔNG nên bắt
+# ├── KeyboardInterrupt   # Ctrl+C - KHÔNG nên bắt
+# ├── GeneratorExit       # Generator bị close
+# └── Exception           # ← Bắt từ đây trở xuống
+#     ├── ValueError
+#     ├── TypeError
+#     ├── KeyError
+#     ├── IndexError
+#     ├── AttributeError
+#     ├── FileNotFoundError
+#     ├── RuntimeError
+#     └── ...
+
+# === Ví dụ từng loại exception phổ biến ===
+
+# --- SyntaxError: lỗi cú pháp (phát hiện khi parse, TRƯỚC khi chạy) ---
+# eval("if True print('hello')")  # ❌ SyntaxError: invalid syntax
+# Không thể bắt bằng try-except trong cùng file (vì file không parse được)
+
+# --- IndentationError: lỗi thụt lề (subclass của SyntaxError) ---
+# def foo():
+# print("hello")  # ❌ IndentationError: expected an indented block
+
+# --- TypeError: sai kiểu dữ liệu trong phép toán ---
+try:
+    result = "hello" + 5           # str + int → không hợp lệ
+except TypeError as e:
+    print(f"TypeError: {e}")
+    # Output: TypeError: can only concatenate str (not "int") to str
+
+try:
+    len(42)                        # int không có len()
+except TypeError as e:
+    print(f"TypeError: {e}")
+    # Output: TypeError: object of type 'int' has no len()
+
+# --- ValueError: đúng kiểu nhưng sai giá trị ---
+try:
+    int("abc")                     # str đúng kiểu nhưng không parse được
+except ValueError as e:
+    print(f"ValueError: {e}")
+    # Output: ValueError: invalid literal for int() with base 10: 'abc'
+
+try:
+    import math
+    math.sqrt(-1)                  # Số âm không có căn bậc 2 thực
+except ValueError as e:
+    print(f"ValueError: {e}")
+    # Output: ValueError: math domain error
+
+# --- NameError: biến chưa được định nghĩa ---
+try:
+    print(undefined_variable)      # Biến chưa tồn tại
+except NameError as e:
+    print(f"NameError: {e}")
+    # Output: NameError: name 'undefined_variable' is not defined
+
+# --- IndexError: truy cập index ngoài phạm vi ---
+try:
+    lst = [1, 2, 3]
+    print(lst[10])                 # Index 10 không tồn tại (chỉ có 0, 1, 2)
+except IndexError as e:
+    print(f"IndexError: {e}")
+    # Output: IndexError: list index out of range
+
+# --- KeyError: truy cập key không tồn tại trong dict ---
+try:
+    d = {"name": "John"}
+    print(d["age"])                # Key "age" không tồn tại
+except KeyError as e:
+    print(f"KeyError: {e}")
+    # Output: KeyError: 'age'
+
+# ✅ Tránh KeyError: dùng .get()
+print(d.get("age", "N/A"))        # Output: N/A (không lỗi)
+
+# --- AttributeError: truy cập attribute không tồn tại ---
+try:
+    x = 42
+    x.append(1)                    # int không có method .append()
+except AttributeError as e:
+    print(f"AttributeError: {e}")
+    # Output: AttributeError: 'int' object has no attribute 'append'
+
+# --- FileNotFoundError: file không tồn tại ---
+try:
+    with open("nonexistent_file.txt") as f:
+        content = f.read()
+except FileNotFoundError as e:
+    print(f"FileNotFoundError: {e}")
+    # Output: FileNotFoundError: [Errno 2] No such file or directory: 'nonexistent_file.txt'
+
+# --- IOError / OSError: lỗi I/O (file, network, OS) ---
+# FileNotFoundError, PermissionError, IsADirectoryError đều kế thừa OSError
+try:
+    with open("/root/secret.txt") as f:  # Không có quyền đọc
+        pass
+except PermissionError as e:
+    print(f"PermissionError: {e}")
+    # Output: PermissionError: [Errno 13] Permission denied: '/root/secret.txt'
+
+# --- RuntimeError: lỗi runtime chung ---
+# Dùng khi không có exception cụ thể phù hợp
+try:
+    raise RuntimeError("Something went wrong at runtime")
+except RuntimeError as e:
+    print(f"RuntimeError: {e}")
+
+# --- NotImplementedError: method chưa được implement ---
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self) -> float:
+        raise NotImplementedError("Subclass must implement area()")
+
+# --- StopIteration: iterator hết phần tử ---
+it = iter([1, 2])
+next(it)  # 1
+next(it)  # 2
+try:
+    next(it)                       # Hết phần tử
+except StopIteration:
+    print("Iterator exhausted")    # Output: Iterator exhausted
+
+# --- ZeroDivisionError: chia cho 0 ---
+try:
+    result = 10 / 0
+except ZeroDivisionError as e:
+    print(f"ZeroDivisionError: {e}")
+    # Output: ZeroDivisionError: division by zero
+
+# --- ImportError / ModuleNotFoundError: import thất bại ---
+try:
+    import nonexistent_module
+except ModuleNotFoundError as e:
+    print(f"ModuleNotFoundError: {e}")
+    # Output: ModuleNotFoundError: No module named 'nonexistent_module'
+
+# --- RecursionError: đệ quy quá sâu ---
+try:
+    def infinite(): return infinite()
+    infinite()
+except RecursionError as e:
+    print(f"RecursionError: {e}")
+    # Output: RecursionError: maximum recursion depth exceeded
+
+# --- KeyboardInterrupt: Ctrl+C (KHÔNG nên bắt trong except Exception) ---
+# ⚠️ KeyboardInterrupt kế thừa BaseException, KHÔNG phải Exception
+# → except Exception sẽ KHÔNG bắt KeyboardInterrupt (đúng ý đồ)
+
+# --- OverflowError: số quá lớn ---
+try:
+    import math
+    math.exp(1000)                 # e^1000 quá lớn cho float
+except OverflowError as e:
+    print(f"OverflowError: {e}")
+    # Output: OverflowError: math range error
+
+# === Bảng tóm tắt: khi nào gặp exception nào ===
+# ┌─────────────────────┬──────────────────────────────────────────┐
+# │ Exception           │ Khi nào xảy ra                           │
+# ├─────────────────────┼──────────────────────────────────────────┤
+# │ TypeError           │ Sai kiểu: "a" + 1, len(42)              │
+# │ ValueError          │ Sai giá trị: int("abc"), sqrt(-1)        │
+# │ KeyError            │ Dict key không tồn tại: d["missing"]     │
+# │ IndexError          │ List index ngoài phạm vi: lst[999]       │
+# │ AttributeError      │ Attribute không tồn tại: 42.append()     │
+# │ NameError           │ Biến chưa định nghĩa: print(x)          │
+# │ FileNotFoundError   │ File không tồn tại: open("missing.txt")  │
+# │ ZeroDivisionError   │ Chia cho 0: 10 / 0                      │
+# │ ImportError         │ Import thất bại: import nonexistent      │
+# │ RecursionError      │ Đệ quy quá sâu (default: 1000 levels)   │
+# │ StopIteration       │ Iterator hết phần tử: next(empty_iter)   │
+# │ PermissionError     │ Không có quyền truy cập file/resource    │
+# └─────────────────────┴──────────────────────────────────────────┘
 ```
 
 #### Custom Error Hierarchy
 
 ```python
+# === Custom Error Hierarchy - tổ chức exceptions theo cấp bậc ===
+# Quy tắc: tạo base exception cho app, các exception cụ thể kế thừa từ đó
+# Giúp caller bắt lỗi ở mức chi tiết hoặc tổng quát tùy nhu cầu
+
 class AppError(Exception):
-    """Base exception for application"""
-    pass
+    """Base exception cho toàn bộ application.
+    Bắt AppError = bắt TẤT CẢ lỗi của app."""
+    def __init__(self, message: str, code: str = "UNKNOWN"):
+        self.code = code
+        super().__init__(message)
 
 class ValidationError(AppError):
-    """Validation error"""
-    pass
+    """Lỗi validation input từ user."""
+    def __init__(self, field: str, message: str):
+        self.field = field
+        super().__init__(f"Validation error on '{field}': {message}", code="VALIDATION_ERROR")
 
 class DatabaseError(AppError):
-    """Database error"""
-    pass
+    """Lỗi liên quan đến database."""
+    def __init__(self, message: str):
+        super().__init__(message, code="DB_ERROR")
 
 class ConnectionError(DatabaseError):
-    """Connection error"""
-    pass
+    """Không kết nối được database."""
+    def __init__(self, host: str, port: int):
+        self.host = host
+        self.port = port
+        super().__init__(f"Cannot connect to {host}:{port}")
+
+class QueryError(DatabaseError):
+    """Lỗi khi thực thi query."""
+    def __init__(self, query: str, reason: str):
+        self.query = query
+        super().__init__(f"Query failed: {reason}")
+
+class AuthError(AppError):
+    """Lỗi authentication/authorization."""
+    def __init__(self, message: str):
+        super().__init__(message, code="AUTH_ERROR")
+
+class NotFoundError(AppError):
+    """Resource không tìm thấy."""
+    def __init__(self, resource: str, identifier):
+        self.resource = resource
+        self.identifier = identifier
+        super().__init__(f"{resource} with id={identifier} not found", code="NOT_FOUND")
+
+# === Sử dụng ===
+def get_user(user_id: int):
+    if user_id <= 0:
+        raise ValidationError("user_id", "Must be positive")
+    if user_id == 999:
+        raise NotFoundError("User", user_id)
+    return {"id": user_id, "name": "John"}
+
+# Bắt lỗi cụ thể
+try:
+    user = get_user(999)
+except NotFoundError as e:
+    print(f"[{e.code}] {e}")
+    # Output: [NOT_FOUND] User with id=999 not found
+    print(f"Resource: {e.resource}, ID: {e.identifier}")
+    # Output: Resource: User, ID: 999
+
+# Bắt lỗi tổng quát (tất cả lỗi app)
+try:
+    user = get_user(-1)
+except AppError as e:
+    print(f"[{e.code}] {e}")
+    # Output: [VALIDATION_ERROR] Validation error on 'user_id': Must be positive
+
+# === Hierarchy diagram ===
+# AppError
+# ├── ValidationError
+# ├── DatabaseError
+# │   ├── ConnectionError
+# │   └── QueryError
+# ├── AuthError
+# └── NotFoundError
 ```
 
 #### Error Wrapping (Exception Chaining)
@@ -6827,33 +7055,125 @@ len(v1)             # 2
 ### 8.4. Circular Dependency
 
 ```python
-# Circular import problem
-# module_a.py
-# from module_b import func_b  # Error!
+# === Circular Dependency - Khi nào xảy ra? ===
+# Xảy ra khi:
+#   module_a.py imports module_b
+#   module_b.py imports module_a
+# → Python chưa load xong module này đã cần module kia
 
-# Giải pháp 1: Import trong function
-def my_func():
-    from module_b import func_b
-    func_b()
+# === Ví dụ lỗi ===
+# models.py
+# from user_service import UserService  # ❌ Lỗi! UserService chưa được định nghĩa
+# class User(models.Model):
+#     name = models.CharField(max_length=100)
 
-# Giải pháp 2: Import module thay vì import function
-import module_b
-module_b.func_b()
+# user_service.py
+# from models import User  # ❌ Lỗi! User model chưa được định nghĩa
+# class UserService:
+#     def get_users(self):
+#         return User.objects.all()
 
-# Giải pháp 3: Tách interface ra module riêng
-# interfaces.py -> module_a.py imports from interfaces
-#               -> module_b.py imports from interfaces
+# === Giải pháp 1: Import trong function (Lazy import) ===
+# models.py
+# class User(models.Model):
+#     name = models.CharField(max_length=100)
 
-# Giải pháp 4: TYPE_CHECKING (chỉ import cho type hints)
-from __future__ import annotations
+# user_service.py - KHÔNG import ở top-level
+class UserService:
+    def get_users(self):
+        from models import User  # Import ở trong method
+        return User.objects.all()
+
+    def create_user(self, name):
+        from models import User
+        return User.objects.create(name=name)
+
+# ⚠️ Ưu điểm: tránh circular import
+# ⚠️ Nhược điểm: import lặp lại mỗi lần gọi (nhưng Python cache nên OK)
+
+# === Giải pháp 2: Import module thay vì import function ===
+# Thay vì: from module_b import func_b
+# Dùng: import module_b → module_b.func_b()
+
+# user_service.py
+import models  # Import cả module, không phải class
+
+class UserService:
+    def get_users(self):
+        return models.User.objects.all()  # Dùng models.User
+
+# === Giải pháp 3: Tách interface ra module riêng ===
+# interfaces.py - Định nghĩa abstract classes
+# from abc import ABC, abstractmethod
+# class IUserService(ABC):
+#     @abstractmethod
+#     def get_users(self): pass
+
+# models.py
+# from interfaces import IUserService
+# class User(models.Model): ...
+
+# user_service.py
+# from interfaces import IUserService
+# class UserService(IUserService): ...
+
+# === Giải pháp 4: TYPE_CHECKING (chỉ import cho type hints) ===
+from __future__ import annotations  # Python 3.7+, forward references
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from module_b import ClassB  # Chỉ import khi type checking
+    # Chỉ import khi type checking (mypy, pyright)
+    # KHÔNG import khi chạy thực tế
+    from module_b import ClassB
 
-def process(obj: 'ClassB') -> None:  # String annotation
-    pass
+# Không cần import ClassB, dùng string annotation
+def process(obj: 'ClassB') -> 'ClassB':  # Hoặc dùng forward reference
+    return obj
+
+# Hoặc không cần annotation
+def process(obj) -> object:
+    return obj
+
+# === Giải pháp 5: Refactor cấu trúc ===
+# Gom các class có circular relationship vào cùng 1 module
+# Hoặc dùng dependency injection
+
+# === Giải pháp 6: Import cuối file ===
+# Đôi khi circular import xảy ra do thứ tự import
+# Thử di chuyển import xuống cuối file
+
+# === Real-world example ===
+# Giả sử có:
+# app/
+#   __init__.py
+#   models.py         # Django models
+#   services.py       # Business logic
+#   serializers.py    # Django REST framework serializers
+
+# serializers.py (lỗi)
+# from app.models import User  # ❌ Có thể lỗi nếu models import serializers
+
+# services.py (lỗi)
+# from app.models import User
+# from app.serializers import UserSerializer  # ❌ Có thể lỗi
+
+# Cách fix:
+# services.py
+class UserService:
+    def get_user_data(self, user_id):
+        from app.models import User  # Lazy import
+        from app.serializers import UserSerializer  # Lazy import
+        user = User.objects.get(id=user_id)
+        return UserSerializer(user).data
+
+# === Cách phát hiện circular dependency ===
+# 1. Chạy: python -c "import module_name"
+# 2. ImportError: cannot import name ...
+# 3. Dùng tool: pip install pydep
+#    pydep -f .  # Hiển thị dependency graph
 ```
+
+
 
 ---
 
@@ -9843,42 +10163,168 @@ def singleton(cls):
 #### Meta-programming
 
 ```python
-# __new__ for customizing object creation
+# === Meta-programming - code tạo/thay đổi code tại runtime ===
+# Python cho phép thao tác classes, functions, attributes tại runtime
+
+# --- __new__ - kiểm soát quá trình TẠO object ---
+# __new__ chạy TRƯỚC __init__, quyết định object nào được tạo
 class Singleton:
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+            cls._instance = super().__new__(cls)  # Tạo object mới
+        return cls._instance  # Trả về instance duy nhất
 
-# __getattr__ for dynamic attributes
-class Dynamic:
+s1 = Singleton()
+s2 = Singleton()
+print(s1 is s2)  # Output: True (cùng 1 object)
+
+# --- __getattr__ vs __getattribute__ ---
+# __getattr__: chỉ gọi khi attribute KHÔNG TÌM THẤY bình thường
+# __getattribute__: gọi cho MỌI truy cập attribute (cẩn thận infinite loop!)
+
+class DynamicConfig:
+    """Config object trả về None cho mọi key chưa set."""
+    def __init__(self):
+        self._data = {}
+
     def __getattr__(self, name):
-        return f"Dynamic: {name}"
+        # Chỉ gọi khi name không tồn tại trong __dict__
+        return self._data.get(name, None)
 
-obj = Dynamic()
-obj.anything  # "Dynamic: anything"
+    def __setattr__(self, name, value):
+        if name.startswith('_'):
+            super().__setattr__(name, value)  # Internal attrs → bình thường
+        else:
+            self._data[name] = value  # Public attrs → lưu vào _data
 
-# __slots__
-class Optimized:
-    __slots__ = ['name', 'age']
+config = DynamicConfig()
+config.debug = True
+config.port = 8080
+print(config.debug)    # Output: True
+print(config.port)     # Output: 8080
+print(config.missing)  # Output: None (không lỗi, trả về None)
+
+# --- __slots__ - tối ưu memory và tốc độ ---
+# Mặc định: mỗi object có __dict__ (dict) → tốn memory
+# __slots__: khai báo trước attributes → dùng tuple thay dict
+
+class OptimizedUser:
+    __slots__ = ['name', 'age']  # Chỉ cho phép 2 attributes này
 
     def __init__(self, name, age):
         self.name = name
         self.age = age
-# Uses less memory, faster attribute access
 
-# Descriptors
-class Descriptor:
+user = OptimizedUser("John", 30)
+print(user.name)       # Output: John
+# user.email = "x"     # ❌ AttributeError: 'OptimizedUser' has no attribute 'email'
+# print(user.__dict__)  # ❌ AttributeError: no __dict__ (tiết kiệm memory!)
+
+# So sánh memory:
+import sys
+class Normal:
+    def __init__(self, x): self.x = x
+
+class Slotted:
+    __slots__ = ['x']
+    def __init__(self, x): self.x = x
+
+print(sys.getsizeof(Normal(1).__dict__))  # Output: ~104 bytes (dict overhead)
+# Slotted không có __dict__ → tiết kiệm ~40-50% memory mỗi instance
+
+# --- Descriptors - kiểm soát truy cập attribute ---
+# Descriptor = object có __get__, __set__, hoặc __delete__
+# Dùng cho: validation, lazy loading, computed properties
+
+class Validated:
+    """Descriptor: validate giá trị khi gán."""
+    def __init__(self, min_val=None, max_val=None):
+        self.min_val = min_val
+        self.max_val = max_val
+
+    def __set_name__(self, owner, name):
+        self.name = name  # Tên attribute (Python 3.6+)
+
     def __get__(self, obj, objtype=None):
-        return obj._value * 2
+        if obj is None:
+            return self  # Truy cập từ class → trả về descriptor
+        return obj.__dict__.get(self.name)
 
     def __set__(self, obj, value):
-        obj._value = value
+        if self.min_val is not None and value < self.min_val:
+            raise ValueError(f"{self.name} must be >= {self.min_val}, got {value}")
+        if self.max_val is not None and value > self.max_val:
+            raise ValueError(f"{self.name} must be <= {self.max_val}, got {value}")
+        obj.__dict__[self.name] = value
 
-class MyClass:
-    value = Descriptor()
+class Product:
+    price = Validated(min_val=0)        # Giá >= 0
+    quantity = Validated(min_val=0, max_val=10000)  # 0 <= quantity <= 10000
+
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price          # Gọi Validated.__set__
+        self.quantity = quantity
+
+p = Product("Laptop", 999, 50)
+print(p.price)         # Output: 999
+# p.price = -10        # ❌ ValueError: price must be >= 0, got -10
+
+# --- Metaclass - class tạo class ---
+# type() vừa là function kiểm tra kiểu, vừa là metaclass mặc định
+# Metaclass kiểm soát quá trình TẠO class (không phải instance)
+
+# Tạo class bằng type() (thay vì dùng class keyword)
+MyClass = type('MyClass', (object,), {'x': 10, 'greet': lambda self: "hello"})
+obj = MyClass()
+print(obj.x)           # Output: 10
+print(obj.greet())     # Output: hello
+
+# Custom metaclass
+class AutoReprMeta(type):
+    """Metaclass tự động thêm __repr__ cho mọi class."""
+    def __new__(mcs, name, bases, namespace):
+        cls = super().__new__(mcs, name, bases, namespace)
+        # Tự thêm __repr__ nếu class chưa có
+        if '__repr__' not in namespace:
+            def auto_repr(self):
+                attrs = ', '.join(f'{k}={v!r}' for k, v in self.__dict__.items())
+                return f"{name}({attrs})"
+            cls.__repr__ = auto_repr
+        return cls
+
+class User(metaclass=AutoReprMeta):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+print(User("John", 30))  # Output: User(name='John', age=30) (tự động!)
+
+# ⚠️ Metaclass rất mạnh nhưng phức tạp
+# Thường dùng decorator hoặc __init_subclass__ thay thế
+# Chỉ dùng metaclass khi thực sự cần kiểm soát quá trình tạo class
+
+# --- __init_subclass__ (Python 3.6+) - thay thế metaclass đơn giản ---
+class Plugin:
+    """Base class tự động đăng ký subclasses."""
+    _registry = {}
+
+    def __init_subclass__(cls, plugin_name=None, **kwargs):
+        super().__init_subclass__(**kwargs)
+        name = plugin_name or cls.__name__
+        Plugin._registry[name] = cls
+        print(f"Registered plugin: {name}")
+
+class JSONPlugin(Plugin, plugin_name="json"):
+    pass  # Output: Registered plugin: json
+
+class XMLPlugin(Plugin, plugin_name="xml"):
+    pass  # Output: Registered plugin: xml
+
+print(Plugin._registry)
+# Output: {'json': <class 'JSONPlugin'>, 'xml': <class 'XMLPlugin'>}
 ```
 
 #### Context Manager
