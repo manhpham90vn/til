@@ -18,12 +18,7 @@ OUTPUT_DIR = os.path.join(PROJECT_ROOT, "Notebooks")
 # Mapping: filename (without .md) -> { code_lang: language tag in code blocks, kernelspec }
 LANGUAGE_CONFIG = {
     "Python": {
-        "code_langs": ["python"],
-        "magic_langs": {
-            "bash": "!",
-            "sh": "!",
-            "pip": "!",
-        },
+        "code_langs": ["python", "bash", "sh", "pip"],
         "kernelspec": {
             "display_name": "Python 3",
             "language": "python",
